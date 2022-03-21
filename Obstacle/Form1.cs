@@ -14,6 +14,8 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.VisualBasic;
+using System.Diagnostics;
+using CoordinateSharp;
 
 namespace Obstacle
 {
@@ -24,8 +26,8 @@ namespace Obstacle
         public Form1()
         {
             InitializeComponent();
-            this.FileName.Visible = false;
-            this.SaveFile.Visible = false;
+           // this.FileName.Visible = false;
+            //this.SaveFile.Visible = false;
            
 
         }
@@ -44,8 +46,13 @@ namespace Obstacle
             Bearing.KeyPress += ValidateKeyPress;
             ReverseBearing.KeyPress += ValidateKeyPress;
             RotorDia.KeyPress += ValidateKeyPress;
-            splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            showgrid();
+            //splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+           // showgrid();
+           if (this.SelectedID.Text == "")
+            {
+                button2_Click(null, null);
+
+            }
         }
 
 
@@ -70,11 +77,36 @@ namespace Obstacle
                     {
                         DataSet ds = new DataSet();
                         adapter.Fill(ds);
-                        dataGridView1.DataSource = ds.Tables[0];
-                        dataGridView1.Refresh();
+                        FrmLoadData loadData = new FrmLoadData();
+                        loadData.Show();
+                        DataGridView dg = (DataGridView)loadData.Controls["dataGridView1"];
+                        loadData.Controls["H_Northing"].Text = this.H_Northing.Text;
+                        loadData.Controls["H_Easting"].Text = this.H_Easting.Text;
+                        loadData.Controls["Bearing"].Text = this.Bearing.Text;
+                        loadData.Controls["ReverseBearing"].Text = this.ReverseBearing.Text;
+                        loadData.Controls["App1North"].Text = this.App1North.Text;
+                        loadData.Controls["App1East"].Text = this.App1East.Text;
+                        loadData.Controls["App2East"].Text = this.App2East.Text;
+                        loadData.Controls["App2North"].Text = this.App2North.Text;
+                        loadData.Controls["Safety"].Text = this.Safety.Text;
+                        loadData.Controls["Diversion"].Text = this.Diversion.Text;
+                        loadData.Controls["RotorDia"].Text = this.RotorDia.Text;
+                        loadData.Controls["FlatFunnel"].Text = this.FlatFunnel.Text;
+                        loadData.Controls["OEdge"].Text = this.OEdge.Text;
+                        loadData.Controls["HRPElevation"].Text = this.HRPElevation.Text;
+                        loadData.Controls["Fato"].Text = this.Fato.Text;
+                        loadData.Controls["Tolf"].Text = this.TOLF.Text;
+
+                        //dataGridView1.DataSource = ds.Tables[0];
+                        dg.DataSource = ds.Tables[0];
+
+                        //dataGridView1.Refresh();
+                        dg.Refresh();
+                        
+
                         //  this.dataGridView1.Columns[0].Visible= false;
-                        this.dataGridView1.Columns[1].Frozen = true;
-                        this.dataGridView1.Columns[2].Frozen = true;
+                        //this.dataGridView1.Columns[1].Frozen = true;
+                        //this.dataGridView1.Columns[2].Frozen = true;
                         //                        this.dataGridView1.Columns[3].Frozen = true;
                     }
                    
@@ -136,11 +168,16 @@ namespace Obstacle
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Exception Message: " + ex.Message);
+                    var st = new StackTrace(ex, true);
+                    // Get the top stack frame
+                    var frame = st.GetFrame(0);
+                    // Get the line number from the stack frame
+                    var line = frame.GetFileLineNumber();
+                    MessageBox.Show("Exception Message: " + ex.Message+" "+ line );
                 }
             MessageBox.Show("Finish");
             showgrid();
-            WindowState = FormWindowState.Maximized;
+            //WindowState = FormWindowState.Maximized;
         }
 
         private void H_Easting_TextChanged(object sender, EventArgs e)
@@ -266,6 +303,7 @@ namespace Obstacle
             double ReverseBear = double.Parse(ReverseBearing.Text); //CalBearing(H_Northing.Text, H_Easting.Text, App2North.Text, App2East.Text);
             Bearing.Text = Math.Round(Bear, 2, MidpointRounding.AwayFromZero).ToString();
             ReverseBearing.Text = Math.Round(ReverseBear, 2, MidpointRounding.AwayFromZero).ToString();
+            GetAppoachCoordinates();
         }
 
         private double CalBearing(string Hn, string He, string A1N, string A1E)
@@ -506,7 +544,7 @@ namespace Obstacle
             else
             { Surface = "Nil"; }
 
-            if (YY >= Y) // && YY<=double.Parse(this.OEdge.Text))
+            if (YY >= Y &&  YY<=double.Parse(this.OEdge.Text))
              {
                 if (nearer)
                 { Surface = label4.Text; }
@@ -692,7 +730,8 @@ namespace Obstacle
                  this.Bearing.Text.ToString() != "" && this.ReverseBearing.Text.ToString() != "" &&
                  this.Safety.Text.ToString() != "" && this.HRPElevation.Text.ToString() != "" && this.Diversion.Text != ""
                  && this.App1East.Text != "" && this.App1North.Text != "" && this.App2East.Text != ""
-                 && this.App2North.Text != "" && this.RotorDia.Text != "" && this.OEdge.Text != "")
+                 && this.App2North.Text != "" && this.RotorDia.Text != "" && this.OEdge.Text != ""
+                 && this.Fato.Text != "" && this.TOLF.Text != "")
             {
 
                 button3_Click(null, null);
@@ -734,9 +773,7 @@ namespace Obstacle
 
         private void saveAsButton_Click(object sender, EventArgs e)
         {
-            this.FileName.Visible = true;
-            this.SaveFile.Visible = true;
-
+            
         }
 
         private void ExportToExcel(string filename)
@@ -827,8 +864,7 @@ namespace Obstacle
                         }
                         worksheetPart.Worksheet.Save();
                         spreadsheetDocument.Close();
-                        this.FileName.Visible = false;
-                        this.SaveFile.Visible = false;
+                   
 
                     }
                 }
@@ -854,7 +890,7 @@ namespace Obstacle
 
          ///       if ( double.Parse(this.Bearing.Text) < 0 && double.Parse(this.Bearing.Text) > 360 )
             {
-               // GetAppoachCoordinates();
+               GetAppoachCoordinates();
                 string NewBearing;
                 label4.Text = SetApp(double.Parse(this.Bearing.Text), out NewBearing);
                 if (!string.IsNullOrEmpty(this.ReverseBearing.Text))
@@ -1040,6 +1076,116 @@ namespace Obstacle
         private void Diversion_TextChanged(object sender, EventArgs e)
         {
             RotorDia_TextChanged(null, null);
+        }
+
+        private void label11_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OEdge_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label12_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label8_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void HRPElevation_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void FlatFunnel_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            frmSelectRecord frmselect = new frmSelectRecord();
+            frmselect.Show();
+
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            bbbbToolStripMenuItem_Click(null, null);
+        }
+
+        private void Bearing_TextChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button2_Click_2(object sender, EventArgs e)
+        {
+            string zone = "44N";
+
+            GetBearingDistance getb = new GetBearingDistance();
+            getb.ToLatLon(double.Parse(this.H_Easting.Text), double.Parse(this.H_Northing.Text), zone, out double latitude, out double longitude);
+            string lat =  latitude.ToString();
+            string lng = longitude.ToString();
+            MessageBox.Show(lat + " " + lng);
+            string part1, part2, part3;
+            double int1, int2, int3,int4,int5;
+            int1 = latitude-Math.Truncate(latitude);
+            int2 =Math.Truncate( int1*60);
+            int3 = ((int1 * 60) - int2)*60; 
+            
+
+            //int3 = (((latitude - int1)*60) - int2) * 60;
+
+            string latD = int1.ToString() + " " + int2.ToString() + " " + int3.ToString();
+            MessageBox.Show(latD);
+           
+        }
+
+        private string LatLong(string Easting,string Northing,int ZoneNo,out string LatLng) 
+        {
+            UniversalTransverseMercator utm = new UniversalTransverseMercator("N", ZoneNo, double.Parse(Easting ), double.Parse( Northing));
+            Coordinate c = UniversalTransverseMercator.ConvertUTMtoLatLong(utm);
+            c.FormatOptions.Format = CoordinateFormatType.Decimal;
+            /*
+             string Cord = c.UTM.ToCentimeterString();
+             string trimmed = String.Concat(Cord.Where(s => !Char.IsWhiteSpace(s)));
+             MessageBox.Show( trimmed );
+            
+            c.FormatOptions.Format = CoordinateFormatType.Decimal;
+            MessageBox.Show(c.ToString());
+            double Lat = c.Latitude.DecimalDegree;
+            double Lng = c.Longitude.DecimalDegree;
+            */
+
+            LatLng = c.ToString(); //N 2º 7' 2.332" E 6º 36' 12.653"
+            return LatLng;
+        }
+        private void button5_Click(object sender, EventArgs e)
+        {
+           
+
         }
     }
 }
