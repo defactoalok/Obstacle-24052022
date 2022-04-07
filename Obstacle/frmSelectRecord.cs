@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.OleDb;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
 using System.Windows.Forms;
-using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
-using Microsoft.VisualBasic;
-using Excel = Microsoft.Office.Interop.Excel;
-using System.IO;
 
 namespace Obstacle
 {
@@ -21,18 +11,15 @@ namespace Obstacle
         public frmSelectRecord()
         {
             InitializeComponent();
-           
-}
-            private void frmSelectRecord_Load(object sender, EventArgs e)
-            {
+
+        }
+        private void frmSelectRecord_Load(object sender, EventArgs e)
+        {
 
             string OledbConnectString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source= ObstaclesData.accdb";
-            string getRecords = "SELECT Master.ID, Master.Location, Master.DateofSave," +
-                " Master.HRPElevation, Master.Safety, Master.Diversion, Master.Bearing, " +
-                "Master.ReverseBearing, Master.RotorDia, Master.OEdge, Master.FlatFunnel " +
-                "FROM Master";
-         
-            // string getRecords = "SELECT  *  FROM SurveyData";
+            string getRecords = "SELECT * from Master";
+
+             
             using (OleDbConnection connection = new OleDbConnection(OledbConnectString))
             {
                 OleDbCommand cmd = new OleDbCommand(getRecords, connection);
@@ -45,11 +32,17 @@ namespace Obstacle
                         adapter.Fill(ds);
                         dataGridView1.DataSource = ds.Tables[0];
                         dataGridView1.Refresh();
+
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    var st = new StackTrace(ex, true);
+                    // Get the top stack frame
+                    var frame = st.GetFrame(0);
+                    // Get the line number from the stack frame
+                    var line = frame.GetFileLineNumber();
+                    MessageBox.Show("Exception Message: " + ex.Message + " " + line);
                 }
 
             }
@@ -69,7 +62,7 @@ namespace Obstacle
                 try
                 {
                     string getMaster = "Select * from Master where ID=@MasterID";
-                    string getRecords = "Select * from SurveyData";
+    
 
                     string DeleteData = "Delete from SurveyData";
                     string AppendSurveyData = "Insert into SurveyData Select * from SurveyDataBank " +
@@ -77,7 +70,7 @@ namespace Obstacle
                     Form1 frmloadMain = new Form1();
 
                     OleDbCommand cmd = new OleDbCommand(getMaster, connection);
-                   connection.Open();
+                    connection.Open();
                     cmd.Parameters.AddWithValue("@MasterId", int.Parse(this.SelectedID.Text));
 
                     using (OleDbDataReader reader = cmd.ExecuteReader())
@@ -101,6 +94,13 @@ namespace Obstacle
                             frmloadMain.Controls["Fato"].Text = reader["Fato"].ToString();
                             frmloadMain.Controls["Tolf"].Text = reader["TOLF"].ToString();
                             frmloadMain.Controls["SelectedID"].Text = this.SelectedID.Text;
+                            frmloadMain.Controls["LatD"].Text = reader["LatD"].ToString();
+                            frmloadMain.Controls["LatM"].Text = reader["LatM"].ToString();
+                            frmloadMain.Controls["LatS"].Text = reader["LatS"].ToString();
+                            frmloadMain.Controls["LngD"].Text = reader["LngD"].ToString();
+                            frmloadMain.Controls["LngM"].Text = reader["LngM"].ToString();
+                            frmloadMain.Controls["LngS"].Text = reader["LngS"].ToString();
+                            frmloadMain.Controls["Zone"].Text = reader["Zones"].ToString();
 
                         }
                         cmd = new OleDbCommand(DeleteData, connection);
@@ -109,36 +109,27 @@ namespace Obstacle
                         cmd.Parameters.AddWithValue("@MasterId", int.Parse(this.SelectedID.Text));
                         cmd.ExecuteNonQuery();
                         frmloadMain.Show();
-                     /*
-                        using (OleDbDataAdapter adapter = new OleDbDataAdapter(getRecords, connection))
-                        {
-                            DataSet ds = new DataSet();
-                            adapter.Fill(ds);
-                            FrmLoadData loadData = new FrmLoadData();
-                           
-
-                            loadData.Show();
-                         //   loadData.Controls["SelectedID"].Text = this.SelectedID.Text;
-                            DataGridView dg = (DataGridView)loadData.Controls["dataGridView1"];
-                            dg.DataSource = ds.Tables[0];
-                            dg.Refresh();
-
-                        }
-                     */
+                 
                     }
 
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Exception Message: " + ex.Message);
+                    var st = new StackTrace(ex, true);
+                    // Get the top stack frame
+                    var frame = st.GetFrame(0);
+                    // Get the line number from the stack frame
+                    var line = frame.GetFileLineNumber();
+                    MessageBox.Show("Exception Message: " + ex.Message + " " + line);
                 }
 
             }
+           this.Hide();
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-           
+
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -149,4 +140,4 @@ namespace Obstacle
             }
         }
     }
-    }
+}

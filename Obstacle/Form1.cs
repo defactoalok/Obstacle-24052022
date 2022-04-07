@@ -1,34 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Data.OleDb;
-using Microsoft.Office;
-using System.Windows.Forms;
-using System.IO;
-using Excel = Microsoft.Office.Interop.Excel;
+﻿using CoordinateSharp;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.VisualBasic;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.OleDb;
 using System.Diagnostics;
-using CoordinateSharp;
+using System.IO;
+using System.Windows.Forms;
+using Microsoft.Office;
 
 namespace Obstacle
 {
     public partial class Form1 : Form
     {
         public object SafetyArea { get; private set; }
-
+        public bool showMenu;
         public Form1()
         {
             InitializeComponent();
-           // this.FileName.Visible = false;
+            // this.FileName.Visible = false;
             //this.SaveFile.Visible = false;
-           
+
 
         }
 
@@ -46,13 +41,20 @@ namespace Obstacle
             Bearing.KeyPress += ValidateKeyPress;
             ReverseBearing.KeyPress += ValidateKeyPress;
             RotorDia.KeyPress += ValidateKeyPress;
-            //splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-           // showgrid();
-           if (this.SelectedID.Text == "")
-            {
-                button2_Click(null, null);
+            LatD.KeyPress += ValidateKeyPress;
+            LatM.KeyPress += ValidateKeyPress;
+            LatS.KeyPress += ValidateKeyPress;
+            LngD.KeyPress += ValidateKeyPress;
+            LngM.KeyPress += ValidateKeyPress;
+            LngS.KeyPress += ValidateKeyPress;
 
-            }
+            //splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // showgrid();
+           // if (this.SelectedID.Text == "")
+            //{
+              //  button2_Click(null, null);
+
+            //}
         }
 
 
@@ -61,10 +63,12 @@ namespace Obstacle
         {
 
             string OledbConnectString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source= ObstaclesData.accdb";
-            string getRecords = "SELECT   id, [SL NO], OBJECT, NORTHING, EASTING, LATITUDE, LONGITUDE," +
-                 " Elevation, HRPDistance,HRPBearing, Surface, X, Y, YFunnel as YY, PEA, OBA, PEB, OBB, PEC, " +
-                 "OBC FROM SurveyData";
+            string getRecords = "SELECT [SL NO], OBJECT, LATITUDE, LONGITUDE, NORTHING , EASTING,  " +
+                 " HRPDistance,Elevation, HRPBearing, X  , Y  , YFunnel, PEA  , OBA  , PEB, OBB, PEC,OBC, Surface  " +
+                 "FROM SurveyData";
             // string getRecords = "SELECT  *  FROM SurveyData";
+            
+       
             using (OleDbConnection connection = new OleDbConnection(OledbConnectString))
             {
 
@@ -80,6 +84,14 @@ namespace Obstacle
                         FrmLoadData loadData = new FrmLoadData();
                         loadData.Show();
                         DataGridView dg = (DataGridView)loadData.Controls["dataGridView1"];
+
+                        //dataGridView1.DataSource = ds.Tables[0];
+                        dg.DataSource = ds.Tables[0];
+                        dg.Columns[0].HeaderText = "Obj No.";
+                        dg.Columns[1].HeaderText = "Obj Name";
+                        //dataGridView1.Refresh();
+
+                       
                         loadData.Controls["H_Northing"].Text = this.H_Northing.Text;
                         loadData.Controls["H_Easting"].Text = this.H_Easting.Text;
                         loadData.Controls["Bearing"].Text = this.Bearing.Text;
@@ -96,32 +108,33 @@ namespace Obstacle
                         loadData.Controls["HRPElevation"].Text = this.HRPElevation.Text;
                         loadData.Controls["Fato"].Text = this.Fato.Text;
                         loadData.Controls["Tolf"].Text = this.TOLF.Text;
-
-                        //dataGridView1.DataSource = ds.Tables[0];
-                        dg.DataSource = ds.Tables[0];
-
-                        //dataGridView1.Refresh();
-                        dg.Refresh();
-                        
+                        loadData.Controls["SiteLocation"].Text = this.SiteLocation.Text;
+                        loadData.Controls["Zone"].Text = this.Zone.Text;
 
                         //  this.dataGridView1.Columns[0].Visible= false;
                         //this.dataGridView1.Columns[1].Frozen = true;
                         //this.dataGridView1.Columns[2].Frozen = true;
                         //                        this.dataGridView1.Columns[3].Frozen = true;
                     }
-                   
+
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Exception Message: " + ex.Message);
+                    var st = new StackTrace(ex, true);
+                    // Get the top stack frame
+                    var frame = st.GetFrame(0);
+                    // Get the line number from the stack frame
+                    var line = frame.GetFileLineNumber();
+                    MessageBox.Show("Exception Message: " + ex.Message + " " + line);
                 }
             }
         }
         private void button2_Click(object sender, EventArgs e)
         {
+
             string DeleteData = "Delete from SurveyData";
-            string appendData = "Insert into SurveyData([SL NO], [OBJECT], LATITUDE, LONGITUDE, NORTHING, EASTING, Elevation ) " +
-                @"Values(@SL,@Object,@Lat,@long,@North,@East,@Elev)";
+            string appendData = "Insert into SurveyData([SL NO], [OBJECT],  NORTHING, EASTING, Elevation,LATITUDE, LONGITUDE ) " +
+                @"Values(@SL,@Object,@North,@East,@Elev,@Lat,@long)";
             openFileDialog1 = new OpenFileDialog();
             // openFileDialog1.ShowDialog();
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -135,6 +148,8 @@ namespace Obstacle
                         string OledbConnectString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=ObstaclesData.accdb";
                         using (OleDbConnection connection = new OleDbConnection(OledbConnectString))
                         {
+                            this.Zone.Text = Interaction.InputBox("Please input Zone No.", "Zone", "");
+                            this.SiteLocation.Text = Interaction.InputBox("Please give a name", "Location", "");
                             connection.Open();
                             OleDbCommand cmdd = new OleDbCommand(DeleteData, connection);
                             cmdd.ExecuteNonQuery();
@@ -150,11 +165,12 @@ namespace Obstacle
 
                                 cmd.Parameters.AddWithValue("@SL", cols[0]);
                                 cmd.Parameters.AddWithValue("@Object", cols[1]);
-                                cmd.Parameters.AddWithValue("@Lat", cols[2]);
-                                cmd.Parameters.AddWithValue("@long", cols[3]);
-                                cmd.Parameters.AddWithValue("@North", double.Parse(cols[4]));
-                                cmd.Parameters.AddWithValue("@East", double.Parse(cols[5]));
-                                cmd.Parameters.AddWithValue("@Elev", double.Parse(cols[6]));
+                                cmd.Parameters.AddWithValue("@North", double.Parse(cols[2]));
+                                cmd.Parameters.AddWithValue("@East", double.Parse(cols[3]));
+                                cmd.Parameters.AddWithValue("@Elev", double.Parse(cols[4]));
+                                LatLong(cols[3], cols[2], int.Parse(this.Zone.Text), out string Lat, out string Lng);
+                                cmd.Parameters.AddWithValue("@Lat", Lat);
+                                cmd.Parameters.AddWithValue("@long", Lng);
                                 cmd.ExecuteNonQuery();
                                 cmd.Parameters.Clear();
 
@@ -173,10 +189,11 @@ namespace Obstacle
                     var frame = st.GetFrame(0);
                     // Get the line number from the stack frame
                     var line = frame.GetFileLineNumber();
-                    MessageBox.Show("Exception Message: " + ex.Message+" "+ line );
+                    MessageBox.Show("Exception Message: " + ex.Message + " " + line);
                 }
             MessageBox.Show("Finish");
-            showgrid();
+            showMenu = false;
+
             //WindowState = FormWindowState.Maximized;
         }
 
@@ -187,12 +204,12 @@ namespace Obstacle
 
         private void AppNorth_TextChanged(object sender, EventArgs e)
         {
-        
+
 
         }
         private void ValidateKeyPress(object sender, KeyPressEventArgs e)
-        { 
-            
+        {
+
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
                 (e.KeyChar != '.'))
             {
@@ -217,7 +234,7 @@ namespace Obstacle
 
         private void H_Northing_TextChanged(object sender, EventArgs e)
         {
-             
+
         }
 
         private void GetAppoachCoordinates()
@@ -228,11 +245,11 @@ namespace Obstacle
                !string.IsNullOrWhiteSpace(this.H_Easting.ToString()) && !string.IsNullOrWhiteSpace(this.H_Northing.ToString())
                && !string.IsNullOrWhiteSpace(this.Bearing.ToString()) && !string.IsNullOrWhiteSpace(this.Safety.ToString())))
             */
-                
-                if ( this.H_Easting.Text.ToString()!= ""  &&  this.H_Northing.Text.ToString() !="" 
-                &&  this.Bearing.Text.ToString()!="" &&  this.Safety.Text.ToString()!="")
-                {
-          
+
+            if (this.H_Easting.Text.ToString() != "" && this.H_Northing.Text.ToString() != ""
+            && this.Bearing.Text.ToString() != "" && this.Safety.Text.ToString() != "")
+            {
+
                 GetNewCoordinates(this.H_Easting.Text.ToString(), this.H_Northing.Text.ToString(),
                     double.Parse(this.Safety.Text) / 2, double.Parse(this.Bearing.Text),
                     out double App1N, out double App1E,
@@ -240,7 +257,7 @@ namespace Obstacle
 
                 this.App1East.Text = App1E.ToString();
                 this.App1North.Text = App1N.ToString();
-               // this.ReverseBearing.Text = ReverseBear.ToString();
+                // this.ReverseBearing.Text = ReverseBear.ToString();
                 this.App2East.Text = App2E.ToString();
                 this.App2North.Text = App2N.ToString();
 
@@ -259,27 +276,27 @@ namespace Obstacle
             double SinX = 0;
             double CosX = 0;
 
-           
-            if(Bearing > 0)
-            {
-                double bearRadian = Math.Round(Bearing * (Math.PI) / 180,2);
-                CosX = Math.Round(Distance *   (Math.Cos(bearRadian)),2);
-                 SinX = Math.Round(Distance *  (Math.Sin(bearRadian)),2) ;
-                
-                App1E = Math.Round( double.Parse(He) + SinX,2) ;
-                App1N = Math.Round( double.Parse(Hn) + CosX,2);
-                ReverseBear = 0;
-                ReverseBear =Math.Round(double.Parse(this.ReverseBearing.Text),2);
 
-                bearRadian = Math.Round( ReverseBear * (Math.PI) / 180,2);
-                CosX = Distance *  (Math.Cos(bearRadian)) ;
-                 SinX = Distance *  (Math.Sin(bearRadian));
-              
-                App2E = Math.Round( double.Parse(He) +  SinX,2) ;
-                App2N =  Math.Round(double.Parse(Hn) +  CosX,2) ;
+            if (Bearing > 0)
+            {
+                double bearRadian = Math.Round(Bearing * (Math.PI) / 180, 2);
+                CosX = Math.Round(Distance * (Math.Cos(bearRadian)), 2);
+                SinX = Math.Round(Distance * (Math.Sin(bearRadian)), 2);
+
+                App1E = Math.Round(double.Parse(He) + SinX, 2);
+                App1N = Math.Round(double.Parse(Hn) + CosX, 2);
+                ReverseBear = 0;
+                ReverseBear = Math.Round(double.Parse(this.ReverseBearing.Text), 2);
+
+                bearRadian = Math.Round(ReverseBear * (Math.PI) / 180, 2);
+                CosX = Distance * (Math.Cos(bearRadian));
+                SinX = Distance * (Math.Sin(bearRadian));
+
+                App2E = Math.Round(double.Parse(He) + SinX, 2);
+                App2N = Math.Round(double.Parse(Hn) + CosX, 2);
             }
             return App1E;
-         
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -289,7 +306,7 @@ namespace Obstacle
             H_Easting.Text = "373247.972";
             Bearing.Text = "122";
             ReverseBearing.Text = "302";
-           RotorDia.Text = "11";
+            RotorDia.Text = "11";
             //App1East.Text = "373247.972";
             //App1North.Text = "1927961.44";
             //App2North.Text = "1927961.44";
@@ -323,7 +340,7 @@ namespace Obstacle
 
                 double EMinusE = double.Parse(A1E) - double.Parse(He);
                 double NMinusN = double.Parse(A1N) - double.Parse(Hn);
-                Bearing =Math.Abs( Math.Atan(( (EMinusE) /  (NMinusN))) * (180 / Math.PI));
+                Bearing = Math.Abs(Math.Atan(((EMinusE) / (NMinusN))) * (180 / Math.PI));
 
                 if (EMinusE > 0 && NMinusN > 0)
                 {
@@ -378,7 +395,7 @@ namespace Obstacle
 
         private string SetApp(double Bear, out string NewBearing)
         {
-            if ( double.Parse(this.Bearing.Text) > 180)
+            if (double.Parse(this.Bearing.Text) > 180)
             {
                 this.ReverseBearing.Text = (double.Parse(this.Bearing.Text) - 180).ToString();
             }
@@ -389,7 +406,7 @@ namespace Obstacle
             NewBearing = "";
 
             var Runway = Bear > 9 ? (Math.Truncate(Bear / 10)) : Math.Truncate(Bear);
-    
+
 
             if (Runway <= 9)
             {
@@ -419,11 +436,11 @@ namespace Obstacle
             GetAppoachCoordinates();
             string NewBearing = "";
 
-           label4.Text= SetApp(double.Parse(this.Bearing.Text),out NewBearing);
-           label9.Text= SetApp(double.Parse(this.ReverseBearing.Text), out  NewBearing);
+            label4.Text = SetApp(double.Parse(this.Bearing.Text), out NewBearing);
+            label9.Text = SetApp(double.Parse(this.ReverseBearing.Text), out NewBearing);
 
 
-            double Bear =  double.Parse(this.Bearing.Text); // Math.Round(CalBearing(H_Northing.Text, H_Easting.Text, App1North.Text, App1East.Text));
+            double Bear = double.Parse(this.Bearing.Text); // Math.Round(CalBearing(H_Northing.Text, H_Easting.Text, App1North.Text, App1East.Text));
             double ReverseBear = double.Parse(this.ReverseBearing.Text); // Math.Round(CalBearing(H_Northing.Text, H_Easting.Text, App2North.Text, App2East.Text));
 
 
@@ -450,16 +467,16 @@ namespace Obstacle
                     {
                         while (reader.Read())
                         {
-                            
+
                             GetBearingDistance getBD = new GetBearingDistance();
                             double distance, Bearing;
-                          
+
                             try
                             {
                                 OleDbCommand cmdUpdate = new OleDbCommand(updateQuery, connection);
 
-                              //  getBD.HN = H_Northing.Text;
-                               // getBD.HE = H_Easting.Text;
+                                //  getBD.HN = H_Northing.Text;
+                                // getBD.HE = H_Easting.Text;
                                 double Easting = double.Parse(reader["Easting"].ToString());
                                 double Northing = double.Parse(reader["Northing"].ToString());
 
@@ -515,7 +532,12 @@ namespace Obstacle
                             }
                             catch (Exception ex)
                             {
-                                MessageBox.Show(ex.Message);
+                                var st = new StackTrace(ex, true);
+                                // Get the top stack frame
+                                var frame = st.GetFrame(0);
+                                // Get the line number from the stack frame
+                                var line = frame.GetFileLineNumber();
+                                MessageBox.Show("Exception Message: " + ex.Message + " " + line);
 
                             }
 
@@ -525,7 +547,12 @@ namespace Obstacle
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    var st = new StackTrace(ex, true);
+                    // Get the top stack frame
+                    var frame = st.GetFrame(0);
+                    // Get the line number from the stack frame
+                    var line = frame.GetFileLineNumber();
+                    MessageBox.Show("Exception Message: " + ex.Message + " " + line);
 
                 }
             }
@@ -533,7 +560,7 @@ namespace Obstacle
             this.dataGridView1.DefaultCellStyle.Font = new System.Drawing.Font("Tahoma", 9);
             showgrid();
         }
-
+      
         private string surface(double YY, double Y, double X, double Distance, int SafetyArea, bool nearer)
         {
             string Surface = "NIL";
@@ -544,8 +571,8 @@ namespace Obstacle
             else
             { Surface = "Nil"; }
 
-            if (YY >= Y &&  YY<=double.Parse(this.OEdge.Text))
-             {
+            if (YY >= Y && YY <= double.Parse(this.OEdge.Text))
+            {
                 if (nearer)
                 { Surface = label4.Text; }
                 else
@@ -582,35 +609,35 @@ namespace Obstacle
                 if (getX <= 3386)
                 {
                     PECatA = (getX * 0.045) + (HrpElevation);
-                    OBA = PECatA - Elevation;
+                    OBA =  Elevation- PECatA ;
                     if (getX <= 245)
                     {
                         PECatB = (getX * .08) + HrpElevation;
-                        OBB = PECatB - Elevation;
+                        OBB =  Elevation- PECatB ;
                     }
                     if (getX > 245 && getY <= 1075)
                     {
                         PECatB = 19.6 + (getX * (16 / 100)) + HrpElevation;
-                        OBB = PECatB - Elevation;
+                        OBB =  Elevation- PECatB ;
                     }
                     if (getX <= 1220)
                     {
                         PECatC = (getX * (12.5 / 100)) + HrpElevation;
-                        OBC = PECatC - Elevation;
+                        OBC = Elevation- PECatC;
 
                     }
 
                 }
                 return PECatB;
             }
-            if ( str != "APP")
+            if (str != "APP")
             {
                 PECatA = (Distance - (SafetyArea / 2)) / 2 + HrpElevation;
                 PECatB = (Distance - (SafetyArea / 2)) / 2 + HrpElevation;
                 PECatC = (Distance - (SafetyArea / 2)) / 2 + HrpElevation;
-                OBA = PECatA - Elevation;
-                OBB = PECatB - Elevation;
-                OBC = PECatC - Elevation;
+                OBA =  Elevation- PECatA ;
+                OBB =  Elevation- PECatB;
+                OBC = Elevation- PECatC;
                 return PECatB;
             }
             return PECatB;
@@ -639,16 +666,16 @@ namespace Obstacle
                 {
                     double EMinusE, NMinusN = 0;
 
-                    EMinusE =  PointE - App1E;
+                    EMinusE = PointE - App1E;
                     NMinusN = PointN - App1N;
-                    double EnMinus = Math.Abs(EMinusE / NMinusN) ;
+                    double EnMinus = Math.Abs(EMinusE / NMinusN);
 
                     BearingApp1 = Math.Atan(EnMinus) * 180 / Math.PI;
 
                     double PointAzimuth1 = SendAzimuth(EMinusE, NMinusN, BearingApp1, out double Azim1);
                     //   MessageBox.Show(EMinusE.ToString() + " " + NMinusN.ToString().ToString());
 
-                    DistAPP1 = Math.Round(Math.Sqrt(Math.Pow(NMinusN, 2) + Math.Pow(EMinusE, 2)),1);
+                    DistAPP1 = Math.Round(Math.Sqrt(Math.Pow(NMinusN, 2) + Math.Pow(EMinusE, 2)), 1);
 
                     EMinusE = PointE - App2E;
                     NMinusN = PointN - App2N;
@@ -661,7 +688,7 @@ namespace Obstacle
                     // MessageBox.Show(EMinusE.ToString() + " " + NMinusN.ToString().ToString());
 
                     //   MessageBox.Show(DistAPP1.ToString()+" "+DistApp2.ToString()+" "+ PointAzimuth1.ToString() + " " + PointAzimuth2.ToString());
-                    DistApp2 = Math.Round(Math.Sqrt(Math.Pow(NMinusN, 2) + Math.Pow(EMinusE, 2)),1);
+                    DistApp2 = Math.Round(Math.Sqrt(Math.Pow(NMinusN, 2) + Math.Pow(EMinusE, 2)), 1);
 
                     YY = 0;
                     RDistApp1 = DistAPP1;
@@ -672,15 +699,15 @@ namespace Obstacle
 
                     if (DistAPP1 > DistApp2)
                     {
-                        returnX = Math.Round(Math.Abs(DistApp2 * (Math.Cos((ReverseBear - Azim2) * (Math.PI) / 180))));
-                        returnY = Math.Round(Math.Abs(DistApp2 * (Math.Sin((ReverseBear - Azim2) * (Math.PI) / 180))));
-
+                         returnX = Math.Round(Math.Abs(DistApp2 * (Math.Cos((ReverseBear - Azim2) * (Math.PI) / 180))));
+                         returnY = Math.Round(Math.Abs(DistApp2 * (Math.Sin((ReverseBear - Azim2) * (Math.PI) / 180))));
+                        
                     }
                     else
                     {
                         returnX = Math.Round(Math.Abs(DistAPP1 * (Math.Cos((Bear - Azim1) * (Math.PI) / 180))));
-                        returnY = Math.Round(Math.Abs(DistAPP1 * (Math.Sin((Bear - Azim1) * (Math.PI) / 180))));
-
+                       returnY = Math.Round(Math.Abs(DistAPP1 * (Math.Sin((Bear - Azim1) * (Math.PI) / 180))));
+                        
                     }
 
                     if (!string.IsNullOrEmpty(Diversion.Text) && !string.IsNullOrEmpty(returnX.ToString()) && !string.IsNullOrEmpty(Safety.Text))
@@ -696,6 +723,8 @@ namespace Obstacle
 
             return DistAPP1;
         }
+
+      
 
         private double GetAzimuth(double eMinusE, double nMinusN, double bearingApp1)
         {
@@ -730,38 +759,48 @@ namespace Obstacle
                  this.Bearing.Text.ToString() != "" && this.ReverseBearing.Text.ToString() != "" &&
                  this.Safety.Text.ToString() != "" && this.HRPElevation.Text.ToString() != "" && this.Diversion.Text != ""
                  && this.App1East.Text != "" && this.App1North.Text != "" && this.App2East.Text != ""
-                 && this.App2North.Text != "" && this.RotorDia.Text != "" && this.OEdge.Text != ""
-                 && this.Fato.Text != "" && this.TOLF.Text != "")
+                 && this.App2North.Text != "" && this.RotorDia.Text != "" && this.OEdge.Text != "" && this.Zone.Text != "")
+                // && this.Fato.Text != "" && this.TOLF.Text != "")
             {
 
                 button3_Click(null, null);
                 foreach (DataGridViewRow Myrow in dataGridView1.Rows)
                 {
                     if (Myrow.IsNewRow) continue;
-                    if (dataGridView1.Rows.Count > 0 && 
-                        !string.IsNullOrEmpty(Myrow.Cells[10].Value.ToString())) { 
-                    string surf = Myrow.Cells[10].Value.ToString();
-                   
-                    try
-                   {
-                           
-                        if (Convert.ToDouble(Myrow.Cells[15].Value) < 0
-                            || Convert.ToDouble(Myrow.Cells[17].Value) < 0
-                            || Convert.ToDouble(Myrow.Cells[19].Value) < 0)
-                           
-                        { if (!string.IsNullOrEmpty(surf) && surf.Substring(0, 2) == "AP")
-                            { Myrow.DefaultCellStyle.BackColor = System.Drawing.Color.Pink; }
-                        }
-
-                   } 
-                    catch (Exception ex)
+                    if (dataGridView1.Rows.Count > 0 &&
+                        !string.IsNullOrEmpty(Myrow.Cells[10].Value.ToString()))
                     {
-                      MessageBox.Show(ex.Message);
+                        string surf = Myrow.Cells[10].Value.ToString();
+ 
+                        try
+                        {
+
+                            if (Convert.ToDouble(Myrow.Cells[13].Value) < 0
+                                || Convert.ToDouble(Myrow.Cells[15].Value) < 0
+                                || Convert.ToDouble(Myrow.Cells[17].Value) < 0)
+
+                            {
+                                if (!string.IsNullOrEmpty(surf) && surf.Substring(0, 2) == "AP")
+                                { Myrow.DefaultCellStyle.BackColor = System.Drawing.Color.Pink; }
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            var st = new StackTrace(ex, true);
+                            // Get the top stack frame
+                            var frame = st.GetFrame(0);
+                            // Get the line number from the stack frame
+                            var line = frame.GetFileLineNumber();
+                            MessageBox.Show("Exception Message: " + ex.Message + " " + line);
+                        }
+ 
                     }
-                    
-                }
 
                 }
+            } else
+            {
+                MessageBox.Show("Please inout all parameters");
             }
         }
         private void aasasToolStripMenuItem_Click(object sender, EventArgs e)
@@ -773,7 +812,7 @@ namespace Obstacle
 
         private void saveAsButton_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void ExportToExcel(string filename)
@@ -834,7 +873,6 @@ namespace Obstacle
                         {
                             columns.Add(column.ColumnName);
 
-
                             Cell c = new Cell()
                             {
                                 DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String,
@@ -864,13 +902,18 @@ namespace Obstacle
                         }
                         worksheetPart.Worksheet.Save();
                         spreadsheetDocument.Close();
-                   
+
 
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    var st = new StackTrace(ex, true);
+                    // Get the top stack frame
+                    var frame = st.GetFrame(0);
+                    // Get the line number from the stack frame
+                    var line = frame.GetFileLineNumber();
+                    MessageBox.Show("Exception Message: " + ex.Message + " " + line);
                 }
 
             }
@@ -886,30 +929,30 @@ namespace Obstacle
 
         private void Bearing_TextChanged(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(this.Bearing.Text) )
+            if (!string.IsNullOrEmpty(this.Bearing.Text))
 
-         ///       if ( double.Parse(this.Bearing.Text) < 0 && double.Parse(this.Bearing.Text) > 360 )
+            ///       if ( double.Parse(this.Bearing.Text) < 0 && double.Parse(this.Bearing.Text) > 360 )
             {
-               GetAppoachCoordinates();
+                GetAppoachCoordinates();
                 string NewBearing;
                 label4.Text = SetApp(double.Parse(this.Bearing.Text), out NewBearing);
                 if (!string.IsNullOrEmpty(this.ReverseBearing.Text))
-                { 
-                     label9.Text = SetApp(double.Parse(this.ReverseBearing.Text), out NewBearing);
+                {
+                    label9.Text = SetApp(double.Parse(this.ReverseBearing.Text), out NewBearing);
                 }
             }
-           
-            }
-            
+
+        }
+
 
         //    double Bear = double.Parse(this.Bearing.Text);
-         //   double ReverseBear = double.Parse(this.ReverseBearing.Text);
+        //   double ReverseBear = double.Parse(this.ReverseBearing.Text);
 
-           
-         
 
-     
-          
+
+
+
+
         private void button3_Click_1(object sender, EventArgs e)
         {
             GetAppoachCoordinates();
@@ -919,15 +962,15 @@ namespace Obstacle
         {
             foreach (DataGridViewRow Myrow in dataGridView1.Rows)
             {            //Here 2 cell is target value and 1 cell is Volume
-              
+
                 if (!string.IsNullOrEmpty(Myrow.Cells["OBA"].ToString()) && !string.IsNullOrEmpty(Myrow.Cells["OBB"].ToString())
                     && !string.IsNullOrEmpty(Myrow.Cells["OBC"].ToString()))
-                { 
-                if (Convert.ToInt32(Myrow.Cells["OBA"].Value) < 0 || Convert.ToInt32(Myrow.Cells["OBB"].Value) < 0 || Convert.ToInt32(Myrow.Cells["OBC"].Value) < 0)
                 {
-                   
-                    Myrow.DefaultCellStyle.BackColor = System.Drawing.Color.Pink;
-                }
+                    if (Convert.ToInt32(Myrow.Cells["OBA"].Value) < 0 || Convert.ToInt32(Myrow.Cells["OBB"].Value) < 0 || Convert.ToInt32(Myrow.Cells["OBC"].Value) < 0)
+                    {
+
+                        Myrow.DefaultCellStyle.BackColor = System.Drawing.Color.Pink;
+                    }
                 }
             }
         }
@@ -939,17 +982,17 @@ namespace Obstacle
 
         private void Bearing_Leave(object sender, EventArgs e)
         {
-           
-           
-            if ((!string.IsNullOrEmpty(this.Bearing.Text) && double.Parse(this.Bearing.Text) < 0 )||
-                (double.Parse(this.Bearing.Text) > 360 && !string.IsNullOrEmpty(this.Bearing.Text))) 
+
+
+            if ((!string.IsNullOrEmpty(this.Bearing.Text) && double.Parse(this.Bearing.Text) < 0) ||
+                (double.Parse(this.Bearing.Text) > 360 && !string.IsNullOrEmpty(this.Bearing.Text)))
             {
                 MessageBox.Show("Please provide correct Bearing in between 1 to 360");
                 this.Bearing.Focus();
             }
 
         }
-      
+
         private void ReverseBearing_Leave(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(this.ReverseBearing.Text) && double.Parse(this.ReverseBearing.Text) < 0 &&
@@ -963,15 +1006,15 @@ namespace Obstacle
         private void ReverseBearing_TextChanged(object sender, EventArgs e)
         {
             //GetAppoachCoordinates();
-          if (!string.IsNullOrEmpty(this.ReverseBearing.Text))
+            if (!string.IsNullOrEmpty(this.ReverseBearing.Text))
 
             ///       if ( double.Parse(this.Bearing.Text) < 0 && double.Parse(this.Bearing.Text) > 360 )
             {
                 string NewBearing;
-          //      if (!string.IsNullOrEmpty(this.Bearing.Text))
+                //      if (!string.IsNullOrEmpty(this.Bearing.Text))
                 {
                     label9.Text = SetApp(double.Parse(this.ReverseBearing.Text), out NewBearing);
-                    
+
                 }
                 label4.Text = SetApp(double.Parse(this.Bearing.Text), out NewBearing);
             }
@@ -984,29 +1027,30 @@ namespace Obstacle
             GetAppoachCoordinates();
         }
 
-     
+
         private void Save_Click(object sender, EventArgs e)
         {
-            
+
             string NewFile = Interaction.InputBox("Give File Name", "File Name", "");
-       
-          
-          if(!string.IsNullOrEmpty(NewFile) && NewFile.Length > 0)
-            { 
-          try { 
+
+
+            if (!string.IsNullOrEmpty(NewFile) && NewFile.Length > 0)
             {
+                try
+                {
+                    {
                         string appendMaster = "Insert into Master(H_Northing,H_Easting,App1East,App1North,App2East,App2North,HRPElevation,Safety," +
                                     "Diversion,Bearing,ReverseBearing) Values(@H_Northing,@H_Easting,@App1East,@App2North,@App2East,@App2North," +
                                     "@HRPElevation,@Safety, @Diversion,@Bearing,@ReverseBearing)";
 
 
-                string appendData = " Select * into "+ NewFile+" from SurveyData";
-            
-            string OledbConnectString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=ObstaclesData.accdb";
-            using (OleDbConnection connection = new OleDbConnection(OledbConnectString))
-            {
-                connection.Open();
-                OleDbCommand cmd = new OleDbCommand(appendMaster, connection);
+                        string appendData = " Select * into " + NewFile + " from SurveyData";
+
+                        string OledbConnectString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=ObstaclesData.accdb";
+                        using (OleDbConnection connection = new OleDbConnection(OledbConnectString))
+                        {
+                            connection.Open();
+                            OleDbCommand cmd = new OleDbCommand(appendMaster, connection);
                             //cmd.Parameters.AddWithValue("@Location", NewFile);
                             cmd.Parameters.AddWithValue("@H_Northing", double.Parse(this.H_Northing.Text));
                             cmd.Parameters.AddWithValue("@H_Easting", double.Parse(this.H_Easting.Text));
@@ -1021,23 +1065,29 @@ namespace Obstacle
                             cmd.Parameters.AddWithValue("@ReverseBearing", double.Parse(this.ReverseBearing.Text));
                             cmd.ExecuteNonQuery();
                             MessageBox.Show(cmd.CommandText);
-               cmd = new OleDbCommand(appendData, connection);
-               cmd.ExecuteNonQuery();
-               
-                
-
-               //   OleDbCommand cmd = new OleDbCommand(appendData, connection);
-             //   cmd.ExecuteNonQuery();
+                            cmd = new OleDbCommand(appendData, connection);
+                            cmd.ExecuteNonQuery();
 
 
-            }
-                WindowState = FormWindowState.Maximized;
-            }
-                }catch(Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
+
+                            //   OleDbCommand cmd = new OleDbCommand(appendData, connection);
+                            //   cmd.ExecuteNonQuery();
+
+
+                        }
+                        WindowState = FormWindowState.Maximized;
+                    }
                 }
-        }
+                catch (Exception ex)
+                {
+                    var st = new StackTrace(ex, true);
+                    // Get the top stack frame
+                    var frame = st.GetFrame(0);
+                    // Get the line number from the stack frame
+                    var line = frame.GetFileLineNumber();
+                    MessageBox.Show("Exception Message: " + ex.Message + " " + line);
+                }
+            }
         }
 
         private void splitContainer1_SplitterMoved_2(object sender, SplitterEventArgs e)
@@ -1070,7 +1120,7 @@ namespace Obstacle
 
         private void Safety_TextChanged(object sender, EventArgs e)
         {
-            RotorDia_TextChanged(null,null);
+            RotorDia_TextChanged(null, null);
         }
 
         private void Diversion_TextChanged(object sender, EventArgs e)
@@ -1142,51 +1192,292 @@ namespace Obstacle
 
         private void button2_Click_2(object sender, EventArgs e)
         {
-            string zone = "44N";
+            frmDistanceBearing frmd = new frmDistanceBearing();
+            frmd.Show();
 
-            GetBearingDistance getb = new GetBearingDistance();
-            getb.ToLatLon(double.Parse(this.H_Easting.Text), double.Parse(this.H_Northing.Text), zone, out double latitude, out double longitude);
-            string lat =  latitude.ToString();
-            string lng = longitude.ToString();
-            MessageBox.Show(lat + " " + lng);
-            string part1, part2, part3;
-            double int1, int2, int3,int4,int5;
-            int1 = latitude-Math.Truncate(latitude);
-            int2 =Math.Truncate( int1*60);
-            int3 = ((int1 * 60) - int2)*60; 
-            
-
-            //int3 = (((latitude - int1)*60) - int2) * 60;
-
-            string latD = int1.ToString() + " " + int2.ToString() + " " + int3.ToString();
-            MessageBox.Show(latD);
-           
         }
 
-        private string LatLong(string Easting,string Northing,int ZoneNo,out string LatLng) 
+        private string LatLong(string Easting, string Northing, int ZoneNo, out string Lat, out string Lng)
         {
-            UniversalTransverseMercator utm = new UniversalTransverseMercator("N", ZoneNo, double.Parse(Easting ), double.Parse( Northing));
+            UniversalTransverseMercator utm = new UniversalTransverseMercator("N", ZoneNo, double.Parse(Easting), double.Parse(Northing));
+            Coordinate c = UniversalTransverseMercator.ConvertUTMtoLatLong(utm);
+            c.FormatOptions.Format = CoordinateFormatType.Degree_Minutes_Seconds;
+            c.FormatOptions.Display_Leading_Zeros = true;
+            c.FormatOptions.Round = 3;
+
+
+            Lat = c.Latitude.ToString();  //N 2º 7' 2.332" E 6º 36' 12.653"
+            Lng = c.Longitude.ToString();
+            return Lat;
+        }
+        private string WorkLatLong(string Easting, string Northing, int ZoneNo, out string Lat, out string Lng)
+        {
+            UniversalTransverseMercator utm = new UniversalTransverseMercator("N", ZoneNo, double.Parse(Easting), double.Parse(Northing));
             Coordinate c = UniversalTransverseMercator.ConvertUTMtoLatLong(utm);
             c.FormatOptions.Format = CoordinateFormatType.Decimal;
-            /*
-             string Cord = c.UTM.ToCentimeterString();
-             string trimmed = String.Concat(Cord.Where(s => !Char.IsWhiteSpace(s)));
-             MessageBox.Show( trimmed );
-            
-            c.FormatOptions.Format = CoordinateFormatType.Decimal;
-            MessageBox.Show(c.ToString());
-            double Lat = c.Latitude.DecimalDegree;
-            double Lng = c.Longitude.DecimalDegree;
-            */
+            c.FormatOptions.Round = 7;
+            Lat = c.Latitude.ToString();  //N 2º 7' 2.332" E 6º 36' 12.653"
+            Lng = c.Longitude.ToString();
+            return Lat;
+        }
+        private void GetObstacles(object sender, EventArgs e)
+        {
 
-            LatLng = c.ToString(); //N 2º 7' 2.332" E 6º 36' 12.653"
-            return LatLng;
+            GetAppoachCoordinates();
+            string NewBearing = "";
+
+            label4.Text = SetApp(double.Parse(this.Bearing.Text), out NewBearing);
+            label9.Text = SetApp(double.Parse(this.ReverseBearing.Text), out NewBearing);
+
+
+            double Bear = double.Parse(this.Bearing.Text); // Math.Round(CalBearing(H_Northing.Text, H_Easting.Text, App1North.Text, App1East.Text));
+            double ReverseBear = double.Parse(this.ReverseBearing.Text); // Math.Round(CalBearing(H_Northing.Text, H_Easting.Text, App2North.Text, App2East.Text));
+
+
+            string updateQuery = "UPDATE SurveyData SET HRPDistance = @HRPDistance, HRPBearing = @HRPBearing, X=@X,Y=@Y  ,YFunnel=@YY, DistApp1=@DistApp1,DistApp2= @DistApp2, BearingApp1=@RBearingApp1, " +
+               "BearingApp2=@RBearingApp2, Surface=@Surface  , PEA=@PEA, PEB=@PEB, PEC=@PEC, OBA=@OBA, OBB=@OBB, OBC=@OBC  WHERE id =@ID";
+
+            //string updateFirstRow= "UPDATE SurveyData SET HRPDistance = @HRPDistance, HRPBearing = @HRPBearing, X=@X,Y=@Y  ,YFunnel=@YY, DistApp1=@DistApp1,DistApp2= @DistApp2, BearingApp1=@RBearingApp1, " +
+             //"BearingApp2=@RBearingApp2, Surface=@Surface  , PEA=@PEA, PEB=@PEB, PEC=@PEC, OBA=@OBA, OBB=@OBB, OBC=@OBC  WHERE id =@ID";
+
+            //  string updateQuery = "UPDATE SurveyData SET HRPDistance = @HRPDistance =HRPBearing = @HRPBearing, PEA=@PEA, PEB=@PEB, PEC=@PEC, OBA=@OBA, OBB=@OBB, OBC=@OBC WHERE id =@ID";
+
+
+            string OledbConnectString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=ObstaclesData.accdb";
+
+            using (OleDbConnection connection = new OleDbConnection(OledbConnectString))
+
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                OleDbCommand cmd = new OleDbCommand("Select * from SurveyData", connection);
+                try
+                {
+                    double HrpLat, HrpLng, App1Lat, App1Lng, App2Lat, App2Lng;
+                    //HRP
+                    WorkLatLong(this.H_Easting.Text, this.H_Northing.Text, Convert.ToInt32(this.Zone.Text),
+                        out string Lat1, out string Lng1);
+                      HrpLat = double.Parse(Lat1.ToString());
+                     HrpLng = double.Parse(Lng1.ToString());
+                    //APP1
+                    WorkLatLong(this.App1East.Text, this.App1North.Text, Convert.ToInt32(this.Zone.Text),
+                        out string Lat2, out string Lng2);
+                     App1Lat = double.Parse(Lat2);
+                      App1Lng = double.Parse(Lng2);
+                    //App2
+                    WorkLatLong(this.App2East.Text, this.App2North.Text, Convert.ToInt32(this.Zone.Text),
+                        out string Lat3, out string Lng3);
+                     App2Lat = double.Parse(Lat3);
+                     App2Lng = double.Parse(Lng3);
+
+                    PointsLatLong(HrpLat, HrpLng, App1Lat, App1Lng, out double RDistance, out double App1Bearing);
+                    double DisApp1 = RDistance;
+                    double BearApp1 = App1Bearing;
+
+                    PointsLatLong(HrpLat, HrpLng, App2Lat, App2Lng, out double RDistance2, out double App2Bearing);
+                    double DisApp2 = RDistance2;
+                    double BearApp2 = App2Bearing;
+                    double distance, Bearing;
+                    double DistanceFromApp1, DistanceFromApp2, BearingFromApp1, BearingFromApp2, getX, getY, getYY;
+                    double PointLat,PointLng, DistanceFromFATO,  BearingFromFATO, Elevation;
+
+                    using (OleDbDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+
+                          //  GetBearingDistance getBD = new GetBearingDistance();
+                             
+
+                            try
+                            {
+                                OleDbCommand cmdUpdate = new OleDbCommand(updateQuery, connection);
+
+                                //  getBD.HN = H_Northing.Text;
+                                // getBD.HE = H_Easting.Text;
+
+
+                                WorkLatLong(reader["Easting"].ToString(), reader["Northing"].ToString(),
+                                    Convert.ToInt32(this.Zone.Text), out string PLat, out string PLng);
+
+                                 PointLat = double.Parse(PLat);
+                                 PointLng = double.Parse(PLng);
+
+                                //  double Easting = double.Parse(reader["Easting"].ToString());
+                                // double Northing = double.Parse(reader["Northing"].ToString());
+
+                                
+
+                                PointsLatLong(HrpLat, HrpLng, PointLat, PointLng, out RDistance, out Bearing);
+                                 DistanceFromFATO = RDistance;
+                                 BearingFromFATO = Bearing;
+
+                                PointsLatLong(App1Lat, App1Lng, PointLat, PointLng, out RDistance, out Bearing);
+                                DistanceFromApp1 = RDistance;
+                                BearingFromApp1 = Bearing;
+                               
+                                PointsLatLong(App2Lat, App2Lng, PointLat, PointLng, out RDistance, out Bearing);
+                                DistanceFromApp2 = RDistance;
+                                BearingFromApp2 = Bearing;
+                                getYY = 0;
+
+
+                                 Elevation = double.Parse(reader["Elevation"].ToString());
+                              
+                                bool nearer = false;
+
+                                nearer = true ? DistanceFromApp1 <= DistanceFromApp2 : DistanceFromApp1 > DistanceFromApp2;
+
+                                if (nearer)
+                                { distance = DistanceFromApp1; Bearing = BearingFromApp1;
+                                     getX = Math.Round(Math.Abs(distance * (Math.Cos((Bear - Bearing) * (Math.PI) / 180))));
+                                     getY = Math.Round(Math.Abs(distance * (Math.Sin((Bear - Bearing) * (Math.PI) / 180))));
+                                }
+                                else
+                                { distance = DistanceFromApp2; Bearing = BearingFromApp2; 
+
+                                  getX = Math.Round(Math.Abs(distance * (Math.Cos((ReverseBear - Bearing) * (Math.PI) / 180))));
+                                  getY = Math.Round(Math.Abs(distance * (Math.Sin((ReverseBear - Bearing) * (Math.PI) / 180))));
+                                }
+
+                                if (!string.IsNullOrEmpty(Diversion.Text) && !string.IsNullOrEmpty(getX.ToString()) && !string.IsNullOrEmpty(Safety.Text))
+                                {
+                                    getYY = Math.Round((getX * (double.Parse(Diversion.Text) / 100) + (int.Parse(Safety.Text)) / 2));
+                                }
+                            
+                                string Surface = surface(getYY, getY, getX, distance, int.Parse(Safety.Text), nearer);
+
+                                PE(Surface, distance, getX, getY, Elevation, double.Parse(HRPElevation.Text), int.Parse(Safety.Text),
+                                    out double PECatA, out double PECatB, out double PECatC, out double OBA, out double OBB, out double OBC);
+
+
+                                int ID = int.Parse(reader["id"].ToString());
+
+                                cmdUpdate.Parameters.AddWithValue("@HRPDistance", Math.Round(DistanceFromFATO, 1));
+                                cmdUpdate.Parameters.AddWithValue("@HRPBearing", Math.Round(BearingFromFATO, 1));
+                                cmdUpdate.Parameters.AddWithValue("@X", Math.Round((getX), 0));
+                                cmdUpdate.Parameters.AddWithValue("@Y", Math.Round((getY), 0));
+                                cmdUpdate.Parameters.AddWithValue("@YY", Math.Round((getYY), 0));
+                                cmdUpdate.Parameters.AddWithValue("@DistApp1", Math.Round((DistanceFromApp1), 1));
+                                cmdUpdate.Parameters.AddWithValue("@DistApp2", Math.Round((DistanceFromApp2), 1));
+                                cmdUpdate.Parameters.AddWithValue("@RBearingApp1", (Math.Round(BearingFromApp1, 1)));
+                                cmdUpdate.Parameters.AddWithValue("@RBearingApp2", (Math.Round(BearingFromApp2, 2)));
+                                cmdUpdate.Parameters.AddWithValue("@Surface", Surface);
+                                cmdUpdate.Parameters.AddWithValue("@PEA", Math.Round(PECatA, 1));
+                                cmdUpdate.Parameters.AddWithValue("@PEB", Math.Round(PECatB, 1));
+                                cmdUpdate.Parameters.AddWithValue("@PEC", Math.Round(PECatC, 1));
+                                cmdUpdate.Parameters.AddWithValue("@OBA", Math.Round(OBA, 1));
+                                cmdUpdate.Parameters.AddWithValue("@OBB", Math.Round(OBB, 1));
+                                cmdUpdate.Parameters.AddWithValue("@OBC", Math.Round(OBC, 1));
+                                cmdUpdate.Parameters.AddWithValue("@ID", ID);
+                                cmdUpdate.ExecuteNonQuery();
+                                cmdUpdate.Parameters.Clear();
+
+                            }
+                            catch (Exception ex)
+                            {
+                                var st = new StackTrace(ex, true);
+                                // Get the top stack frame
+                                var frame = st.GetFrame(0);
+                                // Get the line number from the stack frame
+                                var line = frame.GetFileLineNumber();
+                                MessageBox.Show("Exception Message: " + ex.Message + " " + line);
+
+                            }
+
+                        }
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var st = new StackTrace(ex, true);
+                    // Get the top stack frame
+                    var frame = st.GetFrame(0);
+                    // Get the line number from the stack frame
+                    var line = frame.GetFileLineNumber();
+                    MessageBox.Show("Exception Message: " + ex.Message + " " + line);
+
+                }
+            }
+
+            this.dataGridView1.DefaultCellStyle.Font = new System.Drawing.Font("Tahoma", 9);
+            showgrid();
+        }
+
+        private double PointsLatLong(double Lat1, double Lng1, double Lat2, double Lng2, 
+            out double RDistance, out double Bearing)
+        {
+            Coordinate c1 = new Coordinate( Lat1,  Lng1);
+            Coordinate c2 = new Coordinate(Lat2, Lng2);
+            Distance d=  new Distance(c1, c2, Shape.Ellipsoid);
+            Bearing= Math.Round(d.Bearing, 2);
+            RDistance = Math.Round(d.Meters);
+
+            return RDistance;
         }
         private void button5_Click(object sender, EventArgs e)
         {
-           
+
 
         }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button6_Click_1(object sender, EventArgs e)
+        {
+            if (this.LatD.Text != "" && this.LatM.Text != "" && this.LatS.Text != "" && this.LngD.Text != "" &&
+                this.LngM.Text != "" && this.LngS.Text != "")
+            {
+
+                double latitude = double.Parse(this.LatD.Text) + (double.Parse(this.LatM.Text) / 60) + (double.Parse(this.LatS.Text) / 3600);
+                double longitude = double.Parse(this.LngD.Text) + (double.Parse(this.LngM.Text) / 60) + (double.Parse(this.LngS.Text) / 3600);
+                Coordinate c = new Coordinate(latitude, longitude);
+                c.FormatOptions.Display_Leading_Zeros = true;
+                c.FormatOptions.Round = 3;
+                this.H_Easting.Text = Math.Round(c.UTM.Easting, 3).ToString();
+                this.H_Northing.Text = Math.Round(c.UTM.Northing, 3).ToString();
+
+            }
+        }
+
+        private void ReverseBearing_TextChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Safety_TextChanged_1(object sender, EventArgs e)
+        {
+            GetAppoachCoordinates();
+        }
+
+        private void ImportData_Click(object sender, EventArgs e)
+        {
+            string Msg = "Please select the Csv file WITHOUT header in the format as - Obj.No,Object Name,Northing,Easting, Elevation." +
+              "The software will calculate Latitude and Longitude itself";
+             MessageBox.Show(Msg);
+            button2_Click(null, null);
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+         
+            frmSelectRecord frmEdit = new frmSelectRecord();
+            frmEdit.Show();
+            this.Hide();
+        }
+       
     }
 }
 

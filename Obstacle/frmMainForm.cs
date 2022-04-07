@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Obstacle
@@ -18,14 +12,16 @@ namespace Obstacle
 
         private void btn_NewRecord_Click(object sender, EventArgs e)
         {
-            string Msg= "Please select the Csv file in the format as - Obj.No,Object Name,Latitude,Longitude,Northing,Easting, Elevation";
+            //string Msg = "Please select the Csv file WITHOUT header in the format as - Obj.No,Object Name,Northing,Easting, Elevation." +
+            //  "The software will calculate Latitude and Longitude itself";
 
-            MessageBox.Show(Msg);
 
+            //MessageBox.Show(Msg);
+            //frmDistanceBearing
             Form1 frmForm1 = new Form1();
             frmForm1.Show();
             frmForm1.Controls["SelectedID"].Text = "0";
-            
+
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -37,6 +33,19 @@ namespace Obstacle
         private void button1_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            frmDistanceBearing frmForm1 = new frmDistanceBearing();
+            frmForm1.Show();
+            
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            frmAirportCode2 frmForm1 = new frmAirportCode2();
+            frmForm1.Show();
         }
     }
 }

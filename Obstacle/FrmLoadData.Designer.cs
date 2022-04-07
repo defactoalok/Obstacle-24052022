@@ -52,6 +52,15 @@
             this.Tolf = new System.Windows.Forms.TextBox();
             this.Fato = new System.Windows.Forms.TextBox();
             this.SelectedID = new System.Windows.Forms.TextBox();
+            this.Zone = new System.Windows.Forms.TextBox();
+            this.SiteLocation = new System.Windows.Forms.TextBox();
+            this.LngS = new System.Windows.Forms.TextBox();
+            this.LngM = new System.Windows.Forms.TextBox();
+            this.LngD = new System.Windows.Forms.TextBox();
+            this.LatS = new System.Windows.Forms.TextBox();
+            this.LatM = new System.Windows.Forms.TextBox();
+            this.LatD = new System.Windows.Forms.TextBox();
+            this.showCoordinates = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -78,7 +87,6 @@
             this.dataGridView1.RowTemplate.Height = 24;
             this.dataGridView1.Size = new System.Drawing.Size(1324, 628);
             this.dataGridView1.TabIndex = 66;
-            this.dataGridView1.Visible = false;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             this.dataGridView1.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dataGridView1_DataBindingComplete);
             // 
@@ -94,6 +102,7 @@
             this.menuStrip1.Size = new System.Drawing.Size(1324, 28);
             this.menuStrip1.TabIndex = 68;
             this.menuStrip1.Text = "menuStrip1";
+          //  this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
             // 
             // exportToExcelToolStripMenuItem
             // 
@@ -299,11 +308,110 @@
             this.SelectedID.TabIndex = 86;
             this.SelectedID.Visible = false;
             // 
+            // Zone
+            // 
+            this.Zone.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Zone.Location = new System.Drawing.Point(661, 448);
+            this.Zone.Margin = new System.Windows.Forms.Padding(4);
+            this.Zone.Name = "Zone";
+            this.Zone.Size = new System.Drawing.Size(84, 26);
+            this.Zone.TabIndex = 87;
+            this.Zone.Visible = false;
+            // 
+            // SiteLocation
+            // 
+            this.SiteLocation.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SiteLocation.Location = new System.Drawing.Point(660, 482);
+            this.SiteLocation.Margin = new System.Windows.Forms.Padding(4);
+            this.SiteLocation.Name = "SiteLocation";
+            this.SiteLocation.Size = new System.Drawing.Size(84, 26);
+            this.SiteLocation.TabIndex = 88;
+            this.SiteLocation.Visible = false;
+            // 
+            // LngS
+            // 
+            this.LngS.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LngS.Location = new System.Drawing.Point(1074, 187);
+            this.LngS.Margin = new System.Windows.Forms.Padding(4);
+            this.LngS.Name = "LngS";
+            this.LngS.Size = new System.Drawing.Size(51, 26);
+            this.LngS.TabIndex = 96;
+            this.LngS.Visible = false;
+            // 
+            // LngM
+            // 
+            this.LngM.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LngM.Location = new System.Drawing.Point(1039, 187);
+            this.LngM.Margin = new System.Windows.Forms.Padding(4);
+            this.LngM.Name = "LngM";
+            this.LngM.Size = new System.Drawing.Size(36, 26);
+            this.LngM.TabIndex = 95;
+            this.LngM.Visible = false;
+            // 
+            // LngD
+            // 
+            this.LngD.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LngD.Location = new System.Drawing.Point(1005, 187);
+            this.LngD.Margin = new System.Windows.Forms.Padding(4);
+            this.LngD.Name = "LngD";
+            this.LngD.Size = new System.Drawing.Size(36, 26);
+            this.LngD.TabIndex = 94;
+            this.LngD.Visible = false;
+            // 
+            // LatS
+            // 
+            this.LatS.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LatS.Location = new System.Drawing.Point(887, 187);
+            this.LatS.Margin = new System.Windows.Forms.Padding(4);
+            this.LatS.Name = "LatS";
+            this.LatS.Size = new System.Drawing.Size(51, 26);
+            this.LatS.TabIndex = 93;
+            this.LatS.Visible = false;
+            // 
+            // LatM
+            // 
+            this.LatM.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LatM.Location = new System.Drawing.Point(852, 187);
+            this.LatM.Margin = new System.Windows.Forms.Padding(4);
+            this.LatM.Name = "LatM";
+            this.LatM.Size = new System.Drawing.Size(36, 26);
+            this.LatM.TabIndex = 92;
+            this.LatM.Visible = false;
+            // 
+            // LatD
+            // 
+            this.LatD.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LatD.Location = new System.Drawing.Point(817, 187);
+            this.LatD.Margin = new System.Windows.Forms.Padding(4);
+            this.LatD.Name = "LatD";
+            this.LatD.Size = new System.Drawing.Size(36, 26);
+            this.LatD.TabIndex = 91;
+            this.LatD.Visible = false;
+            // 
+            // showCoordinates
+            // 
+            this.showCoordinates.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.showCoordinates.Location = new System.Drawing.Point(1005, 231);
+            this.showCoordinates.Margin = new System.Windows.Forms.Padding(4);
+            this.showCoordinates.Name = "showCoordinates";
+            this.showCoordinates.Size = new System.Drawing.Size(36, 26);
+            this.showCoordinates.TabIndex = 97;
+            this.showCoordinates.Visible = false;
+            // 
             // FrmLoadData
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1324, 656);
+            this.Controls.Add(this.showCoordinates);
+            this.Controls.Add(this.LngS);
+            this.Controls.Add(this.LngM);
+            this.Controls.Add(this.LngD);
+            this.Controls.Add(this.LatS);
+            this.Controls.Add(this.LatM);
+            this.Controls.Add(this.LatD);
+            this.Controls.Add(this.SiteLocation);
+            this.Controls.Add(this.Zone);
             this.Controls.Add(this.SelectedID);
             this.Controls.Add(this.Fato);
             this.Controls.Add(this.Tolf);
@@ -361,5 +469,14 @@
         private System.Windows.Forms.TextBox Fato;
         private System.Windows.Forms.ToolStripMenuItem editParametersToolStripMenuItem;
         private System.Windows.Forms.TextBox SelectedID;
+        private System.Windows.Forms.TextBox Zone;
+        private System.Windows.Forms.TextBox SiteLocation;
+        private System.Windows.Forms.TextBox LngS;
+        private System.Windows.Forms.TextBox LngM;
+        private System.Windows.Forms.TextBox LngD;
+        private System.Windows.Forms.TextBox LatS;
+        private System.Windows.Forms.TextBox LatM;
+        private System.Windows.Forms.TextBox LatD;
+        private System.Windows.Forms.TextBox showCoordinates;
     }
 }

@@ -23,9 +23,12 @@ C:\Users\alokG\source\repos\Obstacle\Obstacle\bin\Debug\ko\System.Spatial.resour
 C:\Users\alokG\source\repos\Obstacle\Obstacle\bin\Debug\ru\System.Spatial.resources.dll
 C:\Users\alokG\source\repos\Obstacle\Obstacle\bin\Debug\zh-Hans\System.Spatial.resources.dll
 C:\Users\alokG\source\repos\Obstacle\Obstacle\bin\Debug\zh-Hant\System.Spatial.resources.dll
-C:\Users\alokG\source\repos\Obstacle\Obstacle\obj\Debug\Obstacle.csprojAssemblyReference.cache
 C:\Users\alokG\source\repos\Obstacle\Obstacle\obj\Debug\Obstacle.FrmLoadData.resources
 C:\Users\alokG\source\repos\Obstacle\Obstacle\obj\Debug\Obstacle.frmSelectRecord.resources
 C:\Users\alokG\source\repos\Obstacle\Obstacle\obj\Debug\Obstacle.frmMainForm.resources
 C:\Users\alokG\source\repos\Obstacle\Obstacle\bin\Debug\CoordinateSharp.dll
 C:\Users\alokG\source\repos\Obstacle\Obstacle\bin\Debug\CoordinateSharp.xml
+C:\Users\alokG\source\repos\Obstacle\Obstacle\obj\Debug\Obstacle.frmDistanceBearing.resources
+C:\Users\alokG\source\repos\Obstacle\Obstacle\obj\Debug\Obstacle.frmShowCoordinates.resources
+C:\Users\alokG\source\repos\Obstacle\Obstacle\obj\Debug\Obstacle.frmAirportCode2.resources
+C:\Users\alokG\source\repos\Obstacle\Obstacle\obj\Debug\Obstacle.csprojAssemblyReference.cache

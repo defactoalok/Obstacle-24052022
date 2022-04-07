@@ -76,7 +76,8 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1272, 547);
+            this.button1.Font = new System.Drawing.Font("Tahoma", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.button1.Location = new System.Drawing.Point(1274, 547);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(155, 34);
             this.button1.TabIndex = 2;

@@ -64,6 +64,18 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmAirportCode2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmAirportCode2.Designer.cs">
+      <DependentUpon>frmAirportCode2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmDistanceBearing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmDistanceBearing.Designer.cs">
+      <DependentUpon>frmDistanceBearing.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmLoadData.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -82,11 +94,23 @@
     <Compile Include="frmSelectRecord.Designer.cs">
       <DependentUpon>frmSelectRecord.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmShowCoordinates.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmShowCoordinates.Designer.cs">
+      <DependentUpon>frmShowCoordinates.cs</DependentUpon>
+    </Compile>
     <Compile Include="GetBearingDistance.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmAirportCode2.resx">
+      <DependentUpon>frmAirportCode2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmDistanceBearing.resx">
+      <DependentUpon>frmDistanceBearing.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmLoadData.resx">
       <DependentUpon>FrmLoadData.cs</DependentUpon>
@@ -96,6 +120,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmSelectRecord.resx">
       <DependentUpon>frmSelectRecord.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmShowCoordinates.resx">
+      <DependentUpon>frmShowCoordinates.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
