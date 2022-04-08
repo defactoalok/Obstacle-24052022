@@ -552,10 +552,10 @@ namespace Obstacle
                  double longitude2 = double.Parse(this.LngD2.Text) + (double.Parse(this.LngM2.Text) / 60) + (double.Parse(this.LngS2.Text) / 3600);
              */
 
-        
 
-            double latitude =  double.Parse(this.App1Lat.Text.ToString());
-            double longitude  = double.Parse(this.App1Lng.Text.ToString());
+
+            double latitude = double.Parse(this.App1Lat.Text.ToString());
+            double longitude = double.Parse(this.App1Lng.Text.ToString());
             double latitude2 = double.Parse(this.App2Lat.Text.ToString());
             double longitude2 = double.Parse(this.App2Lng.Text.ToString());
 
@@ -563,161 +563,141 @@ namespace Obstacle
             double ARPLat = double.Parse(this.ArpLatD.Text) + (double.Parse(this.ArpLatM.Text) / 60) + (double.Parse(this.ArpLatS.Text) / 3600);
             double ARPLng = double.Parse(this.ArpLngD.Text) + (double.Parse(this.ArpLngM.Text) / 60) + (double.Parse(this.ArpLngS.Text) / 3600);
 
-            double Bear = double.Parse(this.Bearing.Text);  
-            double ReverseBear = double.Parse(this.BackBearing.Text);  
+            double Bear = double.Parse(this.Bearing.Text);
+            double ReverseBear = double.Parse(this.BackBearing.Text);
 
             double distance;
             double DistanceFromApp1, DistanceFromApp2, BearingFromApp1, BearingFromApp2,
-                 getX, getY, getYY, ARPDistance, PointLat, PointLng, Elevation,  RWYSTRIP, RunwayLength;
+                 getX, getY, getYY, ARPDistance, PointLat, PointLng, Elevation, RWYSTRIP, RunwayLength;
 
             bool nearer;
 
 
-            string updateQuery = "UPDATE RWYSurveyData SET Surface=@surface where ID=@ID";
- 
+            string updateQuery = "UPDATE RWYSurveyData SET Surface=@surface,X=@X,Y=@Y,YY=@YY,Distance=@Distance,DistApp1=@DistApp1," +
+                "DistApp2=@DistApp2, Bearing=@Bearing where ID=@ID";
+
             string OledbConnectString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=ObstaclesData.accdb";
 
-           using (OleDbConnection connection = new OleDbConnection(OledbConnectString))
+            using (OleDbConnection connection = new OleDbConnection(OledbConnectString))
 
-           {
-               if (connection.State != ConnectionState.Open)
-               {
-                   connection.Open();
-               }
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
 
-               OleDbCommand cmd = new OleDbCommand("Select * from RWYSurveyData where [Surface]='' ", connection);
-               try
-               {
-                  
-                   using (OleDbDataReader reader = cmd.ExecuteReader())
-                   {
+                OleDbCommand cmd = new OleDbCommand("Select * from RWYSurveyData  ", connection);
+
+                {
+
+                    using (OleDbDataReader reader = cmd.ExecuteReader())
+                    {
                         OleDbCommand cmdUpdate = new OleDbCommand(updateQuery, connection);
                         while (reader.Read())
-                       {
+                        {
 
-                           //  GetBearingDistance getBD = new GetBearingDistance();
+                            //  GetBearingDistance getBD = new GetBearingDistance();
 
 
-                           try
-                           {
-                                getX = 0; getY = 0; getYY = 0; DistanceFromApp1 = 0; DistanceFromApp2 = 0; 
+                          //  try
+                           // {
+                                getX = 0; getY = 0; getYY = 0; DistanceFromApp1 = 0; DistanceFromApp2 = 0;
                                 RWYSTRIP = 0; ARPDistance = 0; RunwayLength = 0; nearer = false;
 
-                                 
-
-                               PointLat = double.Parse(reader["LatDecimal"].ToString());
-                               PointLng = double.Parse(reader["LongDecimal"].ToString());
 
 
-                                MessageBox.Show( reader["SL No"].ToString());
+                                PointLat = double.Parse(reader["LatDecimal"].ToString());
+                                PointLng = double.Parse(reader["LongDecimal"].ToString());
+
 
                                 PointsLatLong(latitude, longitude, PointLat, PointLng, out double RDistance, out double Bearing);
-                               DistanceFromApp1 = RDistance;
-                               BearingFromApp1 = Bearing;
+                                DistanceFromApp1 = RDistance;
+                                BearingFromApp1 = Bearing;
 
-                               PointsLatLong(latitude2, longitude2, PointLat, PointLng, out  RDistance, out Bearing);
-                               DistanceFromApp2 = RDistance;
-                               BearingFromApp2 = Bearing;
+                                PointsLatLong(latitude2, longitude2, PointLat, PointLng, out RDistance, out Bearing);
+                                DistanceFromApp2 = RDistance;
+                                BearingFromApp2 = Bearing;
 
-                               PointsLatLong(ARPLat, ARPLng, PointLat, PointLng, out RDistance, out Bearing);
-                               ARPDistance = RDistance;
-                               
-                               Elevation = double.Parse(reader["Elevation"].ToString());
+                                PointsLatLong(ARPLat, ARPLng, PointLat, PointLng, out RDistance, out Bearing);
+                                ARPDistance = RDistance;
 
-                               nearer = false;
+                                Elevation = double.Parse(reader["Elevation"].ToString());
 
-                               nearer = true ? DistanceFromApp1 <= DistanceFromApp2 : DistanceFromApp1 > DistanceFromApp2;
+                                nearer = false;
 
-                               if (nearer)
-                               {
-                                   distance = DistanceFromApp1; Bearing = BearingFromApp1;
-                                   getX = Math.Round(Math.Abs(distance * (Math.Cos((Bear - Bearing) * (Math.PI) / 180))));
-                                   getY = Math.Round(Math.Abs(distance * (Math.Sin((Bear - Bearing) * (Math.PI) / 180))));
-                               }
-                               else
-                               {
-                                   distance = DistanceFromApp2; Bearing = BearingFromApp2;
+                                nearer = true ? DistanceFromApp1 <= DistanceFromApp2 : DistanceFromApp1 > DistanceFromApp2;
 
-                                   getX = Math.Round(Math.Abs(distance * (Math.Cos((ReverseBear - Bearing) * (Math.PI) / 180))));
-                                   getY = Math.Round(Math.Abs(distance * (Math.Sin((ReverseBear - Bearing) * (Math.PI) / 180))));
-                               }
+                                if (nearer)
+                                {
+                                    distance = DistanceFromApp1; Bearing = BearingFromApp1;
+                                    getX = Math.Round(Math.Abs(distance * (Math.Cos((Bear - Bearing) * (Math.PI) / 180))));
+                                    getY = Math.Round(Math.Abs(distance * (Math.Sin((Bear - Bearing) * (Math.PI) / 180))));
+                                }
+                                else
+                                {
+                                    distance = DistanceFromApp2; Bearing = BearingFromApp2;
 
-                               if (!string.IsNullOrEmpty(Diversion.Text) && !string.IsNullOrEmpty(getX.ToString()) && !string.IsNullOrEmpty(RunwayStrip.Text))
-                               {
-                                   getYY = Math.Round((getX * (double.Parse(Diversion.Text) / 100) + (int.Parse(RunwayStrip.Text)) / 2));
-                               }
+                                    getX = Math.Round(Math.Abs(distance * (Math.Cos((ReverseBear - Bearing) * (Math.PI) / 180))));
+                                    getY = Math.Round(Math.Abs(distance * (Math.Sin((ReverseBear - Bearing) * (Math.PI) / 180))));
+                                }
 
-                                 RWYSTRIP = double.Parse(this.RunwayStrip.Text) / 2;
-                                 RunwayLength = double.Parse(this.RwyLength.Text.ToString());
+                                if (!string.IsNullOrEmpty(Diversion.Text) && !string.IsNullOrEmpty(getX.ToString()) && !string.IsNullOrEmpty(RunwayStrip.Text))
+                                {
+                                    getYY = Math.Abs(Math.Round((getX * (double.Parse(Diversion.Text) / 100) + (int.Parse(RunwayStrip.Text)) / 2)));
+                                }
 
-                               Getsurface(getX-60, getY, getYY, DistanceFromApp1,DistanceFromApp2, RWYSTRIP, ARPDistance, RunwayLength, nearer, out string surface);
+                                RWYSTRIP = double.Parse(this.RunwayStrip.Text) / 2;
+                                RunwayLength = double.Parse(this.RwyLength.Text.ToString());
 
-                         
-                              int ID = int.Parse(reader["id"].ToString());
-                              cmdUpdate.Parameters.AddWithValue("@Surface", surface);
-                              cmdUpdate.Parameters.AddWithValue("@ID", ID );
-                                /*
-                                                               cmdUpdate.Parameters.AddWithValue("@surface", surface);
-                                                               cmdUpdate.Parameters.AddWithValue("@HRPBearing", Math.Round(BearingFromFATO, 1));
-                                                               cmdUpdate.Parameters.AddWithValue("@X", Math.Round((getX), 0));
-                                                               cmdUpdate.Parameters.AddWithValue("@Y", Math.Round((getY), 0));
-                                                               cmdUpdate.Parameters.AddWithValue("@YY", Math.Round((getYY), 0));
-                                                               cmdUpdate.Parameters.AddWithValue("@DistApp1", Math.Round((DistanceFromApp1), 1));
-                                                               cmdUpdate.Parameters.AddWithValue("@DistApp2", Math.Round((DistanceFromApp2), 1));
-                                                               cmdUpdate.Parameters.AddWithValue("@RBearingApp1", (Math.Round(BearingFromApp1, 1)));
-                                                               cmdUpdate.Parameters.AddWithValue("@RBearingApp2", (Math.Round(BearingFromApp2, 2)));
-                                                               cmdUpdate.Parameters.AddWithValue("@Surface", Surface);
-                                                               cmdUpdate.Parameters.AddWithValue("@PEA", Math.Round(PECatA, 1));
-                                                               cmdUpdate.Parameters.AddWithValue("@PEB", Math.Round(PECatB, 1));
-                                                               cmdUpdate.Parameters.AddWithValue("@PEC", Math.Round(PECatC, 1));
-                                                               cmdUpdate.Parameters.AddWithValue("@OBA", Math.Round(OBA, 1));
-                                                               cmdUpdate.Parameters.AddWithValue("@OBB", Math.Round(OBB, 1));
-                                                               cmdUpdate.Parameters.AddWithValue("@OBC", Math.Round(OBC, 1));
-                                                               cmdUpdate.Parameters.AddWithValue("@ID", ID);*/
-                                
-                                cmdUpdate.ExecuteNonQuery();
-                               cmdUpdate.Parameters.Clear();
+                                Getsurface(getX, getY, getYY, DistanceFromApp1, DistanceFromApp2, RWYSTRIP, ARPDistance, RunwayLength, nearer, out string surface);
 
-                            }
-                            
-                           catch (Exception ex)
-                           {
-                               var st = new StackTrace(ex, true);
-                               // Get the top stack frame
-                               var frame = st.GetFrame(0);
-                               // Get the line number from the stack frame
-                               var line = frame.GetFileLineNumber();
-                               MessageBox.Show("Exception Message: " + ex.Message + " " + line);
 
-                           }
-                           
-                       }
+                                int ID = int.Parse(reader["ID"].ToString());
 
-                   }
-               }
-               catch (Exception ex)
-               {
-                   var st = new StackTrace(ex, true);
-                   // Get the top stack frame
-                   var frame = st.GetFrame(0);
-                   // Get the line number from the stack frame
-                   var line = frame.GetFileLineNumber();
-                   MessageBox.Show("Exception Message: " + ex.Message + " " + line);
+                                cmdUpdate.Parameters.AddWithValue("@Surface", surface);
+                                cmdUpdate.Parameters.AddWithValue("@X", getX);
+                                cmdUpdate.Parameters.AddWithValue("@Y", getY);
+                                cmdUpdate.Parameters.AddWithValue("@YY", getY - getYY);
+                                cmdUpdate.Parameters.AddWithValue("@Distance", distance);
+                                cmdUpdate.Parameters.AddWithValue("@DistApp1", DistanceFromApp1);
+                                cmdUpdate.Parameters.AddWithValue("@DistApp2", DistanceFromApp2);
+                                cmdUpdate.Parameters.AddWithValue("@Bearing", Bearing);
+                                cmdUpdate.Parameters.AddWithValue("@ID", ID);
+                            cmdUpdate.ExecuteNonQuery();
+                                cmdUpdate.Parameters.Clear();
 
-               }
-           }
+                          //  }
 
-          // this.dataGridView1.DefaultCellStyle.Font = new System.Drawing.Font("Tahoma", 9);
-//           showgrid();
-           
+                       /*     catch (Exception ex)
+                            {
+                                var st = new StackTrace(ex, true);
+                                // Get the top stack frame
+                                var frame = st.GetFrame(0);
+                                // Get the line number from the stack frame
+                                var line = frame.GetFileLineNumber();
+                                MessageBox.Show("Exception Message: " + ex.Message + " " + line);
+
+                            }*/
+
+                        }
+
+                    }
+
+
+                }
+
+                // this.dataGridView1.DefaultCellStyle.Font = new System.Drawing.Font("Tahoma", 9);
+                //           showgrid();
+            }
         }
+        
 
         private void Getsurface(double getX, double getY, double getYY, double distanceFromApp1, double distanceFromApp2, double rWYSTRIP, double aRPDistance, double runwayLength, bool nearer, out string surface)
         {
             bool Funnel; string found; double DISTANCE; double strip; Funnel=false;
             surface = "Nil";
-            try
-            {
+           // try
+            //{
                 if (distanceFromApp1 < distanceFromApp2)
                 {
                     DISTANCE = distanceFromApp1;
@@ -729,7 +709,7 @@ namespace Obstacle
 
                 strip = Math.Truncate(rWYSTRIP);
 
-                found = "";
+                found = "Nil";
 
                 //Funnel
 
@@ -757,6 +737,7 @@ namespace Obstacle
                     found = "TST";
                 }
 
+           
                 if (found.Substring(0, 2) != "TS" && found.Substring(0, 3) != "RWY" && aRPDistance <= 2500)
                 {
                     if (found.Substring(0, 3) == "APP")
@@ -769,9 +750,11 @@ namespace Obstacle
                     }
 
                 }
+             
 
-                if (aRPDistance > 2500 && aRPDistance <= 3600)
-                {
+            if (aRPDistance > 2500 && aRPDistance <= 3600)
+            {
+               
                     if (found.Substring(0, 3) == "APP")
                     {
                         found = "APP-CON";
@@ -780,9 +763,12 @@ namespace Obstacle
                     {
                         found = "CON";
                     }
+                
                 }
+
                 if (aRPDistance > 3600 && aRPDistance <= 13740)
                 {
+                
                     if (found.Substring(0, 3) == "APP")
                     {
                         found = "APP-OHS";
@@ -791,11 +777,12 @@ namespace Obstacle
                     {
                         found = "OHS";
                     }
-                }
-
-
-                surface = found;
+                 
             }
+
+            surface = found;
+            //}
+ /*
             catch (Exception ex)
             {
                 var st = new StackTrace(ex, true);
@@ -806,6 +793,7 @@ namespace Obstacle
                 MessageBox.Show("Exception Message: " + ex.Message + " " + line);
 
             }
+ */
         }
 
         private string WorkLatLong(string Easting, string Northing, int ZoneNo, out string Lat, out string Lng)
