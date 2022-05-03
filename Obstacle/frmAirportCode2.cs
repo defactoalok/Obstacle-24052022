@@ -10,9 +10,11 @@ namespace Obstacle
 {
     public partial class frmAirportCode2 : Form
     {
+       
         public frmAirportCode2()
         {
             InitializeComponent();
+           
 
         }
 
@@ -67,7 +69,7 @@ namespace Obstacle
         private void button1_Click(object sender, EventArgs e)
         {
 
-
+            
             if (this.LatD.Text != "" && this.LatM.Text != "" && this.LatS.Text != "" && this.LngD.Text != "" &&
               this.LngM.Text != "" && this.LngS.Text != "" && this.LatD2.Text != "" && this.LatM2.Text != "" &&
               this.LatS2.Text != "" && this.LngD2.Text != "" && this.LngM2.Text != "" && this.LngS2.Text != "")
@@ -82,10 +84,10 @@ namespace Obstacle
                 Coordinate c2 = new Coordinate(latitude2, longitude2);
                 Distance d = new Distance(c, c2, Shape.Ellipsoid);
                 this.RwyLength.Text = Math.Round(d.Meters, 2).ToString();
-                this.Bearing.Text = Math.Round(d.Bearing, 2).ToString();
+                this.Bearing.Text = Math.Round(d.Bearing, 6).ToString();
                 d = new Distance(c2, c, Shape.Ellipsoid);
 
-                this.BackBearing.Text = Math.Round(d.Bearing, 2).ToString();
+                this.BackBearing.Text = Math.Round(d.Bearing, 6).ToString();
                 this.Easting.Text = c.UTM.Easting.ToString();
                 this.Northing.Text = c.UTM.Northing.ToString();
                 this.Easting1.Text = c2.UTM.Easting.ToString();
@@ -117,7 +119,12 @@ namespace Obstacle
 
                 App2Lat.Text = LatDecimal.ToString();
                 App2Lng.Text = LongDecimal.ToString();
-                 
+                
+                SetApp(Math.Round(double.Parse(this.Bearing.Text),6), out string NewBearing);
+                this.Rwy1Label.Text = NewBearing;
+                SetApp(Math.Round(double.Parse(this.BackBearing.Text),6), out NewBearing);
+                this.Rwy2Label.Text = NewBearing;
+
             }
         }
 
@@ -135,7 +142,7 @@ namespace Obstacle
 
             if (Bearing > 0)
             {
-                double bearRadian = Math.Round(BackBearing * (Math.PI) / 180, 2);
+                double bearRadian = Math.Round(BackBearing * (Math.PI) / 180, 3);
                 CosX = Math.Round(Distance * (Math.Cos(bearRadian)), 2);
                 SinX = Math.Round(Distance * (Math.Sin(bearRadian)), 2);
 
@@ -144,7 +151,7 @@ namespace Obstacle
                 ReverseBear = 0;
                 ReverseBear = Math.Round(BackBearing, 2);
 
-                bearRadian = Math.Round( Bearing * (Math.PI) / 180, 2);
+                bearRadian = Math.Round( Bearing * (Math.PI) / 180, 3);
                 CosX = Distance * (Math.Cos(bearRadian));
                 SinX = Distance * (Math.Sin(bearRadian));
 
@@ -539,7 +546,7 @@ namespace Obstacle
             Coordinate c2 = new Coordinate(Lat2, Lng2);
             Distance d = new Distance(c1, c2, Shape.Ellipsoid);
             Bearing = Math.Round(d.Bearing, 2);
-            RDistance = Math.Round(d.Meters);
+            RDistance = Math.Round(d.Meters,1);
 
             return RDistance;
         }
@@ -574,7 +581,9 @@ namespace Obstacle
 
 
             string updateQuery = "UPDATE RWYSurveyData SET Surface=@surface,X=@X,Y=@Y,YY=@YY,Distance=@Distance,DistApp1=@DistApp1," +
-                "DistApp2=@DistApp2, Bearing=@Bearing where ID=@ID";
+                "DistApp2=@DistApp2, Bearing=@Bearing,AplElevTSRWY=@AplElevTSRWY,APPElevApproach=@APPElevApproach, " +
+                "APPElevIHSCONOHS=@APPElevIHSCONOHS, PElevTSAPPRWY=@PETSRWYAPP,PElevIHSCONOHS=@PElevIHSCONOHS, " +
+                " ObstRwyTSApp = @ObstRwyTSApp, ObstIHSCONOHSAPPIHSAPPCON = @ObstIHSCONOHSAPPIHSAPPCON where ID=@ID";
 
             string OledbConnectString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=ObstaclesData.accdb";
 
@@ -592,25 +601,25 @@ namespace Obstacle
 
                     using (OleDbDataReader reader = cmd.ExecuteReader())
                     {
-                        OleDbCommand cmdUpdate = new OleDbCommand(updateQuery, connection);
+
                         while (reader.Read())
                         {
-
+                            OleDbCommand cmdUpdate = new OleDbCommand(updateQuery, connection);
                             //  GetBearingDistance getBD = new GetBearingDistance();
 
 
-                          //  try
-                           // {
-                                getX = 0; getY = 0; getYY = 0; DistanceFromApp1 = 0; DistanceFromApp2 = 0;
+                            //  try
+                            // {
+                            getX = 0; getY = 0; getYY = 0; DistanceFromApp1 = 0; DistanceFromApp2 = 0;
                                 RWYSTRIP = 0; ARPDistance = 0; RunwayLength = 0; nearer = false;
 
 
 
                                 PointLat = double.Parse(reader["LatDecimal"].ToString());
                                 PointLng = double.Parse(reader["LongDecimal"].ToString());
+                                double PointElevation= double.Parse(reader["Elevation"].ToString());
 
-
-                                PointsLatLong(latitude, longitude, PointLat, PointLng, out double RDistance, out double Bearing);
+                            PointsLatLong(latitude, longitude, PointLat, PointLng, out double RDistance, out double Bearing);
                                 DistanceFromApp1 = RDistance;
                                 BearingFromApp1 = Bearing;
 
@@ -621,7 +630,7 @@ namespace Obstacle
                                 PointsLatLong(ARPLat, ARPLng, PointLat, PointLng, out RDistance, out Bearing);
                                 ARPDistance = RDistance;
 
-                                Elevation = double.Parse(reader["Elevation"].ToString());
+                            
 
                                 nearer = false;
 
@@ -650,7 +659,8 @@ namespace Obstacle
                                 RunwayLength = double.Parse(this.RwyLength.Text.ToString());
 
                                 Getsurface(getX, getY, getYY, DistanceFromApp1, DistanceFromApp2, RWYSTRIP, ARPDistance, RunwayLength, nearer, out string surface);
-
+                                
+                               
 
                                 int ID = int.Parse(reader["ID"].ToString());
 
@@ -659,25 +669,118 @@ namespace Obstacle
                                 cmdUpdate.Parameters.AddWithValue("@Y", getY);
                                 cmdUpdate.Parameters.AddWithValue("@YY", getY - getYY);
                                 cmdUpdate.Parameters.AddWithValue("@Distance", distance);
-                                cmdUpdate.Parameters.AddWithValue("@DistApp1", DistanceFromApp1);
-                                cmdUpdate.Parameters.AddWithValue("@DistApp2", DistanceFromApp2);
+                                cmdUpdate.Parameters.AddWithValue("@DistApp1",  DistanceFromApp1);
+                                cmdUpdate.Parameters.AddWithValue("@DistApp2",  DistanceFromApp2);
                                 cmdUpdate.Parameters.AddWithValue("@Bearing", Bearing);
-                                cmdUpdate.Parameters.AddWithValue("@ID", ID);
-                            cmdUpdate.ExecuteNonQuery();
-                                cmdUpdate.Parameters.Clear();
 
-                          //  }
+                       
+                            double APPElevApproach = 0;
+                            double APPElevIHSCONOHS = 0;
+                            double PElevIHSCONOHS=0;
 
-                       /*     catch (Exception ex)
+                            double PETSRWYAPP = 0;
+                            Elevation = 0;
+                            double AplElevTSRWY = 0;
+                            string ApplicableElev;
+                            double ObstRwyTSApp = 0;
+                            double ObstIHSCONOHSAPPIHSAPPCON=0;
+
+                            ApplicableElev = "Select top 1 Elevation from RunwayProfile where Distance >=@RwyDistance";
+
+                            if (surface.Substring(0, 2) == "IH" || surface.Substring(0, 2) == "CO" || 
+                                surface.Substring(0, 2) == "OC" || surface.Substring(0, 2) == "OH" || surface.Contains("-"))
                             {
-                                var st = new StackTrace(ex, true);
-                                // Get the top stack frame
-                                var frame = st.GetFrame(0);
-                                // Get the line number from the stack frame
-                                var line = frame.GetFileLineNumber();
-                                MessageBox.Show("Exception Message: " + ex.Message + " " + line);
+                                APPElevIHSCONOHS =Convert.ToDouble( this.MaximumElevation.Text.ToString());
+                                if (surface.Contains("IHS")) 
+                                {
+                                    PElevIHSCONOHS = 45 + APPElevIHSCONOHS;
+                                  
 
-                            }*/
+                                }
+                                if (surface.Contains("CON"))
+                                {
+                                    PElevIHSCONOHS = 45 + ((ARPDistance- 2500) / 20) + APPElevIHSCONOHS;
+                                    
+                                }
+                                if (surface.Contains("OHS"))
+                                {
+                                    PElevIHSCONOHS = 150  + APPElevIHSCONOHS;
+
+                                }
+                                ObstIHSCONOHSAPPIHSAPPCON = Math.Round( PointElevation - PElevIHSCONOHS,1);
+                            }
+
+                            if (surface.Substring(0, 2) == "AP")
+                            {
+                                if (DistanceFromApp1 < DistanceFromApp2) 
+                                {
+                                    APPElevApproach = Convert.ToDouble(this.Rwy1Elevation.Text.ToString());
+                                   
+                                }
+                                else
+                                {
+                                    APPElevApproach = Convert.ToDouble(this.Rwy2Elevation.Text.ToString());
+                               
+                                }
+                                if (getX <= 2500)
+                                {
+                                    PETSRWYAPP = (getX * .04) + APPElevApproach;
+                                    
+                                }
+                                ObstRwyTSApp = Math.Round(PointElevation - PETSRWYAPP,1);
+                            }
+
+
+                            OleDbCommand cmdElev = new OleDbCommand(ApplicableElev, connection);
+                            
+                            if (surface.Substring(0, 2) == "TS" || surface.Substring(0, 2) == "RW")
+                            {
+                                cmdElev.Parameters.AddWithValue("@RwyDistance", distance);
+                                AplElevTSRWY = Convert.ToDouble(cmdElev.ExecuteScalar());
+                                if (!string.IsNullOrEmpty(AplElevTSRWY.ToString()))
+                                {
+                                    PETSRWYAPP = AplElevTSRWY;
+                                    Elevation = AplElevTSRWY;
+                                    if (surface.Substring(0, 2) == "TS")
+                                    {
+                                        PETSRWYAPP = ((getY - (Convert.ToDouble(this.RunwayStrip.Text) / 2)) / 5) + Elevation;
+                                    }
+                                    if (surface.Substring(0, 3) == "TST")
+                                    {
+                                        PETSRWYAPP = ((getX) * 0.04) + (getYY / 5) + Elevation;
+                                    }
+                                 
+                                }
+                                ObstRwyTSApp = Math.Round(PointElevation - PETSRWYAPP,1);
+                            }
+                            cmdUpdate.Parameters.AddWithValue("@AplElevTSRWY", Elevation);
+                            cmdUpdate.Parameters.AddWithValue("@APPElevApproach", APPElevApproach);
+                            cmdUpdate.Parameters.AddWithValue("@APPElevIHSCONOHS", APPElevIHSCONOHS);
+                            cmdUpdate.Parameters.AddWithValue("@PETSRWYAPP", PETSRWYAPP);
+                            cmdUpdate.Parameters.AddWithValue("@PElevIHSCONOHS", PElevIHSCONOHS);
+                            cmdUpdate.Parameters.AddWithValue("@ObstRwyTSApp", ObstRwyTSApp);
+                            cmdUpdate.Parameters.AddWithValue("@ObstIHSCONOHSAPPIHSAPPCON", ObstIHSCONOHSAPPIHSAPPCON);
+                            cmdUpdate.Parameters.AddWithValue("@ID", ID);
+                            cmdUpdate.ExecuteNonQuery();
+                            cmdUpdate.Parameters.Clear();
+                            cmdUpdate.Dispose();
+                            cmdElev.Dispose();
+                            
+
+
+
+                            //  }
+
+                            /*     catch (Exception ex)
+                                 {
+                                     var st = new StackTrace(ex, true);
+                                     // Get the top stack frame
+                                     var frame = st.GetFrame(0);
+                                     // Get the line number from the stack frame
+                                     var line = frame.GetFileLineNumber();
+                                     MessageBox.Show("Exception Message: " + ex.Message + " " + line);
+
+                                 }*/
 
                         }
 
@@ -689,23 +792,26 @@ namespace Obstacle
                 // this.dataGridView1.DefaultCellStyle.Font = new System.Drawing.Font("Tahoma", 9);
                 //           showgrid();
             }
+            MessageBox.Show("Records Updated ");
         }
         
 
         private void Getsurface(double getX, double getY, double getYY, double distanceFromApp1, double distanceFromApp2, double rWYSTRIP, double aRPDistance, double runwayLength, bool nearer, out string surface)
         {
-            bool Funnel; string found; double DISTANCE; double strip; Funnel=false;
+            bool Funnel; string found; double DISTANCE; double strip; Funnel = false; string app;
             surface = "Nil";
            // try
             //{
                 if (distanceFromApp1 < distanceFromApp2)
                 {
                     DISTANCE = distanceFromApp1;
+                    app = Rwy1Label.Text.Substring(3, 2);
                 }
                 else
                 {
                     DISTANCE = distanceFromApp2;
-                }
+                    app = Rwy2Label.Text.Substring(3, 2);
+            }
 
                 strip = Math.Truncate(rWYSTRIP);
 
@@ -716,27 +822,32 @@ namespace Obstacle
                 Funnel = true ? getYY >= getY : getYY < getY;
                 if (Funnel && getX <= 2500)
                 {
-                    found = "APP";
+                    found = "APP"+app;
                 }
 
 
                 if (getY <= strip && distanceFromApp1 <= runwayLength && distanceFromApp2 <= runwayLength)
                 {
-                    found = "RWY";
+                    found = "RWY"+app;
                 }
 
                 if (getY > strip && getY <= ((strip) + 225) && getX <= 1125 && distanceFromApp1 <= runwayLength && distanceFromApp2 <= runwayLength)
                 {
-                    found = "TS";
+                    found = "TS"+app;
                 }
 
-                double newyY = (45 - (getX * 0.0333)) / 0.1433 + getYY;
-
-                if (getX <= 1125 && found == "" && getY <= newyY)
+                if (getY > strip && getY <= ((strip) + 225) && getX <= 1125 && getY >=getYY)
                 {
-                    found = "TST";
+                    found = "TST" + app;
                 }
 
+            double newyY = (45 - (getX * 0.0333)) / 0.1433 + getYY;
+/*
+                if (getX <= 1125 && found == "" && getYY<getY )
+                {
+                    found = "TST"+app;
+                }
+*/
            
                 if (found.Substring(0, 2) != "TS" && found.Substring(0, 3) != "RWY" && aRPDistance <= 2500)
                 {
@@ -821,13 +932,59 @@ namespace Obstacle
             this.ArpLatD.Text = "25"; this.ArpLatM.Text = "01"; this.ArpLatS.Text = "13.5107";
             this.ArpLngD.Text = "73"; this.ArpLngM.Text = "53"; this.ArpLngS.Text = "59.4940";
             this.BasicStrip.Text = "60";this.RunwayStrip.Text = "80";this.Diversion.Text = "10";
-            
+
+            this.MaximumElevation.Text = "535.055";
+            this.Rwy1Elevation.Text = "534.432";
+            this.Rwy2Elevation.Text = "534.94";
 
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
             GetObstacles(null, null);
+        }
+        private string SetApp(double Bear, out string NewBearing)
+        {
+             NewBearing = "";
+           
+            double B = Math.Truncate(Math.Round(Bear / 10));
+            
+            var Runway = B > 9 ? B : Math.Truncate(Bear);
+
+
+            if (Runway <= 9)
+            {
+                NewBearing = "APP" + "0" + Runway.ToString();
+            }
+
+            if (Runway > 9 && Runway <= 99)
+            {
+                NewBearing = "APP" + Runway.ToString();
+            }
+
+          //  if (Bear > 99)
+        //    {
+          //      NewBearing = "APP" + Bear.ToString().Substring(0, 2);
+         //   }
+
+
+            return NewBearing;
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            CreateShape frmd = new CreateShape();
+            frmd.Controls["App1North"].Text = this.Northing.Text;
+            frmd.Controls["App1East"].Text = this.Easting.Text;
+            frmd.Controls["App2North"].Text = this.Northing1.Text;
+            frmd.Controls["App2East"].Text = this.Easting1.Text;
+            frmd.Controls["Bearing"].Text = this.Bearing.Text;
+            frmd.Controls["BackBearing"].Text = this.BackBearing.Text;
+            frmd.Controls["BasicStrip"].Text = this.BasicStrip.Text;
+            frmd.Controls["RunwayStrip"].Text = this.RunwayStrip.Text;
+            frmd.Show();
+
+
         }
     }
 }

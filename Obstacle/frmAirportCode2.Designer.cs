@@ -48,8 +48,8 @@
             this.LatS2 = new System.Windows.Forms.TextBox();
             this.LatM2 = new System.Windows.Forms.TextBox();
             this.LatD2 = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.Rwy1Label = new System.Windows.Forms.Label();
+            this.Rwy2Label = new System.Windows.Forms.Label();
             this.Label10 = new System.Windows.Forms.Label();
             this.BasicStrip = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -88,6 +88,7 @@
             this.ForwardDms = new System.Windows.Forms.TextBox();
             this.BackwardDms = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button7 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.RwyLength = new System.Windows.Forms.TextBox();
@@ -349,27 +350,27 @@
             this.LatD2.Size = new System.Drawing.Size(36, 26);
             this.LatD2.TabIndex = 6;
             // 
-            // label2
+            // Rwy1Label
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI Symbol", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(15, 86);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(165, 20);
-            this.label2.TabIndex = 113;
-            this.label2.Text = "Run End 1- Coordinates";
+            this.Rwy1Label.AutoSize = true;
+            this.Rwy1Label.Font = new System.Drawing.Font("Segoe UI Symbol", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Rwy1Label.Location = new System.Drawing.Point(15, 86);
+            this.Rwy1Label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.Rwy1Label.Name = "Rwy1Label";
+            this.Rwy1Label.Size = new System.Drawing.Size(165, 20);
+            this.Rwy1Label.TabIndex = 113;
+            this.Rwy1Label.Text = "Run End 1- Coordinates";
             // 
-            // label3
+            // Rwy2Label
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI Symbol", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(15, 118);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(165, 20);
-            this.label3.TabIndex = 114;
-            this.label3.Text = "Run End 2- Coordinates";
+            this.Rwy2Label.AutoSize = true;
+            this.Rwy2Label.Font = new System.Drawing.Font("Segoe UI Symbol", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Rwy2Label.Location = new System.Drawing.Point(15, 118);
+            this.Rwy2Label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.Rwy2Label.Name = "Rwy2Label";
+            this.Rwy2Label.Size = new System.Drawing.Size(165, 20);
+            this.Rwy2Label.TabIndex = 114;
+            this.Rwy2Label.Text = "Run End 2- Coordinates";
             // 
             // Label10
             // 
@@ -763,6 +764,7 @@
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.Control;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.button7);
             this.panel1.Controls.Add(this.button6);
             this.panel1.Controls.Add(this.button5);
             this.panel1.Controls.Add(this.RwyLength);
@@ -800,8 +802,8 @@
             this.panel1.Controls.Add(this.Northing);
             this.panel1.Controls.Add(this.Northing1);
             this.panel1.Controls.Add(this.button1);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.Rwy1Label);
+            this.panel1.Controls.Add(this.Rwy2Label);
             this.panel1.Controls.Add(this.BasicStrip);
             this.panel1.Controls.Add(this.Label10);
             this.panel1.Controls.Add(this.Bearing);
@@ -809,8 +811,18 @@
             this.panel1.Controls.Add(this.BackBearing);
             this.panel1.Location = new System.Drawing.Point(36, 18);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(901, 526);
+            this.panel1.Size = new System.Drawing.Size(901, 496);
             this.panel1.TabIndex = 148;
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(376, 419);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(144, 38);
+            this.button7.TabIndex = 176;
+            this.button7.Text = "button7";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // button6
             // 
@@ -1181,7 +1193,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(980, 975);
+            this.ClientSize = new System.Drawing.Size(980, 914);
             this.Controls.Add(this.label37);
             this.Controls.Add(this.App2Lng);
             this.Controls.Add(this.App2Lat);
@@ -1231,6 +1243,7 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
             this.Name = "frmAirportCode2";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmAirportCode2";
             this.Load += new System.EventHandler(this.frmAirportCode2_Load);
             this.panel2.ResumeLayout(false);
@@ -1264,8 +1277,8 @@
         private System.Windows.Forms.TextBox LatS2;
         private System.Windows.Forms.TextBox LatM2;
         private System.Windows.Forms.TextBox LatD2;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label Rwy1Label;
+        private System.Windows.Forms.Label Rwy2Label;
         private System.Windows.Forms.Label Label10;
         private System.Windows.Forms.TextBox BasicStrip;
         private System.Windows.Forms.Label label5;
@@ -1340,5 +1353,6 @@
         private System.Windows.Forms.TextBox App2Lng;
         private System.Windows.Forms.TextBox App2Lat;
         private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.Button button7;
     }
 }

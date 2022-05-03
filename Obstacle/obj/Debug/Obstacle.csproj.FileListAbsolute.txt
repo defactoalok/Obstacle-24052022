@@ -31,4 +31,9 @@ C:\Users\alokG\source\repos\Obstacle\Obstacle\bin\Debug\CoordinateSharp.xml
 C:\Users\alokG\source\repos\Obstacle\Obstacle\obj\Debug\Obstacle.frmDistanceBearing.resources
 C:\Users\alokG\source\repos\Obstacle\Obstacle\obj\Debug\Obstacle.frmShowCoordinates.resources
 C:\Users\alokG\source\repos\Obstacle\Obstacle\obj\Debug\Obstacle.frmAirportCode2.resources
+C:\Users\alokG\source\repos\Obstacle\Obstacle\obj\Debug\Interop.MapWinGIS.dll
+C:\Users\alokG\source\repos\Obstacle\Obstacle\obj\Debug\Obstacle.CreateShape.resources
+C:\Users\alokG\source\repos\Obstacle\Obstacle\bin\Debug\Interop.MapWinGIS.dll
+C:\Users\alokG\source\repos\Obstacle\Obstacle\bin\Debug\AxInterop.MapWinGIS.dll
+C:\Users\alokG\source\repos\Obstacle\Obstacle\obj\Debug\AxInterop.MapWinGIS.dll
 C:\Users\alokG\source\repos\Obstacle\Obstacle\obj\Debug\Obstacle.csprojAssemblyReference.cache
