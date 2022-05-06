@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CreateShape));
             this.button1 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.App1East = new System.Windows.Forms.TextBox();
@@ -55,12 +54,10 @@
             this.textBox10 = new System.Windows.Forms.TextBox();
             this.textBox11 = new System.Windows.Forms.TextBox();
             this.textBox12 = new System.Windows.Forms.TextBox();
-            this.textBox13 = new System.Windows.Forms.TextBox();
+            this.ArpNorth = new System.Windows.Forms.TextBox();
             this.textBox14 = new System.Windows.Forms.TextBox();
-            this.textBox15 = new System.Windows.Forms.TextBox();
+            this.ArpEast = new System.Windows.Forms.TextBox();
             this.textBox16 = new System.Windows.Forms.TextBox();
-            this.axMap1 = new AxMapWinGIS.AxMap();
-            ((System.ComponentModel.ISupportInitialize)(this.axMap1)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -255,6 +252,7 @@
             this.textBox7.Name = "textBox7";
             this.textBox7.Size = new System.Drawing.Size(84, 26);
             this.textBox7.TabIndex = 171;
+            this.textBox7.TextChanged += new System.EventHandler(this.textBox7_TextChanged);
             // 
             // textBox8
             // 
@@ -301,14 +299,14 @@
             this.textBox12.Size = new System.Drawing.Size(84, 26);
             this.textBox12.TabIndex = 181;
             // 
-            // textBox13
+            // ArpNorth
             // 
-            this.textBox13.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox13.Location = new System.Drawing.Point(560, 276);
-            this.textBox13.Margin = new System.Windows.Forms.Padding(4);
-            this.textBox13.Name = "textBox13";
-            this.textBox13.Size = new System.Drawing.Size(97, 26);
-            this.textBox13.TabIndex = 176;
+            this.ArpNorth.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ArpNorth.Location = new System.Drawing.Point(560, 276);
+            this.ArpNorth.Margin = new System.Windows.Forms.Padding(4);
+            this.ArpNorth.Name = "ArpNorth";
+            this.ArpNorth.Size = new System.Drawing.Size(97, 26);
+            this.ArpNorth.TabIndex = 176;
             // 
             // textBox14
             // 
@@ -319,14 +317,14 @@
             this.textBox14.Size = new System.Drawing.Size(97, 26);
             this.textBox14.TabIndex = 178;
             // 
-            // textBox15
+            // ArpEast
             // 
-            this.textBox15.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox15.Location = new System.Drawing.Point(469, 278);
-            this.textBox15.Margin = new System.Windows.Forms.Padding(4);
-            this.textBox15.Name = "textBox15";
-            this.textBox15.Size = new System.Drawing.Size(84, 26);
-            this.textBox15.TabIndex = 175;
+            this.ArpEast.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ArpEast.Location = new System.Drawing.Point(469, 278);
+            this.ArpEast.Margin = new System.Windows.Forms.Padding(4);
+            this.ArpEast.Name = "ArpEast";
+            this.ArpEast.Size = new System.Drawing.Size(84, 26);
+            this.ArpEast.TabIndex = 175;
             // 
             // textBox16
             // 
@@ -337,28 +335,18 @@
             this.textBox16.Size = new System.Drawing.Size(84, 26);
             this.textBox16.TabIndex = 177;
             // 
-            // axMap1
-            // 
-            this.axMap1.Enabled = true;
-            this.axMap1.Location = new System.Drawing.Point(640, 38);
-            this.axMap1.Name = "axMap1";
-            this.axMap1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axMap1.OcxState")));
-            this.axMap1.Size = new System.Drawing.Size(100, 50);
-            this.axMap1.TabIndex = 183;
-            // 
             // CreateShape
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.axMap1);
+            this.ClientSize = new System.Drawing.Size(1293, 450);
             this.Controls.Add(this.textBox9);
             this.Controls.Add(this.textBox10);
             this.Controls.Add(this.textBox11);
             this.Controls.Add(this.textBox12);
-            this.Controls.Add(this.textBox13);
+            this.Controls.Add(this.ArpNorth);
             this.Controls.Add(this.textBox14);
-            this.Controls.Add(this.textBox15);
+            this.Controls.Add(this.ArpEast);
             this.Controls.Add(this.textBox16);
             this.Controls.Add(this.textBox5);
             this.Controls.Add(this.textBox6);
@@ -384,7 +372,6 @@
             this.Name = "CreateShape";
             this.Text = "CreateShape";
             this.Load += new System.EventHandler(this.CreateShape_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.axMap1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -418,10 +405,9 @@
         private System.Windows.Forms.TextBox textBox10;
         private System.Windows.Forms.TextBox textBox11;
         private System.Windows.Forms.TextBox textBox12;
-        private System.Windows.Forms.TextBox textBox13;
+        private System.Windows.Forms.TextBox ArpNorth;
         private System.Windows.Forms.TextBox textBox14;
-        private System.Windows.Forms.TextBox textBox15;
+        private System.Windows.Forms.TextBox ArpEast;
         private System.Windows.Forms.TextBox textBox16;
-        private AxMapWinGIS.AxMap axMap1;
     }
 }

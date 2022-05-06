@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using MapWinGIS;
-using Point = MapWinGIS.Point;
+﻿using MapWinGIS;
+using System;
 using System.IO;
-using AxMapWinGIS;
+using System.Windows.Forms;
+using Point = MapWinGIS.Point;
 
 
 namespace Obstacle
@@ -57,6 +50,32 @@ namespace Obstacle
                 string filname = openFileDialog1.FileName;
 
                 int myPointIndex = 0;
+                //Create Point Shape
+                string[] lines = System.IO.File.ReadAllLines(filname);
+                
+                foreach (string line in lines)
+                {
+                    var cols = line.Split(',');
+                    MapWinGIS.Shape myShape = new Shape();
+                    myShape.Create(ShpfileType.SHP_POINT);
+                    MapWinGIS.Point myPoint = new Point();
+                    myPoint.x = Math.Round(double.Parse(cols[3]), 2);
+                    myPoint.y = Math.Round(double.Parse(cols[2]), 2);
+
+                    myShape.InsertPoint(myPoint, ref myPointIndex);
+                    myShapefile.EditInsertShape(myShape, ref myShapeIndex);
+                    var shpIndex = myShapefile.EditAddShape(myShape);
+                    myShapefile.EditCellValue(objindex, shpIndex, cols[0]);
+                    myShapefile.EditCellValue(objnameindex, shpIndex, cols[1]);
+                    myShapefile.EditCellValue(ElevationIndex, shpIndex, cols[4]);
+                    myShapeIndex++;
+                   
+                }
+
+                myShapefile.StopEditingShapes(true, true, null);
+                myShapefile.Close();
+
+                //Create Polyline Shape
                 Shapefile poly = new Shapefile();
                 poly.CreateNew(@"X:\ShapeTrial\Polyline.shp", ShpfileType.SHP_POLYLINE);// ShpfileType.SHP_POLYLINE);
                 MapWinGIS.Shape pPolyline = new Shape();
@@ -299,6 +318,11 @@ namespace Obstacle
                 string App1TSRFLwr = App1TSRightE + "," + App1TSRightN + ";" + App1TsFunnelLLwrE + "," + App1TsFunnelLLwrN;
                 string App2TSRFLwr = App2TSRightE + "," + App2TSRightN + ";" + App2TsFunnelRLwrE+ "," + App2TsFunnelRLwrN;
 
+                string AppJoinUpper1 = AppUppCord1E + "," + AppUppCord1N + ";" + AppUpperCLineE + "," + AppUpperCLineN;
+                string AppJoingUpper2 = AppUppCord1ELeft + "," + AppUppCord1NLeft + ";" + AppUpperCLineE + "," + AppUpperCLineN;
+                string AppJoinLwr1 = AppLwrCord1E + "," + AppLwrCord1N + ";" + AppLwrCLineE + "," + AppLwrCLineN;
+                string AppJoinLwr2 = AppLwrCord1ELeft + "," + AppLwrCord1NLeft + ";" + AppLwrCLineE + "," + AppLwrCLineN;
+
                 string App2TSL = App2BSRE + "," + App2BSRN + ";" + App2TSLeftE + "," + App2TSLeftN;
                 string App2TSR = App2BSLE + "," + App2BSLN + ";" + App2TSRightE + "," + App2TSRightN;
 
@@ -308,6 +332,7 @@ namespace Obstacle
                 string App1ApplineR = App1BSLE+ "," + App1BSLN+ ";" + AppUppCord1E + "," + AppUppCord1N;
                 string App1ApplineL = App1BSRE + "," + App1BSRN + ";" + AppUppCord1ELeft + "," + AppUppCord1NLeft;
                 string AppUpperCentre = App1BStripE + "," + App1BStripN + ";" + AppUpperCLineE + "," + AppUpperCLineN;
+                //string AppAdd = App1ApplineR + "," + App1ApplineL;
 
                 string App2ApplineR = App2BSLE + "," + App2BSLN + ";" + AppLwrCord1E + "," + AppLwrCord1N;
                 string App2ApplineL = App2BSRE + "," + App2BSRN + ";" + AppLwrCord1ELeft + "," + AppLwrCord1NLeft;
@@ -459,6 +484,24 @@ namespace Obstacle
                 pPolyline22d.Create(poly.ShapefileType);
                 MakePolyline(App2TSRFLwr, myPointIndex, myShapeIndex, poly, pPolyline22d, out PointIndex, out ShapeIndex);
 
+                Shape pPolylineAppUpper1 = new Shape();
+                pPolylineAppUpper1.Create(poly.ShapefileType);
+                MakePolyline(AppJoinUpper1, myPointIndex, myShapeIndex, poly, pPolylineAppUpper1, out PointIndex, out ShapeIndex);
+
+                Shape pPolylineAppUpper2 = new Shape();
+                pPolylineAppUpper2.Create(poly.ShapefileType);
+                MakePolyline(AppJoingUpper2, myPointIndex, myShapeIndex, poly, pPolylineAppUpper2, out PointIndex, out ShapeIndex);
+
+                Shape pPolylineAppJoinLwr1 = new Shape();
+                pPolylineAppJoinLwr1.Create(poly.ShapefileType);
+                MakePolyline(AppJoinLwr1, myPointIndex, myShapeIndex, poly, pPolylineAppJoinLwr1, out PointIndex, out ShapeIndex);
+
+                Shape pPolylineAppJoinLwr2 = new Shape();
+                pPolylineAppJoinLwr2.Create(poly.ShapefileType);
+                MakePolyline(AppJoinLwr2, myPointIndex, myShapeIndex, poly, pPolylineAppJoinLwr2, out PointIndex, out ShapeIndex);
+
+
+
                 Shape pPolyline221 = new Shape();
                 pPolyline221.Create(poly.ShapefileType);
          //       MakePolyline(App2TSRF, myPointIndex, myShapeIndex, poly, pPolyline221, out PointIndex, out ShapeIndex);
@@ -485,37 +528,29 @@ namespace Obstacle
                         Shape pPolyline26 = new Shape();
                         pPolyline26.Create(poly.ShapefileType);
                         MakePolyline(TSJoinR, myPointIndex, myShapeIndex, poly, pPolyline26, out PointIndex, out ShapeIndex);
-                  
+                
+                
+                MapWinGIS.Shape arp = new Shape();
+                arp.Create(ShpfileType.SHP_POINT);
+                MapWinGIS.Point arpPoint = new Point();
+                arpPoint.x = double.Parse(this.ArpEast.Text);
+                arpPoint.y = double.Parse(this.ArpNorth.Text);
+                arp.InsertPoint(arpPoint, ref myPointIndex);
+                poly.EditInsertShape(arp, ref myShapeIndex);
+
+                // var shpIndex = myShapefile.EditAddShape(myShape);
+                /*  
+                  axMap1.Projection = tkMapProjection.PROJECTION_NONE;
+                  int handle = axMap1.AddLayer(pPolyline,false);
+                  axMap1.ZoomToLayer(handle);
+                  axMap1.DrawCircleEx(handle,double.Parse(this.App1East.Text), double.Parse(this.App1North.Text), 1000, 16, true);
+                  axMap1.Redraw();
+                */
                 poly.StopEditingShapes(true, true, null);
                 poly.Close();
 
 
-                axMap1.DrawCircle(double.Parse(this.App1East.Text), double.Parse(this.App1North.Text), 2500, 1, false);
-
-                string[] lines = System.IO.File.ReadAllLines(filname);
-                foreach (string line in lines)
-                {
-
-                    var cols = line.Split(',');
-
-                    MapWinGIS.Shape myShape = new Shape();  
-                    MapWinGIS.Point myPoint = new Point();
-                    myPoint.x = Math.Round(double.Parse(cols[3]),2);
-                    myPoint.y = Math.Round(double.Parse(cols[2]),2);
-                    
-                    myShape.InsertPoint(myPoint, ref myPointIndex);
-                     
-                    myShapefile.EditInsertShape(myShape, ref myShapeIndex);
-                    var shpIndex = myShapefile.EditAddShape(myShape);
-                    myShapefile.EditCellValue(objindex, shpIndex, cols[0]);
-                    myShapefile.EditCellValue(objnameindex, shpIndex, cols[1]);
-                    myShapefile.EditCellValue(ElevationIndex, shpIndex,  cols[4]);
-                    myShapeIndex++;
-
-                }
-
-                myShapefile.StopEditingShapes(true, true, null);
-                myShapefile.Close();
+             //   axMap1.DrawCircle(double.Parse(this.App1East.Text), double.Parse(this.App1North.Text), 2500, 1, false);
                 MessageBox.Show("Done");
                
 
@@ -623,5 +658,9 @@ namespace Obstacle
 
         }
 
+        private void textBox7_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

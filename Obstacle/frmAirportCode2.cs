@@ -69,19 +69,25 @@ namespace Obstacle
         private void button1_Click(object sender, EventArgs e)
         {
 
-            
+
             if (this.LatD.Text != "" && this.LatM.Text != "" && this.LatS.Text != "" && this.LngD.Text != "" &&
               this.LngM.Text != "" && this.LngS.Text != "" && this.LatD2.Text != "" && this.LatM2.Text != "" &&
-              this.LatS2.Text != "" && this.LngD2.Text != "" && this.LngM2.Text != "" && this.LngS2.Text != "")
+              this.LatS2.Text != "" && this.LngD2.Text != "" && this.LngM2.Text != "" && this.LngS2.Text != "" &&
+              this.ArpLatD.Text != "" && this.ArpLatM.Text != "" && this.ArpLatS.Text != "" && this.ArpLngD.Text != "" &&
+               this.ArpLngM.Text != "" && this.ArpLngS.Text != "")
             {
 
                 double latitude = double.Parse(this.LatD.Text) + (double.Parse(this.LatM.Text) / 60) + (double.Parse(this.LatS.Text) / 3600);
                 double longitude = double.Parse(this.LngD.Text) + (double.Parse(this.LngM.Text) / 60) + (double.Parse(this.LngS.Text) / 3600);
                 double latitude2 = double.Parse(this.LatD2.Text) + (double.Parse(this.LatM2.Text) / 60) + (double.Parse(this.LatS2.Text) / 3600);
                 double longitude2 = double.Parse(this.LngD2.Text) + (double.Parse(this.LngM2.Text) / 60) + (double.Parse(this.LngS2.Text) / 3600);
-
+                double Arplatitude = double.Parse(this.ArpLatD.Text) + (double.Parse(this.ArpLatM.Text) / 60) + (double.Parse(this.ArpLatS.Text) / 3600);
+                double Arplongitude = double.Parse(this.ArpLngD.Text) + (double.Parse(this.ArpLngM.Text) / 60) + (double.Parse(this.ArpLngS.Text) / 3600);
+                
                 Coordinate c = new Coordinate(latitude, longitude);
                 Coordinate c2 = new Coordinate(latitude2, longitude2);
+                Coordinate c3 = new Coordinate(Arplatitude, Arplongitude);
+
                 Distance d = new Distance(c, c2, Shape.Ellipsoid);
                 this.RwyLength.Text = Math.Round(d.Meters, 2).ToString();
                 this.Bearing.Text = Math.Round(d.Bearing, 6).ToString();
@@ -94,6 +100,9 @@ namespace Obstacle
                 this.Northing1.Text = c2.UTM.Northing.ToString();
                 this.ForwardDms.Text = decimaltodms(double.Parse(this.Bearing.Text));
                 this.BackwardDms.Text = decimaltodms(double.Parse(this.BackBearing.Text));
+
+                this.ArpEast.Text = c3.UTM.Easting.ToString();
+                this.ArpNorth.Text = c3.UTM.Northing.ToString();
 
                 GetNewCoordinates(this.Easting.Text, this.Northing.Text, this.Easting1.Text, this.Northing1.Text, 
                     double.Parse(this.BasicStrip.Text), double.Parse(this.Bearing.Text), double.Parse(this.BackBearing.Text), 
@@ -583,7 +592,7 @@ namespace Obstacle
             string updateQuery = "UPDATE RWYSurveyData SET Surface=@surface,X=@X,Y=@Y,YY=@YY,Distance=@Distance,DistApp1=@DistApp1," +
                 "DistApp2=@DistApp2, Bearing=@Bearing,AplElevTSRWY=@AplElevTSRWY,APPElevApproach=@APPElevApproach, " +
                 "APPElevIHSCONOHS=@APPElevIHSCONOHS, PElevTSAPPRWY=@PETSRWYAPP,PElevIHSCONOHS=@PElevIHSCONOHS, " +
-                " ObstRwyTSApp = @ObstRwyTSApp, ObstIHSCONOHSAPPIHSAPPCON = @ObstIHSCONOHSAPPIHSAPPCON where ID=@ID";
+                " ObstRwyTSApp = @ObstRwyTSApp, ObstIHSCONOHSAPPIHSAPPCON = @ObstIHSCONOHSAPPIHSAPPCON, Nearest=@Nearest where ID=@ID";
 
             string OledbConnectString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=ObstaclesData.accdb";
 
@@ -659,8 +668,8 @@ namespace Obstacle
                                 RunwayLength = double.Parse(this.RwyLength.Text.ToString());
 
                                 Getsurface(getX, getY, getYY, DistanceFromApp1, DistanceFromApp2, RWYSTRIP, ARPDistance, RunwayLength, nearer, out string surface);
-                                
-                               
+
+                                double nearestRwyDistance = getNearer(getX, RunwayLength, DistanceFromApp1, DistanceFromApp2, out double Nearest);
 
                                 int ID = int.Parse(reader["ID"].ToString());
 
@@ -684,8 +693,11 @@ namespace Obstacle
                             string ApplicableElev;
                             double ObstRwyTSApp = 0;
                             double ObstIHSCONOHSAPPIHSAPPCON=0;
-
-                            ApplicableElev = "Select top 1 Elevation from RunwayProfile where Distance >=@RwyDistance";
+// Get nearest distance for TS
+                            getNearer(Math.Round(getX,0), Math.Round(RunwayLength,0), Math.Round(DistanceFromApp1,0), Math.Round(DistanceFromApp2,0), out double NearestDistance);
+                            double NearDistance= Math.Round(NearestDistance);
+// Get nearest distance for TS
+                            ApplicableElev = "Select top 1 Elevation from RunwayProfile where Distance =@RwyDistance";
 
                             if (surface.Substring(0, 2) == "IH" || surface.Substring(0, 2) == "CO" || 
                                 surface.Substring(0, 2) == "OC" || surface.Substring(0, 2) == "OH" || surface.Contains("-"))
@@ -735,7 +747,7 @@ namespace Obstacle
                             
                             if (surface.Substring(0, 2) == "TS" || surface.Substring(0, 2) == "RW")
                             {
-                                cmdElev.Parameters.AddWithValue("@RwyDistance", distance);
+                                cmdElev.Parameters.AddWithValue("@RwyDistance", nearestRwyDistance);
                                 AplElevTSRWY = Convert.ToDouble(cmdElev.ExecuteScalar());
                                 if (!string.IsNullOrEmpty(AplElevTSRWY.ToString()))
                                 {
@@ -760,6 +772,7 @@ namespace Obstacle
                             cmdUpdate.Parameters.AddWithValue("@PElevIHSCONOHS", PElevIHSCONOHS);
                             cmdUpdate.Parameters.AddWithValue("@ObstRwyTSApp", ObstRwyTSApp);
                             cmdUpdate.Parameters.AddWithValue("@ObstIHSCONOHSAPPIHSAPPCON", ObstIHSCONOHSAPPIHSAPPCON);
+                            cmdUpdate.Parameters.AddWithValue("@Nearest", NearDistance);
                             cmdUpdate.Parameters.AddWithValue("@ID", ID);
                             cmdUpdate.ExecuteNonQuery();
                             cmdUpdate.Parameters.Clear();
@@ -841,7 +854,7 @@ namespace Obstacle
                     found = "TST" + app;
                 }
 
-            double newyY = (45 - (getX * 0.0333)) / 0.1433 + getYY;
+            double newyY = (45 - (getX * 0.04) / 0.20 + getYY);
 /*
                 if (getX <= 1125 && found == "" && getYY<getY )
                 {
@@ -971,6 +984,30 @@ namespace Obstacle
             return NewBearing;
         }
 
+        private double getNearer(double getX, double RwyLgth, double d1, double d2, out double NearestDistance)
+        {
+            NearestDistance = 0;
+            double xMinus60, rwy;
+            xMinus60 = Math.Round(getX,0) - 60;
+            rwy = Math.Round(RwyLgth,0) / 2;
+
+            if (d1 > d2)
+            { 
+                xMinus60 = Math.Round(RwyLgth,0) - Math.Round( xMinus60,0); 
+            }
+
+            double intNear = Math.Truncate( ((xMinus60) / 30)) * 30;
+            double difference = Math.Abs(xMinus60 - intNear);
+            if(difference <= 15) 
+            {
+                NearestDistance = intNear;
+            }else
+            {
+                NearestDistance = intNear+30;
+            } 
+            
+            return NearestDistance;
+        }
         private void button7_Click(object sender, EventArgs e)
         {
             CreateShape frmd = new CreateShape();
@@ -982,6 +1019,8 @@ namespace Obstacle
             frmd.Controls["BackBearing"].Text = this.BackBearing.Text;
             frmd.Controls["BasicStrip"].Text = this.BasicStrip.Text;
             frmd.Controls["RunwayStrip"].Text = this.RunwayStrip.Text;
+            frmd.Controls["ArpEast"].Text = this.ArpEast.Text;
+            frmd.Controls["ArpNorth"].Text = this.ArpNorth.Text;
             frmd.Show();
 
 

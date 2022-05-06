@@ -106,8 +106,8 @@
             this.RunwayStrip = new System.Windows.Forms.TextBox();
             this.label29 = new System.Windows.Forms.Label();
             this.ArpLngS = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.ArpEast = new System.Windows.Forms.TextBox();
+            this.ArpNorth = new System.Windows.Forms.TextBox();
             this.label28 = new System.Windows.Forms.Label();
             this.ArpLngM = new System.Windows.Forms.TextBox();
             this.ArpLngD = new System.Windows.Forms.TextBox();
@@ -783,8 +783,8 @@
             this.panel1.Controls.Add(this.RunwayStrip);
             this.panel1.Controls.Add(this.label29);
             this.panel1.Controls.Add(this.ArpLngS);
-            this.panel1.Controls.Add(this.textBox2);
-            this.panel1.Controls.Add(this.textBox3);
+            this.panel1.Controls.Add(this.ArpEast);
+            this.panel1.Controls.Add(this.ArpNorth);
             this.panel1.Controls.Add(this.label28);
             this.panel1.Controls.Add(this.ArpLngM);
             this.panel1.Controls.Add(this.ArpLngD);
@@ -1000,25 +1000,23 @@
             this.ArpLngS.Size = new System.Drawing.Size(95, 26);
             this.ArpLngS.TabIndex = 19;
             // 
-            // textBox2
+            // ArpEast
             // 
-            this.textBox2.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.Location = new System.Drawing.Point(550, 219);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(4);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(120, 26);
-            this.textBox2.TabIndex = 159;
-            this.textBox2.Visible = false;
+            this.ArpEast.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ArpEast.Location = new System.Drawing.Point(550, 219);
+            this.ArpEast.Margin = new System.Windows.Forms.Padding(4);
+            this.ArpEast.Name = "ArpEast";
+            this.ArpEast.Size = new System.Drawing.Size(120, 26);
+            this.ArpEast.TabIndex = 159;
             // 
-            // textBox3
+            // ArpNorth
             // 
-            this.textBox3.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox3.Location = new System.Drawing.Point(678, 219);
-            this.textBox3.Margin = new System.Windows.Forms.Padding(4);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(120, 26);
-            this.textBox3.TabIndex = 160;
-            this.textBox3.Visible = false;
+            this.ArpNorth.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ArpNorth.Location = new System.Drawing.Point(678, 219);
+            this.ArpNorth.Margin = new System.Windows.Forms.Padding(4);
+            this.ArpNorth.Name = "ArpNorth";
+            this.ArpNorth.Size = new System.Drawing.Size(120, 26);
+            this.ArpNorth.TabIndex = 160;
             // 
             // label28
             // 
@@ -1317,8 +1315,8 @@
         private System.Windows.Forms.TextBox BackwardDms;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TextBox ArpLngS;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox ArpEast;
+        private System.Windows.Forms.TextBox ArpNorth;
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.TextBox ArpLngM;
         private System.Windows.Forms.TextBox ArpLngD;

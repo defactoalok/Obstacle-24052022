@@ -60,7 +60,7 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Tahoma", 10F);
-            this.button1.Location = new System.Drawing.Point(90, 229);
+            this.button1.Location = new System.Drawing.Point(90, 214);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(403, 54);
             this.button1.TabIndex = 3;
@@ -71,7 +71,7 @@
             // button3
             // 
             this.button3.Font = new System.Drawing.Font("Tahoma", 10.2F);
-            this.button3.Location = new System.Drawing.Point(90, 169);
+            this.button3.Location = new System.Drawing.Point(90, 154);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(403, 54);
             this.button3.TabIndex = 4;
