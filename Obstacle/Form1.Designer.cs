@@ -590,7 +590,7 @@
             this.Head.Font = new System.Drawing.Font("Tahoma", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Head.Location = new System.Drawing.Point(100, 4);
             this.Head.Name = "Head";
-            this.Head.Size = new System.Drawing.Size(0, 23);
+            this.Head.Size = new System.Drawing.Size(0, 22);
             this.Head.TabIndex = 73;
             // 
             // button2

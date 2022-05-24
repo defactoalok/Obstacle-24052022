@@ -37,3 +37,4 @@ C:\Users\alokG\source\repos\Obstacle\Obstacle\bin\Debug\Interop.MapWinGIS.dll
 C:\Users\alokG\source\repos\Obstacle\Obstacle\bin\Debug\AxInterop.MapWinGIS.dll
 C:\Users\alokG\source\repos\Obstacle\Obstacle\obj\Debug\AxInterop.MapWinGIS.dll
 C:\Users\alokG\source\repos\Obstacle\Obstacle\obj\Debug\Obstacle.csproj.AssemblyReference.cache
+C:\Users\alokG\source\repos\Obstacle\Obstacle\obj\Debug\Obstacle.csproj.SuggestedBindingRedirects.cache

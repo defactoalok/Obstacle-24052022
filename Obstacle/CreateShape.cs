@@ -1,5 +1,6 @@
 ﻿using MapWinGIS;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using Point = MapWinGIS.Point;
@@ -9,28 +10,38 @@ namespace Obstacle
 {
     public partial class CreateShape : Form
     {
+        string CurrentDir = Directory.GetCurrentDirectory();
+        
+
         public CreateShape()
         {
             InitializeComponent();
+
         }
 
         private void CreateShape_Load(object sender, EventArgs e)
         {
+           
 
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            string CDir = CurrentDir + "\\Shapefiles\\";
 
-            System.IO.DirectoryInfo di = new DirectoryInfo(@"X:\ShapeTrial\");
+            System.IO.DirectoryInfo di = new DirectoryInfo(CDir);
 
             foreach (FileInfo file in di.GetFiles())
             {
                 file.Delete();
             }
+        
+           
+           
+       
             Shapefile myShapefile = new Shapefile();
             //Define the path of the new shapefile and geometry type
-            myShapefile.CreateNew(@"X:\ShapeTrial\trialMywinGis.shp", ShpfileType.SHP_POINT);
+            myShapefile.CreateNew(@CDir+"\\SurveyPoints.shp", ShpfileType.SHP_POINT);
             //Create new field
             MapWinGIS.Field myField = new Field();
            var objindex= myShapefile.EditAddField("Obj No.", FieldType.STRING_FIELD, 0, 4);
@@ -52,32 +63,55 @@ namespace Obstacle
                 int myPointIndex = 0;
                 //Create Point Shape
                 string[] lines = System.IO.File.ReadAllLines(filname);
-                
+                MessageBox.Show(lines.Length.ToString());
+
+
+                dataGridView1.Columns.Add("Obj NO","Object");
+                dataGridView1.Columns.Add("Obj Name", "Name");
+                dataGridView1.Columns.Add("Elevation", "Elevation");
+
+
+                int i = 1;
+                int j = 0;
+                int shpIndex;
                 foreach (string line in lines)
                 {
+                 
+                    this.dataGridView1.Rows.Add();
+                    
+                                       
                     var cols = line.Split(',');
                     MapWinGIS.Shape myShape = new Shape();
                     myShape.Create(ShpfileType.SHP_POINT);
                     MapWinGIS.Point myPoint = new Point();
                     myPoint.x = Math.Round(double.Parse(cols[3]), 2);
                     myPoint.y = Math.Round(double.Parse(cols[2]), 2);
-
                     myShape.InsertPoint(myPoint, ref myPointIndex);
-                    myShapefile.EditInsertShape(myShape, ref myShapeIndex);
-                    var shpIndex = myShapefile.EditAddShape(myShape);
+                    shpIndex = i - 1;
+                    myShapefile.EditInsertShape(myShape, ref shpIndex);
+                    
+                    //myShapefile.EditInsertShape(myShape,j);
+
                     myShapefile.EditCellValue(objindex, shpIndex, cols[0]);
                     myShapefile.EditCellValue(objnameindex, shpIndex, cols[1]);
                     myShapefile.EditCellValue(ElevationIndex, shpIndex, cols[4]);
-                    myShapeIndex++;
-                   
+                    this.dataGridView1.Rows[i].Cells[0].Value = cols[0];
+                    this.dataGridView1.Rows[i].Cells[1].Value = cols[1];
+                    this.dataGridView1.Rows[i].Cells[2].Value = cols[4];
+                    
+                    //  myShapeIndex++;
+                    myPointIndex++;
+                    i++;
                 }
+                
 
                 myShapefile.StopEditingShapes(true, true, null);
                 myShapefile.Close();
+                
 
                 //Create Polyline Shape
                 Shapefile poly = new Shapefile();
-                poly.CreateNew(@"X:\ShapeTrial\Polyline.shp", ShpfileType.SHP_POLYLINE);// ShpfileType.SHP_POLYLINE);
+                poly.CreateNew(CDir+"\\Polyline.shp", ShpfileType.SHP_POLYLINE);// ShpfileType.SHP_POLYLINE);
                 MapWinGIS.Shape pPolyline = new Shape();
                 pPolyline.Create(ShpfileType.SHP_POINT);
 
@@ -314,8 +348,8 @@ namespace Obstacle
                  string App1TSR = App1BSRE + "," + App1BSRN + ";" + App1TSRightE + "," + App1TSRightN;
 
                  string App1TSLF = App1TSLeftE + "," + App1TSLeftN + ";" + App1TsFunnelLE + "," + App1TsFunnelLN;
-                string App2TSRF = App2TSLeftE + "," + App2TSLeftN + ";" + App2TsFunnelRE + "," + App2TsFunnelRN;
                 string App1TSRFLwr = App1TSRightE + "," + App1TSRightN + ";" + App1TsFunnelLLwrE + "," + App1TsFunnelLLwrN;
+                string App2TSRF = App2TSLeftE + "," + App2TSLeftN + ";" + App2TsFunnelRE + "," + App2TsFunnelRN;
                 string App2TSRFLwr = App2TSRightE + "," + App2TSRightN + ";" + App2TsFunnelRLwrE+ "," + App2TsFunnelRLwrN;
 
                 string AppJoinUpper1 = AppUppCord1E + "," + AppUppCord1N + ";" + AppUpperCLineE + "," + AppUpperCLineN;
@@ -553,11 +587,19 @@ namespace Obstacle
 
              //   axMap1.DrawCircle(double.Parse(this.App1East.Text), double.Parse(this.App1North.Text), 2500, 1, false);
                 MessageBox.Show("Done");
-               
+                //
+                string utm = "PROJCS[WGS_84_UTM_zone_" + this.Zone.Text + "N";
+                string ProjFile = utm + ",GEOGCS['GCS_WGS_1984',DATUM['D_WGS84',SPHEROID['WGS84',6378137,298.257223563]],PRIMEM['Greenwich',0],UNIT['Degree',0.017453292519943295]],PROJECTION['Transverse_Mercator'],PARAMETER['latitude_of_origin',0],PARAMETER['central_meridian',75],PARAMETER['scale_factor',0.9996],PARAMETER['false_easting',500000],PARAMETER['false_northing',0],UNIT['Meter',1]]";
+                File.WriteAllText(@CDir + "\\SurveyPoints.prj", ProjFile);
+                File.WriteAllText(@CDir + "\\Polyline.prj", ProjFile);
+                File.WriteAllText(@CDir + "\\ConPolygon.prj", ProjFile);
+                File.WriteAllText(@CDir + "\\ArpPolygon.prj", ProjFile);
+                //
+
 
             }
 
-        
+
 
         }
         private void MakePolyline(string Coordinates, int myPointIndex, int myShapeIndex, 
@@ -594,8 +636,9 @@ namespace Obstacle
 
         private void MakeIHSPolygonShape()
         {
+            string CDir = CurrentDir + "\\Shapefiles\\";
             Shapefile shpPloygon = new Shapefile();
-            shpPloygon.CreateNew(@"X:\ShapeTrial\ArpPolygon.shp", ShpfileType.SHP_POLYGON);
+            shpPloygon.CreateNew(@CDir+"\\ArpPolygon.shp", ShpfileType.SHP_POLYGON);
             int fldX = shpPloygon.EditAddField("X", FieldType.DOUBLE_FIELD, 9, 12);
             int fldY = shpPloygon.EditAddField("Y", FieldType.DOUBLE_FIELD, 9, 12);
             int fldArea = shpPloygon.EditAddField("area", FieldType.DOUBLE_FIELD, 9, 12);
@@ -633,8 +676,9 @@ namespace Obstacle
         }
         private void MakeCONPolygonShape()
         {
+            string CDir = CurrentDir + "\\Shapefiles\\";
             Shapefile shpPloygon = new Shapefile();
-            shpPloygon.CreateNew(@"X:\ShapeTrial\ConPolygon.shp", ShpfileType.SHP_POLYGON);
+            shpPloygon.CreateNew(CDir+"\\ConPolygon.shp", ShpfileType.SHP_POLYGON);
             int fldX = shpPloygon.EditAddField("X", FieldType.DOUBLE_FIELD, 9, 12);
             int fldY = shpPloygon.EditAddField("Y", FieldType.DOUBLE_FIELD, 9, 12);
             int fldArea = shpPloygon.EditAddField("area", FieldType.DOUBLE_FIELD, 9, 12);
@@ -747,5 +791,6 @@ namespace Obstacle
         {
             MakeIHSPolygonShape();
         }
+     
     }
 }

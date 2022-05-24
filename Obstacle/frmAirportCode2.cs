@@ -1021,6 +1021,7 @@ namespace Obstacle
             frmd.Controls["RunwayStrip"].Text = this.RunwayStrip.Text;
             frmd.Controls["ArpEast"].Text = this.ArpEast.Text;
             frmd.Controls["ArpNorth"].Text = this.ArpNorth.Text;
+            frmd.Controls["Zone"].Text = this.Zone.Text;
             frmd.Show();
 
 

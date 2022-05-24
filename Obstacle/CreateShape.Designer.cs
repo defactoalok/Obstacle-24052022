@@ -59,6 +59,11 @@
             this.ArpEast = new System.Windows.Forms.TextBox();
             this.textBox16 = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.Zone = new System.Windows.Forms.TextBox();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -199,6 +204,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(97, 26);
             this.textBox1.TabIndex = 168;
+            this.textBox1.Visible = false;
             // 
             // textBox2
             // 
@@ -208,6 +214,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(97, 26);
             this.textBox2.TabIndex = 170;
+            this.textBox2.Visible = false;
             // 
             // textBox3
             // 
@@ -217,6 +224,7 @@
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(84, 26);
             this.textBox3.TabIndex = 167;
+            this.textBox3.Visible = false;
             // 
             // textBox4
             // 
@@ -226,6 +234,7 @@
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(84, 26);
             this.textBox4.TabIndex = 169;
+            this.textBox4.Visible = false;
             // 
             // textBox5
             // 
@@ -235,6 +244,7 @@
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(97, 26);
             this.textBox5.TabIndex = 172;
+            this.textBox5.Visible = false;
             // 
             // textBox6
             // 
@@ -244,6 +254,7 @@
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(97, 26);
             this.textBox6.TabIndex = 174;
+            this.textBox6.Visible = false;
             // 
             // textBox7
             // 
@@ -253,6 +264,7 @@
             this.textBox7.Name = "textBox7";
             this.textBox7.Size = new System.Drawing.Size(84, 26);
             this.textBox7.TabIndex = 171;
+            this.textBox7.Visible = false;
             this.textBox7.TextChanged += new System.EventHandler(this.textBox7_TextChanged);
             // 
             // textBox8
@@ -263,6 +275,7 @@
             this.textBox8.Name = "textBox8";
             this.textBox8.Size = new System.Drawing.Size(84, 26);
             this.textBox8.TabIndex = 173;
+            this.textBox8.Visible = false;
             // 
             // textBox9
             // 
@@ -272,6 +285,7 @@
             this.textBox9.Name = "textBox9";
             this.textBox9.Size = new System.Drawing.Size(97, 26);
             this.textBox9.TabIndex = 180;
+            this.textBox9.Visible = false;
             // 
             // textBox10
             // 
@@ -281,6 +295,7 @@
             this.textBox10.Name = "textBox10";
             this.textBox10.Size = new System.Drawing.Size(97, 26);
             this.textBox10.TabIndex = 182;
+            this.textBox10.Visible = false;
             // 
             // textBox11
             // 
@@ -290,6 +305,7 @@
             this.textBox11.Name = "textBox11";
             this.textBox11.Size = new System.Drawing.Size(84, 26);
             this.textBox11.TabIndex = 179;
+            this.textBox11.Visible = false;
             // 
             // textBox12
             // 
@@ -299,6 +315,7 @@
             this.textBox12.Name = "textBox12";
             this.textBox12.Size = new System.Drawing.Size(84, 26);
             this.textBox12.TabIndex = 181;
+            this.textBox12.Visible = false;
             // 
             // ArpNorth
             // 
@@ -308,6 +325,7 @@
             this.ArpNorth.Name = "ArpNorth";
             this.ArpNorth.Size = new System.Drawing.Size(97, 26);
             this.ArpNorth.TabIndex = 176;
+            this.ArpNorth.Visible = false;
             // 
             // textBox14
             // 
@@ -317,6 +335,7 @@
             this.textBox14.Name = "textBox14";
             this.textBox14.Size = new System.Drawing.Size(97, 26);
             this.textBox14.TabIndex = 178;
+            this.textBox14.Visible = false;
             // 
             // ArpEast
             // 
@@ -326,6 +345,7 @@
             this.ArpEast.Name = "ArpEast";
             this.ArpEast.Size = new System.Drawing.Size(84, 26);
             this.ArpEast.TabIndex = 175;
+            this.ArpEast.Visible = false;
             // 
             // textBox16
             // 
@@ -335,6 +355,7 @@
             this.textBox16.Name = "textBox16";
             this.textBox16.Size = new System.Drawing.Size(84, 26);
             this.textBox16.TabIndex = 177;
+            this.textBox16.Visible = false;
             // 
             // button2
             // 
@@ -346,11 +367,40 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.dataGridView1);
+            this.panel1.Location = new System.Drawing.Point(704, 13);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(577, 425);
+            this.panel1.TabIndex = 184;
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(19, 16);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowHeadersWidth = 51;
+            this.dataGridView1.RowTemplate.Height = 24;
+            this.dataGridView1.Size = new System.Drawing.Size(240, 150);
+            this.dataGridView1.TabIndex = 0;
+            // 
+            // Zone
+            // 
+            this.Zone.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Zone.Location = new System.Drawing.Point(270, 337);
+            this.Zone.Margin = new System.Windows.Forms.Padding(4);
+            this.Zone.Name = "Zone";
+            this.Zone.Size = new System.Drawing.Size(120, 26);
+            this.Zone.TabIndex = 185;
+            // 
             // CreateShape
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1293, 450);
+            this.Controls.Add(this.Zone);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.textBox9);
             this.Controls.Add(this.textBox10);
@@ -384,6 +434,8 @@
             this.Name = "CreateShape";
             this.Text = "CreateShape";
             this.Load += new System.EventHandler(this.CreateShape_Load);
+            this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -422,5 +474,8 @@
         private System.Windows.Forms.TextBox ArpEast;
         private System.Windows.Forms.TextBox textBox16;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.TextBox Zone;
     }
 }
