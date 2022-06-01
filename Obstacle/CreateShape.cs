@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using Point = MapWinGIS.Point;
+using System.Linq;
 
 
 namespace Obstacle
@@ -392,9 +393,12 @@ namespace Obstacle
                 string RectangleBottom = App1BSRE + "," + App1BSRN+ ";" + App2BSRE+ "," + App2BSRN
                     + ";" + App2TSRightE + "," + App2TSRightN + ";" + App1TSRightE + "," + App1TSRightN;
 
-                string RunwayStrip = App1BSRE + "," + App1BSRN + ";" + App1BSLE + "," + App1BSLN + ";" + 
-                    App2BSLE +","+ App2BSLN + ";" + App2BSRE + "," + App2BSRN;
+                //string RunwayStrip = App1BSRE + "," + App1BSRN + ";" + App1BSLE + "," + App1BSLN + ";" + 
+                //  App2BSLE +","+ App2BSLN + ";" + App2BSRE + "," + App2BSRN;
 
+                string RunwayStrip = App1StripRightE + "," + App1StripRightN + ";" + App1StripLeftE + "," + App1StripLeftN 
+                    + ";" + App2StripRightE + "," + App2StripRightN + ";" + App2StripLeftE + "," + App2StripLeftN;
+               
                 String leftApporach = App1BSLE + "," + App1BSLN + ";" + AppUppCord1E + "," + AppUppCord1N 
                     + ";" + AppUppCord1ELeft + "," + AppUppCord1NLeft + ";" + App1BSRE + "," + App1BSRN;
 
@@ -427,11 +431,11 @@ namespace Obstacle
 
                 Shape PlgRectangleBottom = new Shape();
                 PlgRectangleBottom.Create(PolygonShape.ShapefileType);
-                MakePolygon(RectangleBottom, myPointIndex, myShapeIndex, PolygonShape, PlgRectangleBottom);
+              MakePolygon(RectangleBottom, myPointIndex, myShapeIndex, PolygonShape, PlgRectangleBottom);
 
                 Shape Runway = new Shape();
                 Runway.Create(PolygonShape.ShapefileType);
-                MakePolygon(RunwayStrip, myPointIndex, myShapeIndex, PolygonShape, PlgRectangleBottom);
+               MakePolygon(RunwayStrip, myPointIndex, myShapeIndex, PolygonShape, Runway);
 
                 Shape PlgTringleBottomLeft = new Shape();
                 PlgTringleBottomLeft.Create(PolygonShape.ShapefileType);
@@ -441,23 +445,33 @@ namespace Obstacle
                
                 string Bs1 = App2StripRightE + "," + App2StripRightN + ";" + App2StripLeftE + "," +
                     App2StripLeftN + ";" + App2BSLE + "," + App2BSLN + ";" + App2BSRE + "," + App2BSRN;
-                string Bs2 = App1StripLeftE + "," + App1StripRightE + ";" + App1BSRE + "," + App1BSRN + ";" +
+
+                string Bs2 = App1StripLeftE + "," + App1StripLeftN + ";" + App1BSRE + "," + App1BSRN + ";" +
                 App1BSLE + "," + App1BSLN + ";" + App1StripRightE + "," + App1StripRightN;
 
-                Shape Bs1 = new Shape();
-                Bs1.Create(PolygonShape.ShapefileType);
-                MakePolygon(Bs1, myPointIndex, myShapeIndex, PolygonShape,Bs1);
+                Shape ShapeBs1 = new Shape();
+                ShapeBs1.Create(PolygonShape.ShapefileType);
+                MakePolygon(Bs1, myPointIndex, myShapeIndex, PolygonShape,ShapeBs1);
 
-                Shape Bs2 = new Shape();
-                Bs2.Create(PolygonShape.ShapefileType);
-                MakePolygon(Bs2, myPointIndex, myShapeIndex, PolygonShape, Bs2);
+                Shape ShapeBs2 = new Shape();
+                ShapeBs2.Create(PolygonShape.ShapefileType);
+                MakePolygon(Bs2, myPointIndex, myShapeIndex, PolygonShape, ShapeBs2);
 
-             
+
+                string PlyCentreLine = AppUpperCLineE + "," + AppUpperCLineN + ";" + AppLwrCLineE + "," + AppLwrCLineN;
+                Shape PlyShapeCentreLine = new Shape();
+                PlyShapeCentreLine.Create(poly.ShapefileType);
+                MakePolygon(PlyCentreLine, myPointIndex, myShapeIndex, PolygonShape, PlyShapeCentreLine);
+
                 PolygonShape.StopEditingShapes(true, true, null);
                 PolygonShape.Close();
 
-                //
+                string searchPoint = "388395.628,2768107.980";
+                IsInPolygon(searchPoint, TriangleTopLeft);
 
+
+                //
+                /*
                 string JoinRW1 = App1StripLeftE + "," + App1StripLeftN + ";" + App1StripRightE + "," + App1StripRightN;
      
 
@@ -474,6 +488,11 @@ namespace Obstacle
                 Shape pPolyline13 = new Shape();
                 pPolyline13.Create(poly.ShapefileType);
                 MakePolyline(AppLeftCentre, myPointIndex, myShapeIndex, poly, pPolyline13, out PointIndex, out ShapeIndex);
+                */
+                string CentreLine = AppUpperCLineE + "," + AppUpperCLineN+ ";" + AppLwrCLineE+ "," + AppLwrCLineN;
+                Shape ShapeCentreLine = new Shape();
+                ShapeCentreLine.Create(poly.ShapefileType);
+                MakePolyline(CentreLine, myPointIndex, myShapeIndex, poly, ShapeCentreLine, out int PointIndex, out int ShapeIndex);
 
 
                 /*
@@ -970,7 +989,66 @@ namespace Obstacle
         {
             MakeIHSPolygonShape();
         }
+        public static bool IsInPolygon(string point, string polygon)
+        {
+            bool inout = false;
+            var SplitPoint = point.Split(',');
+            MapWinGIS.Point pnt = new Point();
 
-     
+            pnt.x = double.Parse(SplitPoint[0]);
+            pnt.y = double.Parse(SplitPoint[1]);
+
+
+            double[] Xs = new double[4];
+            double[] Ys = new double[4];
+
+            string[] vpoints = polygon.Split(';');
+
+            int i = 0;
+            foreach (string vpoint in vpoints)
+            {
+                MapWinGIS.Point PolyPoint = new Point();
+                // ShpfileType.SHP_POINT);
+                var vp = vpoint.Split(',');
+                Xs[i] = Convert.ToDouble(vp[0]);
+                Ys[i] = Convert.ToDouble(vp[1]);
+                i++;
+
+            }
+            MapWinGIS.Point lastpoint=new Point();
+            lastpoint.x = Xs[2];
+            lastpoint.y = Ys[2]; 
+
+            for(i=0;i<=2; i++)
+            {
+                MapWinGIS.Point b = new MapWinGIS.Point();
+                b.x = Xs[i]; b.y = Ys[i];
+
+                if ((b.x == pnt.x) && (b.y == pnt.y))
+                    return true;
+
+                if ((b.y == lastpoint.y) && (pnt.y == lastpoint.y))
+                {
+                    if (lastpoint.x<= pnt.x && pnt.x<= b.x)
+                        return true;
+
+                    if ((b.x <= pnt.x) && (pnt.x <= lastpoint.x))
+                        return true;
+                }
+
+                if ((b.y < pnt.y) && (lastpoint.y >= pnt.y) || (lastpoint.y < pnt.y) && (b.y >= pnt.y))
+                {
+                    if (b.x + (pnt.y - b.y) / (lastpoint.y - b.y) * (lastpoint.x - b.x) <= pnt.x)
+                        inout = !inout;
+                }
+                lastpoint = b;
+            }
+            return inout ;
+
+        }
+
+             
+        
+
     }
 }
