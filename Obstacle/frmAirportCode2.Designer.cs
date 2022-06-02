@@ -125,6 +125,10 @@
             this.App2Lng = new System.Windows.Forms.TextBox();
             this.App2Lat = new System.Windows.Forms.TextBox();
             this.label37 = new System.Windows.Forms.Label();
+            this.TstTopLeft = new System.Windows.Forms.TextBox();
+            this.TstTopRight = new System.Windows.Forms.TextBox();
+            this.TstBottomLeft = new System.Windows.Forms.TextBox();
+            this.TstBottomRight = new System.Windows.Forms.TextBox();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -1187,11 +1191,43 @@
             this.label37.TabIndex = 177;
             this.label37.Text = "Zone";
             // 
+            // TstTopLeft
+            // 
+            this.TstTopLeft.Location = new System.Drawing.Point(866, 825);
+            this.TstTopLeft.Name = "TstTopLeft";
+            this.TstTopLeft.Size = new System.Drawing.Size(100, 22);
+            this.TstTopLeft.TabIndex = 198;
+            // 
+            // TstTopRight
+            // 
+            this.TstTopRight.Location = new System.Drawing.Point(866, 795);
+            this.TstTopRight.Name = "TstTopRight";
+            this.TstTopRight.Size = new System.Drawing.Size(100, 22);
+            this.TstTopRight.TabIndex = 199;
+            // 
+            // TstBottomLeft
+            // 
+            this.TstBottomLeft.Location = new System.Drawing.Point(866, 880);
+            this.TstBottomLeft.Name = "TstBottomLeft";
+            this.TstBottomLeft.Size = new System.Drawing.Size(100, 22);
+            this.TstBottomLeft.TabIndex = 200;
+            // 
+            // TstBottomRight
+            // 
+            this.TstBottomRight.Location = new System.Drawing.Point(866, 853);
+            this.TstBottomRight.Name = "TstBottomRight";
+            this.TstBottomRight.Size = new System.Drawing.Size(100, 22);
+            this.TstBottomRight.TabIndex = 201;
+            // 
             // frmAirportCode2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(980, 914);
+            this.Controls.Add(this.TstBottomRight);
+            this.Controls.Add(this.TstBottomLeft);
+            this.Controls.Add(this.TstTopRight);
+            this.Controls.Add(this.TstTopLeft);
             this.Controls.Add(this.label37);
             this.Controls.Add(this.App2Lng);
             this.Controls.Add(this.App2Lat);
@@ -1352,5 +1388,9 @@
         private System.Windows.Forms.TextBox App2Lat;
         private System.Windows.Forms.Label label37;
         private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.TextBox TstTopLeft;
+        private System.Windows.Forms.TextBox TstTopRight;
+        private System.Windows.Forms.TextBox TstBottomLeft;
+        private System.Windows.Forms.TextBox TstBottomRight;
     }
 }

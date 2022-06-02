@@ -12,7 +12,8 @@ namespace Obstacle
     public partial class CreateShape : Form
     {
         string CurrentDir = Directory.GetCurrentDirectory();
-        
+
+        public string TstTopLeft, TstTopRight, TstBottomLeft, TstBottomRight;
 
         public CreateShape()
         {
@@ -20,9 +21,11 @@ namespace Obstacle
 
         }
 
+        
         private void CreateShape_Load(object sender, EventArgs e)
         {
-           
+            this.Hide();
+            button1_Click(null,null);
 
         }
 
@@ -376,17 +379,21 @@ namespace Obstacle
                
                 string TriangleTopLeft = App1TsFunnelLE + "," + App1TsFunnelLN + ";" + 
                     App1TSLeftE + "," + App1TSLeftN +";" + App1BSLE + "," + App1BSLN;
-                    
+
+     
 
                 string RectangleTop= App1BSLE + "," + App1BSLN + ";" + App2BSLE + "," + App2BSLN
                     + ";" + App2TSLeftE + "," + App2TSLeftN + ";" + App1TSLeftE + "," + App1TSLeftN;
 
                 string TriangleTopRight = App2TSLeftE + "," + App2TSLeftN + ";" +App2BSLE + "," + App2BSLN
                    + ";" + App2TsFunnelRE + "," + App2TsFunnelRN;
+                
+            
 
                 string TriangleBottomRight =  App2BSRE+ "," + App2BSRN+";"+ App2TSRightE + "," + App2TSRightN + ";"  
                     + App2TsFunnelRLwrE + "," + App2TsFunnelRLwrN;
 
+                
                 string TriangleBottomLeft = App1BSRE + "," + App1BSRN + ";" + App1TSRightE + "," + App1TSRightN + ";"
                    + App1TsFunnelLLwrE + "," + App1TsFunnelLLwrN;
 
@@ -466,8 +473,14 @@ namespace Obstacle
                 PolygonShape.StopEditingShapes(true, true, null);
                 PolygonShape.Close();
 
-                string searchPoint = "388395.628,2768107.980";
-                IsInPolygon(searchPoint, TriangleTopLeft);
+                frmAirportCode2 frm = new frmAirportCode2();
+                frm.Controls["TstTopLeft"].Text= TriangleTopLeft;
+                frm.Controls["TstTopRight"].Text = TriangleTopRight;
+                frm.Controls["TstBottomLeft"].Text = TriangleBottomLeft;
+                frm.Controls["TstBottomRight"].Text = TriangleBottomRight;
+
+                //string searchPoint = "388395.628,2768107.980";
+                //IsInPolygon(searchPoint, TriangleTopLeft);
 
 
                 //
@@ -495,258 +508,7 @@ namespace Obstacle
                 MakePolyline(CentreLine, myPointIndex, myShapeIndex, poly, ShapeCentreLine, out int PointIndex, out int ShapeIndex);
 
 
-                /*
-                                string App1TSLF = App1TSLeftE + "," + App1TSLeftN + ";" + App1TsFunnelLE + "," + App1TsFunnelLN;
-                                string App1TSRFLwr = App1TSRightE + "," + App1TSRightN + ";" + App1TsFunnelLLwrE + "," + App1TsFunnelLLwrN;
-                                string App2TSRF = App2TSLeftE + "," + App2TSLeftN + ";" + App2TsFunnelRE + "," + App2TsFunnelRN;
-                                string App2TSRFLwr = App2TSRightE + "," + App2TSRightN + ";" + App2TsFunnelRLwrE + "," + App2TsFunnelRLwrN;
-
-
-                                string xyz = this.textBox3.Text + "," + this.textBox1.Text + ";" + this.textBox8.Text + "," + this.textBox6.Text;
-                                string xyz1 = this.textBox8.Text + "," + this.textBox6.Text + ";" + this.App2East.Text + "," + this.App2North.Text;
-                                string xyz2 =  this.textBox4.Text + "," + this.textBox2.Text + ";" + this.textBox7.Text + "," + this.textBox5.Text;
-                                string App1BS = this.App1East.Text + "," + this.App1North.Text + ";" + App1BStripE+ "," + App1BStripN;
-                                string App2BS = this.App2East.Text + "," + this.App2North.Text + ";" + App2BStripE + "," + App2BStripN;
-                                string App1BSLine = App1BSLE + "," + App1BSLN + ";" + App1BSRE + "," + App1BSRN;
-                                string App2BSLine = App2BSLE + "," + App2BSLN + ";" + App2BSRE + "," + App2BSRN;
-                                string App1JoinR = App1BSLE + "," + App1BSLN + ";" + App1StripRightE + "," + App1StripRightN;
-                                string App1JoinL = App1BSRE + "," + App1BSRN + ";" + App1StripLeftE + "," + App1StripLeftN;
-                                string App2JoinR = App2BSLE + "," + App2BSLN + ";" + App2StripLeftE + "," + App2StripLeftN;
-                                string App2JoinL = App2BSRE + "," + App2BSRN + ";" + App2StripRightE + "," + App2StripRightN;
-                                //    *************  
-                                 string App1TSL = App1BSLE + "," + App1BSLN + ";" + App1TSLeftE+ "," + App1TSLeftN;
-                                 string App1TSR = App1BSRE + "," + App1BSRN + ";" + App1TSRightE + "," + App1TSRightN;
-
-
-                                string AppJoinUpper1 = AppUppCord1E + "," + AppUppCord1N + ";" + AppUpperCLineE + "," + AppUpperCLineN;
-                                string AppJoingUpper2 = AppUppCord1ELeft + "," + AppUppCord1NLeft + ";" + AppUpperCLineE + "," + AppUpperCLineN;
-                                string AppJoinLwr1 = AppLwrCord1E + "," + AppLwrCord1N + ";" + AppLwrCLineE + "," + AppLwrCLineN;
-                                string AppJoinLwr2 = AppLwrCord1ELeft + "," + AppLwrCord1NLeft + ";" + AppLwrCLineE + "," + AppLwrCLineN;
-
-                                string App2TSL = App2BSRE + "," + App2BSRN + ";" + App2TSLeftE + "," + App2TSLeftN;
-                                string App2TSR = App2BSLE + "," + App2BSLN + ";" + App2TSRightE + "," + App2TSRightN;
-
-                                string  TSJoinR = App1TSRightE + "," + App1TSRightN+ ";" + App2TSRightE + "," + App2TSRightN;
-                                string  TSJoinL = App1TSLeftE + "," + App1TSLeftN + ";" + App2TSLeftE + "," + App2TSLeftN;
-
-                                string App1ApplineR = App1BSLE+ "," + App1BSLN+ ";" + AppUppCord1E + "," + AppUppCord1N;
-                                string App1ApplineL = App1BSRE + "," + App1BSRN + ";" + AppUppCord1ELeft + "," + AppUppCord1NLeft;
-                                string AppUpperCentre = App1BStripE + "," + App1BStripN + ";" + AppUpperCLineE + "," + AppUpperCLineN;
-                                //string AppAdd = App1ApplineR + "," + App1ApplineL;
-
-                                string App2ApplineR = App2BSLE + "," + App2BSLN + ";" + AppLwrCord1E + "," + AppLwrCord1N;
-                                string App2ApplineL = App2BSRE + "," + App2BSRN + ";" + AppLwrCord1ELeft + "," + AppLwrCord1NLeft;
-                                string AppLwrCentre = App2BStripE + "," + App2BStripN + ";" + AppLwrCLineE + "," + AppLwrCLineN;
-
-                                string App2TSRightUp= App2BStripE+","+ App2BStripN +";"+ App2TsPointE +","+ App2TsPointN;
-
-                                string trial = App2ApplineR +","+ App2ApplineL+","+ AppLwrCentre;
-
-                                string P1 = this.App1East.Text + "," + this.App1North.Text + ";" + this.App2East.Text + ","
-                                    + this.App2North.Text;
-
-                                string RWidth1 = this.App1East.Text + "," + this.App1North.Text + ";"+ textBox3.Text + "," + textBox1.Text;
-
-                                string RWidth2 = textBox4.Text + "," + textBox2.Text+";"+this.App1East.Text + "," + this.App1North.Text ;
-
-                                string RWidth3 = this.App2East.Text + "," + this.App2North.Text + ";" + textBox7.Text + "," + textBox5.Text;
-                                string RWidth4 = this.App2East.Text + "," + this.App2North.Text + ";" + textBox8.Text + "," + textBox6.Text;
-
-                                string RWidth5 =   textBox3.Text + "," + textBox1.Text+";"+ textBox8.Text + "," + textBox6.Text;
-                                string RWidth6 = textBox4.Text + "," + textBox2.Text + ";" + textBox7.Text + "," + textBox5.Text; ;
-
-
-                                string AppLine_1 =  this.App1East.Text+","+this.App1North.Text+";"+AppLineE + "," + AppLineN ;
-                                string AppLine_2 = this.App2East.Text + "," + this.App2North.Text+";"+RAppLineE + "," + RAppLineN;
-                                string AppBottom= this.App1East.Text + "," + this.App1North.Text + ";" + AppLineE + "," + AppLineN;
-
-                                pPolyline = new Shape();
-                                pPolyline.Create(poly.ShapefileType);
-
-                               MakePolyline(P1, myPointIndex, myShapeIndex, poly, pPolyline, out int PointIndex,   out  int ShapeIndex);
-
-
-                                Shape pPolyline1 = new Shape();
-                                pPolyline1.Create(poly.ShapefileType);
-                                MakePolyline(RWidth1, myPointIndex, myShapeIndex, poly, pPolyline1, out    PointIndex, out   ShapeIndex);
-
-                                 Shape pPolyline2 = new Shape();
-                                 pPolyline2.Create(poly.ShapefileType);
-                                 MakePolyline(xyzz, myPointIndex, myShapeIndex, poly, pPolyline2, out PointIndex, out ShapeIndex);
-
-                               Shape pPolyline3 = new Shape();
-                               pPolyline3.Create(poly.ShapefileType);
-                               MakePolyline(xyz, myPointIndex, myShapeIndex, poly, pPolyline3, out PointIndex, out ShapeIndex);
-
-                             Shape pPolyline4 = new Shape();
-                             pPolyline4.Create(poly.ShapefileType);
-                             MakePolyline(xyz1, myPointIndex, myShapeIndex, poly, pPolyline4, out PointIndex, out ShapeIndex);
-
-                            Shape pPolyline5 = new Shape();
-                            pPolyline5.Create(poly.ShapefileType);
-                             MakePolyline(xyz2, myPointIndex, myShapeIndex, poly, pPolyline5, out PointIndex, out ShapeIndex);
-
-                                Shape pPolyline6 = new Shape();
-                                pPolyline6.Create(poly.ShapefileType);
-                                MakePolyline(App2EOR, myPointIndex, myShapeIndex, poly, pPolyline6, out PointIndex, out ShapeIndex);
-
-                                Shape pPolyline7 = new Shape();
-                                pPolyline7.Create(poly.ShapefileType);
-                                MakePolyline(App1BS, myPointIndex, myShapeIndex, poly, pPolyline7, out PointIndex, out ShapeIndex);
-
-                                Shape pPolyline8 = new Shape();
-                                pPolyline8.Create(poly.ShapefileType);
-                                MakePolyline(App2BS, myPointIndex, myShapeIndex, poly, pPolyline8, out PointIndex, out ShapeIndex);
-
-                                Shape pPolyline9 = new Shape();
-                                pPolyline9.Create(poly.ShapefileType);
-                                MakePolyline(App1BSLine, myPointIndex, myShapeIndex, poly, pPolyline9, out PointIndex, out ShapeIndex);
-
-                                 Shape pPolyline10 = new Shape();
-                                 pPolyline10.Create(poly.ShapefileType);
-                                MakePolyline(App2BSLine, myPointIndex, myShapeIndex, poly, pPolyline10, out PointIndex, out ShapeIndex);
-
-                                Shape pPolyline11 = new Shape();
-                                pPolyline11.Create(poly.ShapefileType);
-                                MakePolyline(App1ApplineR, myPointIndex, myShapeIndex, poly, pPolyline11, out PointIndex, out ShapeIndex);
-
-                                Shape pPolyline12 = new Shape();
-                                pPolyline12.Create(poly.ShapefileType);
-                                MakePolyline(App1ApplineL, myPointIndex, myShapeIndex, poly, pPolyline12, out PointIndex, out ShapeIndex);
-
-                                Shape pPolyline13 = new Shape();
-                                pPolyline13.Create(poly.ShapefileType);
-                                MakePolyline(AppUpperCentre, myPointIndex, myShapeIndex, poly, pPolyline13, out PointIndex, out ShapeIndex);
-
-                              //  string trial = App2ApplineR + "," + App2ApplineL + "," + AppLwrCentre;
-
-                                Shape pPolyline14 = new Shape();
-                                pPolyline14.Create(poly.ShapefileType);
-                                MakePolyline(App2ApplineR, myPointIndex, myShapeIndex, poly, pPolyline14, out PointIndex, out ShapeIndex);
-
-                                Shape pPolyline15 = new Shape();
-                                pPolyline15.Create(poly.ShapefileType);
-                                MakePolyline(App2ApplineL, myPointIndex, myShapeIndex, poly, pPolyline15, out PointIndex, out ShapeIndex);
-
-                                Shape pPolyline16 = new Shape();
-                                pPolyline16.Create(poly.ShapefileType);
-                                MakePolyline(AppLwrCentre, myPointIndex, myShapeIndex, poly, pPolyline16, out PointIndex, out ShapeIndex);
-
-                                Shape pPolyline17 = new Shape();
-                                pPolyline17.Create(poly.ShapefileType);
-                                MakePolyline(App1JoinR, myPointIndex, myShapeIndex, poly, pPolyline17, out PointIndex, out ShapeIndex);
-
-                                Shape pPolyline18 = new Shape();
-                                pPolyline18.Create(poly.ShapefileType);
-                                MakePolyline(App1JoinL, myPointIndex, myShapeIndex, poly, pPolyline18, out PointIndex, out ShapeIndex);
-
-                                Shape pPolyline19 = new Shape();
-                                pPolyline19.Create(poly.ShapefileType);
-                                MakePolyline(App2JoinR, myPointIndex, myShapeIndex, poly, pPolyline19, out PointIndex, out ShapeIndex);
-
-                                Shape pPolyline20 = new Shape();
-                                pPolyline20.Create(poly.ShapefileType);
-                                MakePolyline(App2JoinL, myPointIndex, myShapeIndex, poly, pPolyline20, out PointIndex, out ShapeIndex);
-
-
-                                Shape pPolyline211 = new Shape();
-                                pPolyline211.Create(poly.ShapefileType);
-                                MakePolyline(App1TSR, myPointIndex, myShapeIndex, poly, pPolyline211, out PointIndex, out ShapeIndex);
-
-                                Shape pPolyline21 = new Shape();
-                                pPolyline21.Create(poly.ShapefileType);
-                                MakePolyline(App1TSL, myPointIndex, myShapeIndex, poly, pPolyline21, out PointIndex, out ShapeIndex);
-
-
-                              //  Shape pPolyline29 = new Shape();
-                              //  pPolyline29.Create(poly.ShapefileType);
-                             //   MakePolyline(App2TsLineR, myPointIndex, myShapeIndex, poly, pPolyline29, out PointIndex, out ShapeIndex);
-
-                                Shape pPolyline22 = new Shape();
-                                       pPolyline22.Create(poly.ShapefileType);
-                                      MakePolyline(App1TSL, myPointIndex, myShapeIndex, poly, pPolyline22, out PointIndex, out ShapeIndex);
-
-                                Shape pPolyline22a = new Shape();
-                                pPolyline22a.Create(poly.ShapefileType);
-                                MakePolyline(App1TSLF, myPointIndex, myShapeIndex, poly, pPolyline22a, out PointIndex, out ShapeIndex);
-
-                                Shape pPolyline22b = new Shape();
-                                pPolyline22b.Create(poly.ShapefileType);
-                                MakePolyline(App2TSRF, myPointIndex, myShapeIndex, poly, pPolyline22b, out PointIndex, out ShapeIndex);
-
-
-                                Shape pPolyline22c = new Shape();
-                                pPolyline22c.Create(poly.ShapefileType);
-                                MakePolyline(App1TSRFLwr, myPointIndex, myShapeIndex, poly, pPolyline22c, out PointIndex, out ShapeIndex);
-
-
-                                Shape pPolyline22d = new Shape();
-                                pPolyline22d.Create(poly.ShapefileType);
-                                MakePolyline(App2TSRFLwr, myPointIndex, myShapeIndex, poly, pPolyline22d, out PointIndex, out ShapeIndex);
-
-                                Shape pPolylineAppUpper1 = new Shape();
-                                pPolylineAppUpper1.Create(poly.ShapefileType);
-                                MakePolyline(AppJoinUpper1, myPointIndex, myShapeIndex, poly, pPolylineAppUpper1, out PointIndex, out ShapeIndex);
-
-                                Shape pPolylineAppUpper2 = new Shape();
-                                pPolylineAppUpper2.Create(poly.ShapefileType);
-                                MakePolyline(AppJoingUpper2, myPointIndex, myShapeIndex, poly, pPolylineAppUpper2, out PointIndex, out ShapeIndex);
-
-                                Shape pPolylineAppJoinLwr1 = new Shape();
-                                pPolylineAppJoinLwr1.Create(poly.ShapefileType);
-                                MakePolyline(AppJoinLwr1, myPointIndex, myShapeIndex, poly, pPolylineAppJoinLwr1, out PointIndex, out ShapeIndex);
-
-                                Shape pPolylineAppJoinLwr2 = new Shape();
-                                pPolylineAppJoinLwr2.Create(poly.ShapefileType);
-                                MakePolyline(AppJoinLwr2, myPointIndex, myShapeIndex, poly, pPolylineAppJoinLwr2, out PointIndex, out ShapeIndex);
-
-
-
-                                Shape pPolyline221 = new Shape();
-                                pPolyline221.Create(poly.ShapefileType);
-                         //       MakePolyline(App2TSRF, myPointIndex, myShapeIndex, poly, pPolyline221, out PointIndex, out ShapeIndex);
-
-                                Shape pPolyline23 = new Shape();
-                                        pPolyline23.Create(poly.ShapefileType);
-                                MakePolyline(App2TSR, myPointIndex, myShapeIndex, poly, pPolyline23, out PointIndex, out ShapeIndex);
-
-                                Shape pPolyline123 = new Shape();
-                                pPolyline123.Create(poly.ShapefileType);
-                                MakePolyline(App2TSRightUp, myPointIndex, myShapeIndex, poly, pPolyline123, out PointIndex, out ShapeIndex);
-
-
-                                        Shape pPolyline24 = new Shape();
-                                        pPolyline24.Create(poly.ShapefileType);
-                                        MakePolyline(App2TSL, myPointIndex, myShapeIndex, poly, pPolyline24, out PointIndex, out ShapeIndex);
-
-
-                                        Shape pPolyline25 = new Shape();
-                                        pPolyline25.Create(poly.ShapefileType);
-                                        MakePolyline(TSJoinL, myPointIndex, myShapeIndex, poly, pPolyline25, out PointIndex, out ShapeIndex);
-
-
-                                        Shape pPolyline26 = new Shape();
-                                        pPolyline26.Create(poly.ShapefileType);
-                                        MakePolyline(TSJoinR, myPointIndex, myShapeIndex, poly, pPolyline26, out PointIndex, out ShapeIndex);
-
-
-                                MapWinGIS.Shape arp = new Shape();
-                                arp.Create(ShpfileType.SHP_POINT);
-                                MapWinGIS.Point arpPoint = new Point();
-                                arpPoint.x = double.Parse(this.ArpEast.Text);
-                                arpPoint.y = double.Parse(this.ArpNorth.Text);
-                                arp.InsertPoint(arpPoint, ref myPointIndex);
-                                poly.EditInsertShape(arp, ref myShapeIndex);
-
-                                // var shpIndex = myShapefile.EditAddShape(myShape);
-                                /*  
-                                  axMap1.Projection = tkMapProjection.PROJECTION_NONE;
-                                  int handle = axMap1.AddLayer(pPolyline,false);
-                                  axMap1.ZoomToLayer(handle);
-                                  axMap1.DrawCircleEx(handle,double.Parse(this.App1East.Text), double.Parse(this.App1North.Text), 1000, 16, true);
-                                  axMap1.Redraw();
-                                */
-
+               
                 poly.StopEditingShapes(true, true, null);
                 poly.Close();
                 MakeIHSPolygonShape();

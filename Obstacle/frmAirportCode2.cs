@@ -5,12 +5,13 @@ using System.Data;
 using System.Data.OleDb;
 using System.Diagnostics;
 using System.Windows.Forms;
-
+using MapWinGIS;
+using Point = MapWinGIS.Point;
 namespace Obstacle
 {
     public partial class frmAirportCode2 : Form
     {
-       
+        string STstTopLeft, STstTopRight, STstBottomLeft, STstBottomRight;
         public frmAirportCode2()
         {
             InitializeComponent();
@@ -88,10 +89,10 @@ namespace Obstacle
                 Coordinate c2 = new Coordinate(latitude2, longitude2);
                 Coordinate c3 = new Coordinate(Arplatitude, Arplongitude);
 
-                Distance d = new Distance(c, c2, Shape.Ellipsoid);
+                Distance d = new Distance(c, c2,  CoordinateSharp.Shape .Ellipsoid);
                 this.RwyLength.Text = Math.Round(d.Meters, 2).ToString();
                 this.Bearing.Text = Math.Round(d.Bearing, 6).ToString();
-                d = new Distance(c2, c, Shape.Ellipsoid);
+                d = new Distance(c2, c, CoordinateSharp.Shape.Ellipsoid);
 
                 this.BackBearing.Text = Math.Round(d.Bearing, 6).ToString();
                 this.Easting.Text = c.UTM.Easting.ToString();
@@ -379,7 +380,7 @@ namespace Obstacle
             c = new Coordinate(latitude,longitude);
             Coordinate c2 = new Coordinate(latitude2, longitude2);
          
-            Distance d = new Distance(c, c2, Shape.Ellipsoid);
+            Distance d = new Distance(c, c2, CoordinateSharp.Shape.Ellipsoid);
 
             PDistance= Math.Round(d.Meters, 1) ;
           
@@ -387,7 +388,7 @@ namespace Obstacle
             
             ForwardDms = decimaltodms(Forward);
             
-            d = new Distance(c2, c, Shape.Ellipsoid);
+            d = new Distance(c2, c, CoordinateSharp.Shape.Ellipsoid);
             
             Backward = Math.Round(d.Bearing, 2) ;
             
@@ -553,7 +554,7 @@ namespace Obstacle
         {
             Coordinate c1 = new Coordinate(Lat1, Lng1);
             Coordinate c2 = new Coordinate(Lat2, Lng2);
-            Distance d = new Distance(c1, c2, Shape.Ellipsoid);
+            Distance d = new Distance(c1, c2, CoordinateSharp.Shape.Ellipsoid);
             Bearing = Math.Round(d.Bearing, 2);
             RDistance = Math.Round(d.Meters,1);
 
@@ -561,12 +562,6 @@ namespace Obstacle
         }
         private void GetObstacles(object sender, EventArgs e)
         {
-
-            /*     double latitude = double.Parse(this.LatD.Text) + (double.Parse(this.LatM.Text) / 60) + (double.Parse(this.LatS.Text) / 3600);
-                 double longitude = double.Parse(this.LngD.Text) + (double.Parse(this.LngM.Text) / 60) + (double.Parse(this.LngS.Text) / 3600);
-                 double latitude2 = double.Parse(this.LatD2.Text) + (double.Parse(this.LatM2.Text) / 60) + (double.Parse(this.LatS2.Text) / 3600);
-                 double longitude2 = double.Parse(this.LngD2.Text) + (double.Parse(this.LngM2.Text) / 60) + (double.Parse(this.LngS2.Text) / 3600);
-             */
 
 
 
@@ -622,9 +617,10 @@ namespace Obstacle
                             getX = 0; getY = 0; getYY = 0; DistanceFromApp1 = 0; DistanceFromApp2 = 0;
                                 RWYSTRIP = 0; ARPDistance = 0; RunwayLength = 0; nearer = false;
 
+                                double PointE = double.Parse(reader["Easting"].ToString());
+                                double PointN = double.Parse(reader["Northing"].ToString());
 
-
-                                PointLat = double.Parse(reader["LatDecimal"].ToString());
+                            PointLat = double.Parse(reader["LatDecimal"].ToString());
                                 PointLng = double.Parse(reader["LongDecimal"].ToString());
                                 double PointElevation= double.Parse(reader["Elevation"].ToString());
 
@@ -667,7 +663,7 @@ namespace Obstacle
                                 RWYSTRIP = double.Parse(this.RunwayStrip.Text) / 2;
                                 RunwayLength = double.Parse(this.RwyLength.Text.ToString());
 
-                                Getsurface(getX, getY, getYY, DistanceFromApp1, DistanceFromApp2, RWYSTRIP, ARPDistance, RunwayLength, nearer, out string surface);
+                                Getsurface(getX, getY, getYY, DistanceFromApp1, DistanceFromApp2, RWYSTRIP, ARPDistance, RunwayLength, PointE, PointN, nearer, out string surface);
 
                                 double nearestRwyDistance = getNearer(getX, RunwayLength, DistanceFromApp1, DistanceFromApp2, out double Nearest);
 
@@ -809,13 +805,17 @@ namespace Obstacle
         }
         
 
-        private void Getsurface(double getX, double getY, double getYY, double distanceFromApp1, double distanceFromApp2, double rWYSTRIP, double aRPDistance, double runwayLength, bool nearer, out string surface)
+        private void Getsurface(double getX, double getY, double getYY, double distanceFromApp1, double distanceFromApp2, double rWYSTRIP, double aRPDistance, double runwayLength, double PointE, double PointY,
+            bool nearer, out string surface)
         {
             bool Funnel; string found; double DISTANCE; double strip; Funnel = false; string app;
             surface = "Nil";
-           // try
+            bool isTst = false;
+            string PointCoordinates = PointE.ToString() + "," + PointY.ToString();
+
+            // try
             //{
-                if (distanceFromApp1 < distanceFromApp2)
+            if (distanceFromApp1 < distanceFromApp2)
                 {
                     DISTANCE = distanceFromApp1;
                     app = Rwy1Label.Text.Substring(3, 2);
@@ -849,20 +849,41 @@ namespace Obstacle
                     found = "TS"+app;
                 }
 
-                if (getY > strip && getY <= ((strip) + 225) && getX <= 1125 && getY >=getYY)
+            //******************TST
+
+            isTst = IsInPolygon(PointCoordinates, STstTopLeft);
+
+                if (isTst==false)
+                {
+                    isTst = IsInPolygon(PointCoordinates, STstTopRight);
+                }
+                if (isTst == false)
+                {
+                    isTst = IsInPolygon(PointCoordinates, STstBottomLeft);
+                }
+                if (isTst == false)
+                {
+                    isTst = IsInPolygon(PointCoordinates, STstBottomRight);
+                }
+
+            //if (getY > strip && getY <= ((strip) + 225) && getX <= 1125 && getY >=getYY)
+           
+            if (isTst == true)
                 {
                     found = "TST" + app;
                 }
+            //******************TST
 
-            double newyY = (45 - (getX * 0.04) / 0.20 + getYY);
-/*
-                if (getX <= 1125 && found == "" && getYY<getY )
-                {
-                    found = "TST"+app;
-                }
-*/
-           
-                if (found.Substring(0, 2) != "TS" && found.Substring(0, 3) != "RWY" && aRPDistance <= 2500)
+            /*
+                        double newyY = (45 - (getX * 0.04) / 0.20 + getYY);
+
+                            if (getX <= 1125 && found == "" && getYY<getY )
+                            {
+                                found = "TST"+app;
+                            }
+            */
+
+            if (found.Substring(0, 2) != "TS" && found.Substring(0, 3) != "RWY" && aRPDistance <= 2500)
                 {
                     if (found.Substring(0, 3) == "APP")
                     {
@@ -954,7 +975,230 @@ namespace Obstacle
 
         private void button6_Click(object sender, EventArgs e)
         {
+
+            //Get Basic Strip Coordinates
+
+            GetNewCoordinatesWithAngle(this.Easting.Text, this.Northing.Text, 60, double.Parse(this.BackBearing.Text), out double App1N, out double App1E);
+            string App1BStripE = App1E.ToString(); string App1BStripN = App1N.ToString();
+
+            //Get Basic Strip Coordinates
+
+            GetNewCoordinatesWithAngle(this.Easting1.Text, this.Northing1.Text, 60, double.Parse(this.Bearing.Text), out App1N, out App1E);
+            string App2BStripE = App1E.ToString(); string App2BStripN = App1N.ToString();
+
+            //Get Center line Coordinates
+
+            GetNewCoordinatesWithAngle(App1BStripE, App1BStripN, 2500, double.Parse(this.BackBearing.Text), out App1N, out App1E);
+            string AppLineE = App1E.ToString(); string AppLineN = App1N.ToString();
+
+            //Get Center line Coordinates
+
+            GetNewCoordinatesWithAngle(App2BStripE, App2BStripN, 2500, double.Parse(this.Bearing.Text), out App1N, out App1E);
+            string RAppLineE = App1E.ToString(); string RAppLineN = App1N.ToString();
+
+            //Get Runway Strip
+            GetNewCoordinatesWithAngle(this.Easting.Text, this.Northing.Text, double.Parse(this.RunwayStrip.Text) / 2, double.Parse(this.Bearing.Text) - 90,
+                  out App1N, out App1E);
+
+            string App1StripRightE = App1E.ToString();
+            string App1StripRightN = App1N.ToString();
+
+
+            GetNewCoordinatesWithAngle(this.Easting.Text, this.Northing.Text, double.Parse(this.RunwayStrip.Text) / 2, double.Parse(this.Bearing.Text) + 90,
+                out App1N, out App1E);
+
+            string App1StripLeftE = App1E.ToString();
+            string App1StripLeftN = App1N.ToString();
+
+
+            GetNewCoordinatesWithAngle(App1BStripE, App1BStripN, double.Parse(this.RunwayStrip.Text) / 2, double.Parse(this.Bearing.Text) - 90,
+                  out App1N, out App1E);
+            string App1BSLE = App1E.ToString();
+            string App1BSLN = App1N.ToString();
+
+            GetNewCoordinatesWithAngle(App1BStripE, App1BStripN, double.Parse(this.RunwayStrip.Text) / 2, double.Parse(this.Bearing.Text) + 90,
+                 out App1N, out App1E);
+            string App1BSRE = App1E.ToString();
+            string App1BSRN = App1N.ToString();
+
+            GetNewCoordinatesWithAngle(App2BStripE, App2BStripN, double.Parse(this.RunwayStrip.Text) / 2, double.Parse(this.Bearing.Text) - 90,
+              out App1N, out App1E);
+            string App2BSLE = App1E.ToString();
+            string App2BSLN = App1N.ToString();
+
+            GetNewCoordinatesWithAngle(App2BStripE, App2BStripN, double.Parse(this.RunwayStrip.Text) / 2, double.Parse(this.Bearing.Text) + 90,
+                 out App1N, out App1E);
+            string App2BSRE = App1E.ToString();
+            string App2BSRN = App1N.ToString();
+
+            GetNewCoordinatesWithAngle(App1BSLE, App1BSLN, 2500, double.Parse(this.BackBearing.Text) + 5.710, out App1N, out App1E);
+            string AppUppCord1E = App1E.ToString();
+            string AppUppCord1N = App1N.ToString();
+
+            GetNewCoordinatesWithAngle(App1BSRE, App1BSRN, 2500, double.Parse(this.BackBearing.Text) - 5.710, out App1N, out App1E);
+            string AppUppCord1ELeft = App1E.ToString();
+            string AppUppCord1NLeft = App1N.ToString();
+
+            GetNewCoordinatesWithAngle(App1BStripE, App1BStripN, 2500, double.Parse(this.BackBearing.Text), out App1N, out App1E);
+            string AppUpperCLineE = App1E.ToString();
+            string AppUpperCLineN = App1N.ToString();
+
+
+
+            //*****************************
+            GetNewCoordinatesWithAngle(App2BSLE, App2BSLN, 2500, double.Parse(this.Bearing.Text) - 5.710, out App1N, out App1E);
+            string AppLwrCord1E = App1E.ToString();
+            string AppLwrCord1N = App1N.ToString();
+
+            GetNewCoordinatesWithAngle(App2BSRE, App2BSRN, 2500, double.Parse(this.Bearing.Text) + 5.710, out App1N, out App1E);
+            string AppLwrCord1ELeft = App1E.ToString();
+            string AppLwrCord1NLeft = App1N.ToString();
+
+            GetNewCoordinatesWithAngle(App2BStripE, App2BStripN, 2500, double.Parse(this.Bearing.Text),
+               out App1N, out App1E);
+            string AppLwrCLineE = App1E.ToString();
+            string AppLwrCLineN = App1N.ToString();
+
+            //******************************
+            GetNewCoordinatesWithAngle(App1BSLE, App1BSLN, 225, double.Parse(this.Bearing.Text) - 90,
+              out App1N, out App1E);
+
+            string App1TSLeftE = App1E.ToString();
+            string App1TSLeftN = App1N.ToString();
+
+            GetNewCoordinatesWithAngle(App1BSRE, App1BSRN, 225, double.Parse(this.Bearing.Text) + 90,
+            out App1N, out App1E);
+
+            string App1TSRightE = App1E.ToString();
+            string App1TSRightN = App1N.ToString();
+
+            GetNewCoordinatesWithAngle(App2BSLE, App2BSLN, 225, double.Parse(this.Bearing.Text) - 90,
+            out App1N, out App1E);
+
+            string App2TSLeftE = App1E.ToString();
+            string App2TSLeftN = App1N.ToString();
+
+            GetNewCoordinatesWithAngle(App2BSRE, App2BSRN, 225, double.Parse(this.Bearing.Text) + 90,
+            out App1N, out App1E);
+
+            string App2TSRightE = App1E.ToString();
+            string App2TSRightN = App1N.ToString();
+
+            GetNewCoordinatesWithAngle(App1BStripE, App1BStripN, 1125, double.Parse(this.BackBearing.Text),
+        out App1N, out App1E);
+
+            string App1TsPointE = App1E.ToString();
+            string App1TsPointN = App1N.ToString();
+
+
+
+            GetNewCoordinatesWithAngle(App2BStripE, App2BStripN, 1125, double.Parse(this.Bearing.Text),
+        out App1N, out App1E);
+
+            string App2TsPointE = App1E.ToString();
+            string App2TsPointN = App1N.ToString();
+
+
+
+            GetNewCoordinatesWithAngle(App1TsPointE, App1TsPointN, 152.5, double.Parse(this.BackBearing.Text) + 90, out App1N, out App1E);
+
+            string App1TsFunnelLE = App1E.ToString();
+            string App1TsFunnelLN = App1N.ToString();
+
+
+
+            GetNewCoordinatesWithAngle(App2TsPointE, App2TsPointN, 152.5, double.Parse(this.Bearing.Text) - 90, out App1N, out App1E);
+
+            string App2TsFunnelRE = App1E.ToString();
+            string App2TsFunnelRN = App1N.ToString();
+
+
+
+            GetNewCoordinatesWithAngle(App1TsPointE, App1TsPointN, 152.5, double.Parse(this.BackBearing.Text) - 90, out App1N, out App1E);
+
+            string App1TsFunnelLLwrE = App1E.ToString();
+            string App1TsFunnelLLwrN = App1N.ToString();
+
+
+
+            GetNewCoordinatesWithAngle(App2TsPointE, App2TsPointN, 152.5, double.Parse(this.Bearing.Text) + 90,
+      out App1N, out App1E);
+
+            string App2TsFunnelRLwrE = App1E.ToString();
+            string App2TsFunnelRLwrN = App1N.ToString();
+
+
+            //Get Upper Approach line Coordinates
+      //      GetNewCoordinatesWithAngle(this.textBox3.Text, this.textBox1.Text, 2500, double.Parse(this.BackBearing.Text) - 6,
+       //           out App1N, out App1E); ;
+        //    string AppBtnCord1E = App1E.ToString();
+          //  string AppBtnCord1N = App1N.ToString();
+
+
+
+            GetNewCoordinatesWithAngle(this.Easting1.Text, this.Northing1.Text,
+                   double.Parse(this.RunwayStrip.Text) / 2, double.Parse(this.BackBearing.Text) - 90,
+                   out App1N, out App1E);
+
+          string App2StripRightE = App1E.ToString();
+          string App2StripRightN = App1N.ToString();
+
+
+
+            GetNewCoordinatesWithAngle(this.Easting1.Text, this.Northing1.Text,
+                   double.Parse(this.RunwayStrip.Text) / 2, double.Parse(this.BackBearing.Text) + 90,
+                   out App1N, out App1E);
+
+           // this.textBox8.Text = App1E.ToString();
+           // this.textBox6.Text = App1N.ToString();
+//App2StripLeftE = App1E.ToString();
+          //  App2StripLeftN = App1N.ToString();
+
+
+
+            STstTopLeft = App1TsFunnelLE + "," + App1TsFunnelLN + ";" + App1TSLeftE + "," + App1TSLeftN + ";" + App1BSLE + "," + App1BSLN;
+              STstTopRight = App2TSLeftE + "," + App2TSLeftN + ";" + App2BSLE + "," + App2BSLN + ";" + App2TsFunnelRE + "," + App2TsFunnelRN;
+              STstBottomRight = App2BSRE + "," + App2BSRN + ";" + App2TSRightE + "," + App2TSRightN + ";" + App2TsFunnelRLwrE + "," + App2TsFunnelRLwrN;
+              STstBottomLeft = App1BSRE + "," + App1BSRN + ";" + App1TSRightE + "," + App1TSRightN + ";" + App1TsFunnelLLwrE + "," + App1TsFunnelLLwrN;
+
+
+
+
             GetObstacles(null, null);
+        }
+
+        private void GetNewCoordinatesWithAngle(string He, string Hn, double Distance,
+         double Bearing, out double App1N, out double App1E)
+        {
+            App1E = 0;
+            //App2E = 0;
+            App1N = 0;
+            //App2N = 0;
+            //double ReverseBear = 0;
+            double SinX = 0;
+            double CosX = 0;
+
+
+            if (Bearing > 0)
+            {
+                double bearRadian = Math.Round(Bearing * (Math.PI) / 180, 3);
+                CosX = Math.Round(Distance * (Math.Cos(bearRadian)), 3);
+                SinX = Math.Round(Distance * (Math.Sin(bearRadian)), 3);
+
+                App1E = Math.Round(double.Parse(He) + SinX, 3);
+                App1N = Math.Round(double.Parse(Hn) + CosX, 3);
+                //    ReverseBear = 0;
+                //   ReverseBear = Math.Round(BackBearing, 2);
+
+                // bearRadian = Math.Round(Bearing * (Math.PI) / 180, 2);
+                //CosX = Distance * (Math.Cos(bearRadian));
+                //SinX = Distance * (Math.Sin(bearRadian));
+
+                //     App2E = Math.Round(double.Parse(He1) + SinX, 2);
+                //   App2N = Math.Round(double.Parse(Hn1) + CosX, 2);
+            }
+
+
         }
         private string SetApp(double Bear, out string NewBearing)
         {
@@ -1026,5 +1270,64 @@ namespace Obstacle
 
 
         }
+
+        public static bool IsInPolygon(string point, string polygon)
+        {
+            bool inout = false;
+            var SplitPoint = point.Split(',');
+            MapWinGIS.Point pnt = new Point();
+
+            pnt.x = double.Parse(SplitPoint[0]);
+            pnt.y = double.Parse(SplitPoint[1]);
+
+
+            double[] Xs = new double[4];
+            double[] Ys = new double[4];
+
+            string[] vpoints = polygon.Split(';');
+
+            int i = 0;
+            foreach (string vpoint in vpoints)
+            {
+                MapWinGIS.Point PolyPoint = new Point();
+                // ShpfileType.SHP_POINT);
+                var vp = vpoint.Split(',');
+                Xs[i] = Convert.ToDouble(vp[0]);
+                Ys[i] = Convert.ToDouble(vp[1]);
+                i++;
+
+            }
+            MapWinGIS.Point lastpoint = new Point();
+            lastpoint.x = Xs[2];
+            lastpoint.y = Ys[2];
+
+            for (i = 0; i <= 2; i++)
+            {
+                MapWinGIS.Point b = new MapWinGIS.Point();
+                b.x = Xs[i]; b.y = Ys[i];
+
+                if ((b.x == pnt.x) && (b.y == pnt.y))
+                    return true;
+
+                if ((b.y == lastpoint.y) && (pnt.y == lastpoint.y))
+                {
+                    if (lastpoint.x <= pnt.x && pnt.x <= b.x)
+                        return true;
+
+                    if ((b.x <= pnt.x) && (pnt.x <= lastpoint.x))
+                        return true;
+                }
+
+                if ((b.y < pnt.y) && (lastpoint.y >= pnt.y) || (lastpoint.y < pnt.y) && (b.y >= pnt.y))
+                {
+                    if (b.x + (pnt.y - b.y) / (lastpoint.y - b.y) * (lastpoint.x - b.x) <= pnt.x)
+                        inout = !inout;
+                }
+                lastpoint = b;
+            }
+            return inout;
+
+        }
+
     }
 }
