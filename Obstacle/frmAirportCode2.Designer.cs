@@ -129,6 +129,7 @@
             this.TstTopRight = new System.Windows.Forms.TextBox();
             this.TstBottomLeft = new System.Windows.Forms.TextBox();
             this.TstBottomRight = new System.Windows.Forms.TextBox();
+            this.button8 = new System.Windows.Forms.Button();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -768,6 +769,7 @@
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.Control;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.button8);
             this.panel1.Controls.Add(this.button7);
             this.panel1.Controls.Add(this.button6);
             this.panel1.Controls.Add(this.button5);
@@ -815,7 +817,7 @@
             this.panel1.Controls.Add(this.BackBearing);
             this.panel1.Location = new System.Drawing.Point(36, 18);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(901, 496);
+            this.panel1.Size = new System.Drawing.Size(901, 535);
             this.panel1.TabIndex = 148;
             // 
             // button7
@@ -1219,6 +1221,16 @@
             this.TstBottomRight.Size = new System.Drawing.Size(100, 22);
             this.TstBottomRight.TabIndex = 201;
             // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(376, 473);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(127, 43);
+            this.button8.TabIndex = 177;
+            this.button8.Text = "Create Shape Files";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
             // frmAirportCode2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1392,5 +1404,6 @@
         private System.Windows.Forms.TextBox TstTopRight;
         private System.Windows.Forms.TextBox TstBottomLeft;
         private System.Windows.Forms.TextBox TstBottomRight;
+        private System.Windows.Forms.Button button8;
     }
 }

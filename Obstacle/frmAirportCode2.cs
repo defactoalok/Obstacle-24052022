@@ -5,12 +5,17 @@ using System.Data;
 using System.Data.OleDb;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.IO;
 using MapWinGIS;
 using Point = MapWinGIS.Point;
+using System.Collections.Generic;
+
 namespace Obstacle
 {
     public partial class frmAirportCode2 : Form
+
     {
+        string CurrentDir = Directory.GetCurrentDirectory();
         string STstTopLeft, STstTopRight, STstBottomLeft, STstBottomRight;
         public frmAirportCode2()
         {
@@ -1129,7 +1134,7 @@ namespace Obstacle
 
 
             //Get Upper Approach line Coordinates
-      //      GetNewCoordinatesWithAngle(this.textBox3.Text, this.textBox1.Text, 2500, double.Parse(this.BackBearing.Text) - 6,
+      //      GetNewCoordinatesWithAngle(App1StripRightE, App1StripRightN, 2500, double.Parse(this.BackBearing.Text) - 6,
        //           out App1N, out App1E); ;
         //    string AppBtnCord1E = App1E.ToString();
           //  string AppBtnCord1N = App1N.ToString();
@@ -1150,9 +1155,9 @@ namespace Obstacle
                    out App1N, out App1E);
 
            // this.textBox8.Text = App1E.ToString();
-           // this.textBox6.Text = App1N.ToString();
-//App2StripLeftE = App1E.ToString();
-          //  App2StripLeftN = App1N.ToString();
+           // App2StripLeftN = App1N.ToString();
+           // App2StripLeftE = App1E.ToString();
+            //App2StripLeftN = App1N.ToString();
 
 
 
@@ -1252,6 +1257,12 @@ namespace Obstacle
             
             return NearestDistance;
         }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            CreateShapeFiles();
+        }
+
         private void button7_Click(object sender, EventArgs e)
         {
             CreateShape frmd = new CreateShape();
@@ -1268,6 +1279,605 @@ namespace Obstacle
             frmd.Controls["Zone"].Text = this.Zone.Text;
             frmd.Show();
 
+
+        }
+
+        public void CreateShapeFiles()
+        {
+            string CDir = Directory.GetCurrentDirectory() + "\\Shapefiles\\";
+            int myPointIndex = 0;
+            System.IO.DirectoryInfo di = new DirectoryInfo(CDir);
+
+            foreach (FileInfo file in di.GetFiles())
+            {
+                file.Delete();
+            }
+
+            Shapefile myShapefile = new Shapefile();
+            //Define the path of the new shapefile and geometry type
+            myShapefile.CreateNew(@CDir + "\\SurveyPoints.shp", ShpfileType.SHP_POINT);
+            //Create new field
+            MapWinGIS.Field myField = new Field();
+            
+            var objindex = myShapefile.EditAddField("Obj No.", FieldType.STRING_FIELD, 0, 4);
+            var objnameindex = myShapefile.EditAddField("Obj Name", FieldType.STRING_FIELD, 0, 25);
+            var ElevationIndex = myShapefile.EditAddField("Elevation", FieldType.DOUBLE_FIELD, 2, 5);
+            var PE_Elev_TSAPPRWY= myShapefile.EditAddField("PE_Elev_TS-App-Rwy", FieldType.DOUBLE_FIELD, 2, 5);
+            var PE_Elev_IHSConOhs = myShapefile.EditAddField("PE_Elev_IHS-Con-OHS", FieldType.DOUBLE_FIELD, 2, 5);
+            var PE_Elev_Approach = myShapefile.EditAddField("PE_Elev_Approach", FieldType.DOUBLE_FIELD, 2, 5);
+            var PE_Elev_AppIhs_AppCon = myShapefile.EditAddField("PE_Elev_APP-Ihs_App-Con", FieldType.DOUBLE_FIELD, 2, 5);
+            var Obst_Rwy_Ts_App = myShapefile.EditAddField("Obst_Rwy_Ts_App ", FieldType.DOUBLE_FIELD, 2, 5);
+            var Obst_IHS_Con_OHS_App = myShapefile.EditAddField("Obst_IHS_Con_OHS_App", FieldType.DOUBLE_FIELD, 2, 5);
+
+            //Add the filed for the shapefile table
+            int intFieldIndex = 0;
+            int myShapeIndex = 0;
+
+            string OledbConnectString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=ObstaclesData.accdb";
+
+            using (OleDbConnection connection = new OleDbConnection(OledbConnectString))
+
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                OleDbCommand cmd = new OleDbCommand("Select * from RWYSurveyData  ", connection);
+
+                {
+
+                    using (OleDbDataReader reader = cmd.ExecuteReader())
+                    {
+
+                        while (reader.Read())
+                        {
+                          
+                            //Create Point Shape
+                        
+                            int i = 1;
+                            int j = 0;
+                            int shpIndex;
+
+                            
+                            MapWinGIS.Shape myShape = new MapWinGIS.Shape();
+                            myShape.Create(ShpfileType.SHP_POINT);
+                            MapWinGIS.Point myPoint = new Point();
+                            myPoint.x = Math.Round(double.Parse(reader["Easting"].ToString()), 2);
+                            myPoint.y = Math.Round(double.Parse(reader["Northing"].ToString()), 2);
+                            myShape.InsertPoint(myPoint, ref myPointIndex);
+                            shpIndex = i - 1;
+                            myShapefile.EditInsertShape(myShape, ref shpIndex);
+                            myShapefile.EditCellValue(objindex, shpIndex, reader["SL No"].ToString());
+                            myShapefile.EditCellValue(objnameindex, shpIndex, reader["Object"].ToString());
+                            myShapefile.EditCellValue(ElevationIndex, shpIndex, reader["Elevation"].ToString());
+                            myShapefile.EditCellValue(PE_Elev_TSAPPRWY, shpIndex, reader["PElevTSAPPRWY"].ToString());
+                            myShapefile.EditCellValue(PE_Elev_IHSConOhs, shpIndex, reader["PElevIHSCONOHS"].ToString());
+                            myShapefile.EditCellValue(PE_Elev_Approach, shpIndex, reader["PEElevApproach"].ToString());
+                            myShapefile.EditCellValue(PE_Elev_AppIhs_AppCon, shpIndex, reader["PElevAPP-IHSAPP-CON"].ToString());
+                            myShapefile.EditCellValue(Obst_Rwy_Ts_App, shpIndex, reader["ObstRwyTSApp"].ToString());
+                            myShapefile.EditCellValue(Obst_IHS_Con_OHS_App, shpIndex, reader["ObstIHSCONOHSAPPIHSAPPCON"].ToString());
+
+                            myPointIndex++;
+                            i++;
+                        }
+
+
+                        myShapefile.StopEditingShapes(true, true, null);
+                        myShapefile.Close();
+                        List<string> Coord = new List<string>();
+
+                        string head = "Name, Easting,Name,Northing";
+                        Coord.Add(head);
+
+
+                        string App1StripRightE, App1StripRightN, App1StripLeftE, App1StripLeftN,
+                            App2StripRightE, App2StripRightN, App2StripLeftE, App2StripLeftN;
+
+
+                        //Get Basic Strip Coordinates
+
+                        GetNewCoordinatesWithAngle(this.Easting.Text, this.Northing.Text, 60,
+                            double.Parse(this.BackBearing.Text), out double App1N, out double App1E);
+                        string App1BStripE = App1E.ToString(); string App1BStripN = App1N.ToString();
+
+                        Coord.Add("App1BStripE" + "," + App1E.ToString() + "," + "App1BStripN" + "," + App1N.ToString());
+
+                        //Get Basic Strip Coordinates
+
+                        GetNewCoordinatesWithAngle(this.Easting1.Text, this.Northing1.Text, 60, double.Parse(this.Bearing.Text),
+                            out App1N, out App1E);
+
+                        string App2BStripE = App1E.ToString(); string App2BStripN = App1N.ToString();
+                        Coord.Add("App2BStripE " + "," + App1E.ToString() + "," + "App2BStripN" + "," + App1N.ToString());
+
+                        //Get Center line Coordinates
+
+                        GetNewCoordinatesWithAngle(App1BStripE, App1BStripN, 2500, double.Parse(this.BackBearing.Text), out App1N, out App1E);
+                        string AppLineE = App1E.ToString(); string AppLineN = App1N.ToString();
+                        Coord.Add("AppLineE" + "," + App1E.ToString() + "," + "AppLineN" + "," + App1N.ToString());
+                        //Get Center line Coordinates
+
+                        GetNewCoordinatesWithAngle(App2BStripE, App2BStripN, 2500, double.Parse(this.Bearing.Text), out App1N, out App1E);
+                        string RAppLineE = App1E.ToString(); string RAppLineN = App1N.ToString();
+                        Coord.Add("RAppLineE" + "," + App1E.ToString() + "," + "RAppLineN" + "," + App1N.ToString());
+                        //Get Runway Strip
+                        GetNewCoordinatesWithAngle(this.Easting.Text, this.Northing.Text,
+                              double.Parse(this.RunwayStrip.Text) / 2, double.Parse(this.Bearing.Text) - 90,
+                              out App1N, out App1E);
+                       
+                        App1StripRightE = App1E.ToString();
+                        App1StripRightN = App1N.ToString();
+
+                        Coord.Add("App1StripRightE" + "," + App1E.ToString() + "," + "App1StripRightN" + "," + App1N.ToString());
+
+                        GetNewCoordinatesWithAngle(this.Easting.Text, this.Northing.Text,
+                            double.Parse(this.RunwayStrip.Text) / 2, double.Parse(this.Bearing.Text) + 90,
+                            out App1N, out App1E);
+
+                       // App1StripLeftE = App1E.ToString();
+                        //App1StripLeftN = App1N.ToString();
+
+                        App1StripLeftE = App1E.ToString();
+                        App1StripLeftN = App1N.ToString();
+                        Coord.Add("App1StripLeftE" + "," + App1E.ToString() + "," + "App1StripLeftN" + "," + App1N.ToString());
+
+                        GetNewCoordinatesWithAngle(App1BStripE, App1BStripN,
+                              double.Parse(this.RunwayStrip.Text) / 2, double.Parse(this.Bearing.Text) - 90,
+                              out App1N, out App1E);
+                        string App1BSLE = App1E.ToString();
+                        string App1BSLN = App1N.ToString();
+
+                        Coord.Add("App1BSLE" + "," + App1E.ToString() + "," + "App1BSLN" + "," + App1N.ToString());
+
+                        GetNewCoordinatesWithAngle(App1BStripE, App1BStripN,
+                             double.Parse(this.RunwayStrip.Text) / 2, double.Parse(this.Bearing.Text) + 90,
+                             out App1N, out App1E);
+                        string App1BSRE = App1E.ToString();
+                        string App1BSRN = App1N.ToString();
+
+                        Coord.Add("App1BSRE" + "," + App1E.ToString() + "," + "App1BSRN" + "," + App1N.ToString());
+
+
+                        GetNewCoordinatesWithAngle(App2BStripE, App2BStripN,
+                          double.Parse(this.RunwayStrip.Text) / 2, double.Parse(this.Bearing.Text) - 90,
+                          out App1N, out App1E);
+                        string App2BSLE = App1E.ToString();
+                        string App2BSLN = App1N.ToString();
+
+                        Coord.Add("App2BSLE" + "," + App1E.ToString() + "," + "App2BSLN" + "," + App1N.ToString());
+
+                        GetNewCoordinatesWithAngle(App2BStripE, App2BStripN,
+                             double.Parse(this.RunwayStrip.Text) / 2, double.Parse(this.Bearing.Text) + 90,
+                             out App1N, out App1E);
+                        string App2BSRE = App1E.ToString();
+                        string App2BSRN = App1N.ToString();
+
+                        Coord.Add("App2BSRE" + "," + App1E.ToString() + "," + "App2BSRN" + "," + App1N.ToString());
+
+                        GetNewCoordinatesWithAngle(App1BSLE, App1BSLN, 2500, double.Parse(this.BackBearing.Text) + 5.710,
+                              out App1N, out App1E);
+                        string AppUppCord1E = App1E.ToString();
+                        string AppUppCord1N = App1N.ToString();
+
+                        Coord.Add("AppUppCord1E" + "," + App1E.ToString() + "," + "AppUppCord1N" + "," + App1N.ToString());
+
+                        GetNewCoordinatesWithAngle(App1BSRE, App1BSRN, 2500, double.Parse(this.BackBearing.Text) - 5.710,
+                            out App1N, out App1E);
+                        string AppUppCord1ELeft = App1E.ToString();
+                        string AppUppCord1NLeft = App1N.ToString();
+
+                        Coord.Add("AppUppCord1ELeft" + "," + App1E.ToString() + "," + "AppUppCord1NLeft" + "," + App1N.ToString());
+
+                        //                GetNewCoordinatesWithAngle(App1BSRE, App1BSRN, 2500, double.Parse(this.BackBearing.Text) ,
+                        GetNewCoordinatesWithAngle(App1BStripE, App1BStripN, 2500, double.Parse(this.BackBearing.Text),
+                           out App1N, out App1E);
+                        string AppUpperCLineE = App1E.ToString();
+                        string AppUpperCLineN = App1N.ToString();
+
+                        Coord.Add("AppUpperCLineE" + "," + App1E.ToString() + "," + "AppUpperCLineN" + "," + App1N.ToString());
+
+                        //*****************************
+                        GetNewCoordinatesWithAngle(App2BSLE, App2BSLN, 2500, double.Parse(this.Bearing.Text) - 5.710,
+                            out App1N, out App1E);
+                        string AppLwrCord1E = App1E.ToString();
+                        string AppLwrCord1N = App1N.ToString();
+
+                        Coord.Add("AppLwrCord1E" + "," + App1E.ToString() + "," + "AppLwrCord1N" + "," + App1N.ToString());
+
+                        GetNewCoordinatesWithAngle(App2BSRE, App2BSRN, 2500, double.Parse(this.Bearing.Text) + 5.710,
+                            out App1N, out App1E);
+                        string AppLwrCord1ELeft = App1E.ToString();
+                        string AppLwrCord1NLeft = App1N.ToString();
+
+                        Coord.Add("AppLwrCord1ELeft" + "," + App1E.ToString() + "," + "AppLwrCord1NLeft" + "," + App1N.ToString());
+
+                        GetNewCoordinatesWithAngle(App2BStripE, App2BStripN, 2500, double.Parse(this.Bearing.Text),
+                           out App1N, out App1E);
+                        string AppLwrCLineE = App1E.ToString();
+                        string AppLwrCLineN = App1N.ToString();
+
+                        Coord.Add("AppLwrCLineE" + "," + App1E.ToString() + "," + "AppLwrCLineN" + "," + App1N.ToString());
+
+                        //******************************
+                        GetNewCoordinatesWithAngle(App1BSLE, App1BSLN, 225, double.Parse(this.Bearing.Text) - 90,
+                          out App1N, out App1E);
+
+                        string App1TSLeftE = App1E.ToString();
+                        string App1TSLeftN = App1N.ToString();
+
+                        Coord.Add("App1TSLeftE" + "," + App1E.ToString() + "," + "App1TSLeftN" + "," + App1N.ToString());
+
+                        GetNewCoordinatesWithAngle(App1BSRE, App1BSRN, 225, double.Parse(this.Bearing.Text) + 90,
+                        out App1N, out App1E);
+
+                        string App1TSRightE = App1E.ToString();
+                        string App1TSRightN = App1N.ToString();
+
+                        Coord.Add("App1TSRightE" + "," + App1E.ToString() + "," + "App1TSRightN" + "," + App1N.ToString());
+
+                        GetNewCoordinatesWithAngle(App2BSLE, App2BSLN, 225, double.Parse(this.Bearing.Text) - 90,
+                         out App1N, out App1E);
+
+                        string App2TSLeftE = App1E.ToString();
+                        string App2TSLeftN = App1N.ToString();
+
+                        Coord.Add("App2TSLeftE" + "," + App1E.ToString() + "," + "App2TSLeftN" + "," + App1N.ToString());
+
+                        GetNewCoordinatesWithAngle(App2BSRE, App2BSRN, 225, double.Parse(this.Bearing.Text) + 90,
+                        out App1N, out App1E);
+
+                        string App2TSRightE = App1E.ToString();
+                        string App2TSRightN = App1N.ToString();
+
+                        Coord.Add("App2TSRightE" + "," + App1E.ToString() + "," + "App2TSRightN" + "," + App1N.ToString());
+
+                        GetNewCoordinatesWithAngle(App1BStripE, App1BStripN, 1125, double.Parse(this.BackBearing.Text),
+                    out App1N, out App1E);
+
+                        string App1TsPointE = App1E.ToString();
+                        string App1TsPointN = App1N.ToString();
+
+                        Coord.Add("App1TsPointE" + "," + App1E.ToString() + "," + "App1TsPointN" + "," + App1N.ToString());
+
+                        GetNewCoordinatesWithAngle(App2BStripE, App2BStripN, 1125, double.Parse(this.Bearing.Text),
+                    out App1N, out App1E);
+
+                        string App2TsPointE = App1E.ToString();
+                        string App2TsPointN = App1N.ToString();
+
+                        Coord.Add("App2TsPointE" + "," + App1E.ToString() + "," + "App2TsPointN" + "," + App1N.ToString());
+
+                        GetNewCoordinatesWithAngle(App1TsPointE, App1TsPointN, 152.5, double.Parse(this.BackBearing.Text) + 90, out App1N, out App1E);
+
+                        string App1TsFunnelLE = App1E.ToString();
+                        string App1TsFunnelLN = App1N.ToString();
+
+                        Coord.Add("App1TsFunnelLE" + "," + App1E.ToString() + "," + "App1TsFunnelLN" + "," + App1N.ToString());
+
+                        GetNewCoordinatesWithAngle(App2TsPointE, App2TsPointN, 152.5, double.Parse(this.Bearing.Text) - 90, out App1N, out App1E);
+
+                        string App2TsFunnelRE = App1E.ToString();
+                        string App2TsFunnelRN = App1N.ToString();
+
+                        Coord.Add("App2TsFunnelRE" + "," + App1E.ToString() + "," + "App2TsFunnelRN" + "," + App1N.ToString());
+
+                        GetNewCoordinatesWithAngle(App1TsPointE, App1TsPointN, 152.5, double.Parse(this.BackBearing.Text) - 90, out App1N, out App1E);
+
+                        string App1TsFunnelLLwrE = App1E.ToString();
+                        string App1TsFunnelLLwrN = App1N.ToString();
+
+                        Coord.Add("App1TsFunnelLLwrE" + "," + App1E.ToString() + "," + "App1TsFunnelLLwrN" + "," + App1N.ToString());
+
+                        GetNewCoordinatesWithAngle(App2TsPointE, App2TsPointN, 152.5, double.Parse(this.Bearing.Text) + 90,
+                  out App1N, out App1E);
+
+                        string App2TsFunnelRLwrE = App1E.ToString();
+                        string App2TsFunnelRLwrN = App1N.ToString();
+                        Coord.Add("App2TsFunnelRLwrE" + "," + App1E.ToString() + "," + "App2TsFunnelRLwrN" + "," + App1N.ToString());
+
+                        //Get Upper Approach line Coordinates
+                        GetNewCoordinatesWithAngle(App1StripRightE, App1StripRightN, 2500, double.Parse(this.BackBearing.Text) - 6,
+                              out App1N, out App1E); ;
+                        string AppBtnCord1E = App1E.ToString();
+                        string AppBtnCord1N = App1N.ToString();
+                        Coord.Add("AppBtnCord1E " + "," + App1E.ToString() + "," + "AppBtnCord1N" + "," + App1N.ToString());
+
+
+                        GetNewCoordinatesWithAngle(this.Easting1.Text, this.Northing1.Text,
+                               double.Parse(this.RunwayStrip.Text) / 2, double.Parse(this.BackBearing.Text) - 90,
+                               out App1N, out App1E);
+
+                        //App2StripRightE = App1E.ToString();
+                        //App2StripRightN = App1N.ToString();
+                        App2StripRightE = App1E.ToString();
+                        App2StripRightN = App1N.ToString();
+
+                        Coord.Add("App2StripRightE" + "," + App1E.ToString() + "," + "App2StripRightN" + "," + App1N.ToString());
+
+                        GetNewCoordinatesWithAngle(this.Easting1.Text, this.Northing1.Text,
+                               double.Parse(this.RunwayStrip.Text) / 2, double.Parse(this.BackBearing.Text) + 90,
+                               out App1N, out App1E);
+
+                      //App2StripLeftE = App1E.ToString();
+                        //App2StripLeftN = App1N.ToString();
+                        App2StripLeftE = App1E.ToString();
+                        App2StripLeftN = App1N.ToString();
+
+                        Coord.Add("App2StripLeftE" + "," + App1E.ToString() + "," + "App2StripLeftN" + "," + App1N.ToString());
+
+                        string[] Tlines = { "" };
+                        File.WriteAllLines("Coordinates.txt", Tlines);
+                        using (TextWriter tw = new StreamWriter("Coordinates.txt"))
+                        {
+                            foreach (String s in Coord)
+                                tw.WriteLine(s);
+                        }
+                        //  System.IO.File.WriteAllLines(@CDir + "\\PolyCoordinates.txt" + "Coordinates.txt", List. Lists.Coords);
+
+                        Shapefile PolygonShape = new Shapefile();
+                        PolygonShape.CreateNew(@CDir + "\\TstPolygon.shp", ShpfileType.SHP_POLYGON);
+
+                        //Make TST polygon
+
+                        string TriangleTopLeft = App1TsFunnelLE + "," + App1TsFunnelLN + ";" +
+                            App1TSLeftE + "," + App1TSLeftN + ";" + App1BSLE + "," + App1BSLN;
+
+                        string RectangleTop = App1BSLE + "," + App1BSLN + ";" + App2BSLE + "," + App2BSLN
+                            + ";" + App2TSLeftE + "," + App2TSLeftN + ";" + App1TSLeftE + "," + App1TSLeftN;
+
+                        string TriangleTopRight = App2TSLeftE + "," + App2TSLeftN + ";" + App2BSLE + "," + App2BSLN
+                           + ";" + App2TsFunnelRE + "," + App2TsFunnelRN;
+
+                        string TriangleBottomRight = App2BSRE + "," + App2BSRN + ";" + App2TSRightE + "," + App2TSRightN + ";"
+                            + App2TsFunnelRLwrE + "," + App2TsFunnelRLwrN;
+
+
+                        string TriangleBottomLeft = App1BSRE + "," + App1BSRN + ";" + App1TSRightE + "," + App1TSRightN + ";"
+                           + App1TsFunnelLLwrE + "," + App1TsFunnelLLwrN;
+
+                        string RectangleBottom = App1BSRE + "," + App1BSRN + ";" + App2BSRE + "," + App2BSRN
+                            + ";" + App2TSRightE + "," + App2TSRightN + ";" + App1TSRightE + "," + App1TSRightN;
+
+                         
+                        string RunwayStrip = App1StripRightE + "," + App1StripRightN + ";" + App1StripLeftE + "," + App1StripLeftN
+                            + ";" + App2StripRightE + "," + App2StripRightN + ";" + App2StripLeftE + "," + App2StripLeftN;
+
+                        String leftApporach = App1BSLE + "," + App1BSLN + ";" + AppUppCord1E + "," + AppUppCord1N
+                            + ";" + AppUppCord1ELeft + "," + AppUppCord1NLeft + ";" + App1BSRE + "," + App1BSRN;
+
+                        string rightApproach = App2BSLE + "," + App2BSLN + ";" + AppLwrCord1E + "," + AppLwrCord1N + ";" +
+                            AppLwrCord1ELeft + "," + AppLwrCord1NLeft + ";" + App2BSRE + "," + App2BSRN;
+
+                       MapWinGIS.Shape PlgLeftApproach = new MapWinGIS.Shape();
+                        PlgLeftApproach.Create(PolygonShape.ShapefileType);
+                        MakePolygon(leftApporach, myPointIndex, myShapeIndex, PolygonShape, PlgLeftApproach);
+
+                        MapWinGIS.Shape PlgRightApproach = new MapWinGIS.Shape();
+                        PlgRightApproach.Create(PolygonShape.ShapefileType);
+                        MakePolygon(rightApproach, myPointIndex, myShapeIndex, PolygonShape, PlgRightApproach);
+
+                        MapWinGIS.Shape PlgTriangleLeft = new MapWinGIS.Shape();
+                        PlgTriangleLeft.Create(PolygonShape.ShapefileType);
+                        MakePolygon(TriangleTopLeft, myPointIndex, myShapeIndex, PolygonShape, PlgTriangleLeft);
+
+                        MapWinGIS.Shape PlgnRectTop = new MapWinGIS.Shape();
+                        PlgnRectTop.Create(PolygonShape.ShapefileType);
+                        MakePolygon(RectangleTop, myPointIndex, myShapeIndex, PolygonShape, PlgnRectTop);
+
+                        MapWinGIS.Shape PlgTringleTopRight = new MapWinGIS.Shape();
+                        PlgTringleTopRight.Create(PolygonShape.ShapefileType);
+                        MakePolygon(TriangleTopRight, myPointIndex, myShapeIndex, PolygonShape, PlgTringleTopRight);
+
+                        MapWinGIS.Shape PlgTringleBottomRight = new MapWinGIS.Shape();
+                        PlgTringleBottomRight.Create(PolygonShape.ShapefileType);
+                        MakePolygon(TriangleBottomRight, myPointIndex, myShapeIndex, PolygonShape, PlgTringleBottomRight);
+
+                        MapWinGIS.Shape PlgRectangleBottom = new MapWinGIS.Shape();
+                        PlgRectangleBottom.Create(PolygonShape.ShapefileType);
+                        MakePolygon(RectangleBottom, myPointIndex, myShapeIndex, PolygonShape, PlgRectangleBottom);
+
+                        MapWinGIS.Shape Runway = new MapWinGIS.Shape();
+                        Runway.Create(PolygonShape.ShapefileType);
+                        MakePolygon(RunwayStrip, myPointIndex, myShapeIndex, PolygonShape, Runway);
+
+                        MapWinGIS.Shape PlgTringleBottomLeft = new MapWinGIS.Shape();
+                        PlgTringleBottomLeft.Create(PolygonShape.ShapefileType);
+                        MakePolygon(TriangleBottomLeft, myPointIndex, myShapeIndex, PolygonShape, PlgTringleBottomLeft);
+
+                        string App1ApplineL = App1BSRE + "," + App1BSRN + ";" + AppUppCord1ELeft + "," + AppUppCord1NLeft;
+
+                        string Bs1 = App2StripRightE + "," + App2StripRightN + ";" + App2StripLeftE + "," +
+                            App2StripLeftN + ";" + App2BSLE + "," + App2BSLN + ";" + App2BSRE + "," + App2BSRN;
+
+                        string Bs2 = App1StripLeftE + "," + App1StripLeftN + ";" + App1BSRE + "," + App1BSRN + ";" +
+                        App1BSLE + "," + App1BSLN + ";" + App1StripRightE + "," + App1StripRightN;
+
+                        MapWinGIS.Shape ShapeBs1 = new MapWinGIS.Shape();
+                        ShapeBs1.Create(PolygonShape.ShapefileType);
+                        MakePolygon(Bs1, myPointIndex, myShapeIndex, PolygonShape, ShapeBs1);
+
+                        MapWinGIS.Shape ShapeBs2 = new MapWinGIS.Shape();
+                        ShapeBs2.Create(PolygonShape.ShapefileType);
+                        MakePolygon(Bs2, myPointIndex, myShapeIndex, PolygonShape, ShapeBs2);
+
+                        PolygonShape.StopEditingShapes(true, true, null);
+                        PolygonShape.Close();
+
+                        string PlyCentreLine = AppUpperCLineE + "," + AppUpperCLineN + ";" + AppLwrCLineE + "," + AppLwrCLineN;
+                        Shapefile poly = new Shapefile();
+                        poly.CreateNew(@CDir + "\\Polyline.shp", ShpfileType.SHP_POLYLINE);// ShpfileType.SHP_POLYLINE);
+                        MapWinGIS.Shape pPolyline = new MapWinGIS.Shape();
+                        pPolyline.Create(poly.ShapefileType);
+
+                        MakePolyline(PlyCentreLine, myPointIndex, myShapeIndex, poly, pPolyline, out int PointIndex, out int ShapeIndex);
+                        
+                        poly.StopEditingShapes(true, true, null);
+                        poly.Close();
+
+                        MakeIHSPolygonShape();
+                        MakeCONPolygonShape();
+
+                        //   axMap1.DrawCircle(double.Parse(this.Easting.Text), double.Parse(this.Northing.Text), 2500, 1, false);
+                        MessageBox.Show("Done");
+                        //
+                        string utm = "PROJCS[WGS_84_UTM_zone_" + this.Zone.Text + "N";
+                        string ProjFile = utm + ",GEOGCS['GCS_WGS_1984',DATUM['D_WGS84',SPHEROID['WGS84',6378137,298.257223563]],PRIMEM['Greenwich',0],UNIT['Degree',0.017453292519943295]],PROJECTION['Transverse_Mercator'],PARAMETER['latitude_of_origin',0],PARAMETER['central_meridian',75],PARAMETER['scale_factor',0.9996],PARAMETER['false_easting',500000],PARAMETER['false_northing',0],UNIT['Meter',1]]";
+                        File.WriteAllText(@CDir + "\\SurveyPoints.prj", ProjFile);
+                        File.WriteAllText(@CDir + "\\Polyline.prj", ProjFile);
+                        File.WriteAllText(@CDir + "\\ConPolygon.prj", ProjFile);
+                        File.WriteAllText(@CDir + "\\ArpPolygon.prj", ProjFile);
+                        File.WriteAllText(@CDir + "\\TstPolygon.prj", ProjFile);
+                        //
+
+
+
+                    }
+
+                }
+            }
+        }
+        private void MakePolyline(string Coordinates, int myPointIndex, int myShapeIndex,
+         Shapefile poly, MapWinGIS.Shape pPolyline, out int PointIndex, out int ShapeIndex)
+        {
+            try
+            {
+                string[] vpoints = Coordinates.Split(';');
+
+                foreach (string vpoint in vpoints)
+                {
+                    MapWinGIS.Point PolyPoint = new Point();
+                    // ShpfileType.SHP_POINT);
+                    var vp = vpoint.Split(',');
+                    PolyPoint.x = Convert.ToDouble(vp[0]);
+                    PolyPoint.y = Convert.ToDouble(vp[1]);
+                    pPolyline.InsertPoint(PolyPoint, ref myPointIndex);
+                    poly.EditInsertShape(pPolyline, ref myShapeIndex);
+                    myPointIndex++;
+                    myShapeIndex++;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            var shapeindex = poly.EditAddShape(pPolyline);
+
+            PointIndex = myPointIndex;
+            ShapeIndex = myShapeIndex;
+
+        }
+
+        private void MakePolygon(string Coordinates, int myPointIndex, int myShapeIndex,
+            Shapefile poly, MapWinGIS.Shape pPolyline)
+        {
+            try
+            {
+                string[] vpoints = Coordinates.Split(';');
+
+                foreach (string vpoint in vpoints)
+                {
+                    MapWinGIS.Point PolyPoint = new Point();
+                    // ShpfileType.SHP_POINT);
+                    var vp = vpoint.Split(',');
+                    PolyPoint.x = Convert.ToDouble(vp[0]);
+                    PolyPoint.y = Convert.ToDouble(vp[1]);
+                    pPolyline.InsertPoint(PolyPoint, ref myPointIndex);
+                    poly.EditInsertShape(pPolyline, ref myShapeIndex);
+                    myPointIndex++;
+                    myShapeIndex++;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            var shapeindex = poly.EditAddShape(pPolyline);
+
+
+
+        }
+
+        private void MakeIHSPolygonShape()
+        {
+            string CDir = CurrentDir + "\\Shapefiles\\";
+            Shapefile shpPloygon = new Shapefile();
+            shpPloygon.CreateNew(@CDir + "\\ArpPolygon.shp", ShpfileType.SHP_POLYGON);
+            int fldX = shpPloygon.EditAddField("X", FieldType.DOUBLE_FIELD, 9, 12);
+            int fldY = shpPloygon.EditAddField("Y", FieldType.DOUBLE_FIELD, 9, 12);
+            int fldArea = shpPloygon.EditAddField("area", FieldType.DOUBLE_FIELD, 9, 12);
+
+
+            double ArpCentreE = double.Parse(this.ArpEast.Text);
+            double ArpCentreN = double.Parse(this.ArpNorth.Text);
+            double ArpRadius = 2500;
+            int myPointIndex = 0;
+            int myShapeIndex = 0;
+            try
+            {
+               MapWinGIS.Shape shp = new MapWinGIS.Shape();
+                shp.Create(ShpfileType.SHP_POLYGON);
+
+                for (int i = 0; i <= 37; i++)
+                {
+
+                    MapWinGIS.Point pnt = new Point();
+                    pnt.x = ArpCentreE + ArpRadius * Math.Cos(i * Math.PI / 18);
+                    pnt.y = ArpCentreN - ArpRadius * Math.Sin(i * Math.PI / 18);
+                    shp.InsertPoint(pnt, ref myPointIndex);
+                    shpPloygon.EditInsertShape(shp, ref myShapeIndex);
+                    //   myPointIndex++;
+                    //  myShapeIndex++;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            shpPloygon.StopEditingShapes(true, true, null);
+            shpPloygon.Close();
+
+        }
+        private void MakeCONPolygonShape()
+        {
+            string CDir = CurrentDir + "\\Shapefiles\\";
+            Shapefile shpPloygon = new Shapefile();
+            shpPloygon.CreateNew(CDir + "\\ConPolygon.shp", ShpfileType.SHP_POLYGON);
+            int fldX = shpPloygon.EditAddField("X", FieldType.DOUBLE_FIELD, 9, 12);
+            int fldY = shpPloygon.EditAddField("Y", FieldType.DOUBLE_FIELD, 9, 12);
+            int fldArea = shpPloygon.EditAddField("area", FieldType.DOUBLE_FIELD, 9, 12);
+
+
+            double ArpCentreE = double.Parse(this.ArpEast.Text);
+            double ArpCentreN = double.Parse(this.ArpNorth.Text);
+            double ArpRadius = 2700;
+            int myPointIndex = 0;
+            int myShapeIndex = 0;
+            try
+            {
+                MapWinGIS.Shape shp = new MapWinGIS.Shape();
+                shp.Create(ShpfileType.SHP_POLYGON);
+
+                for (int i = 0; i <= 37; i++)
+                {
+
+                    MapWinGIS.Point pnt = new Point();
+                    pnt.x = ArpCentreE + ArpRadius * Math.Cos(i * Math.PI / 18);
+                    pnt.y = ArpCentreN - ArpRadius * Math.Sin(i * Math.PI / 18);
+                    shp.InsertPoint(pnt, ref myPointIndex);
+                    shpPloygon.EditInsertShape(shp, ref myShapeIndex);
+                    //   myPointIndex++;
+                    //  myShapeIndex++;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            shpPloygon.StopEditingShapes(true, true, null);
+            shpPloygon.Close();
 
         }
 

@@ -110,10 +110,10 @@ namespace Obstacle
                 myShapefile.Close();
                 
 
-                //Create Polyline Shape
+                 //Create Polyline Shape
                 Shapefile poly = new Shapefile();
                 poly.CreateNew(@CDir+"\\Polyline.shp", ShpfileType.SHP_POLYLINE);// ShpfileType.SHP_POLYLINE);
-                MapWinGIS.Shape pPolyline = new Shape();
+                MapWinGIS.Shape pPolyline =new Shape();
                 pPolyline.Create(ShpfileType.SHP_POINT);
 
                // File.WriteAllText(@CDir + "\\PolyCoordinates.txt", "FieldName,Easting,Northing");
@@ -473,35 +473,6 @@ namespace Obstacle
                 PolygonShape.StopEditingShapes(true, true, null);
                 PolygonShape.Close();
 
-                frmAirportCode2 frm = new frmAirportCode2();
-                frm.Controls["TstTopLeft"].Text= TriangleTopLeft;
-                frm.Controls["TstTopRight"].Text = TriangleTopRight;
-                frm.Controls["TstBottomLeft"].Text = TriangleBottomLeft;
-                frm.Controls["TstBottomRight"].Text = TriangleBottomRight;
-
-                //string searchPoint = "388395.628,2768107.980";
-                //IsInPolygon(searchPoint, TriangleTopLeft);
-
-
-                //
-                /*
-                string JoinRW1 = App1StripLeftE + "," + App1StripLeftN + ";" + App1StripRightE + "," + App1StripRightN;
-     
-
-                Shape JoinRW1Shape = new Shape();
-                JoinRW1Shape.Create(poly.ShapefileType);
-                MakePolyline(JoinRW1, myPointIndex, myShapeIndex,  poly, JoinRW1Shape, out int PointIndex, out int ShapeIndex);
-
-                string JoinRW2 = App2StripLeftE + "," + App2StripLeftN + ";" + App2StripRightE + "," + App2StripRightN;
-                Shape JoinRW2Shape = new Shape();
-                JoinRW2Shape.Create(poly.ShapefileType);
-                MakePolyline(JoinRW2, myPointIndex, myShapeIndex, poly, JoinRW2Shape, out  PointIndex, out  ShapeIndex);
-                
-                string AppLeftCentre = App1BStripE + "," + App1BStripN + ";" + AppUpperCLineE + "," + AppUpperCLineN;
-                Shape pPolyline13 = new Shape();
-                pPolyline13.Create(poly.ShapefileType);
-                MakePolyline(AppLeftCentre, myPointIndex, myShapeIndex, poly, pPolyline13, out PointIndex, out ShapeIndex);
-                */
                 string CentreLine = AppUpperCLineE + "," + AppUpperCLineN+ ";" + AppLwrCLineE+ "," + AppLwrCLineN;
                 Shape ShapeCentreLine = new Shape();
                 ShapeCentreLine.Create(poly.ShapefileType);
@@ -747,10 +718,7 @@ namespace Obstacle
 
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            MakeIHSPolygonShape();
-        }
+       
         public static bool IsInPolygon(string point, string polygon)
         {
             bool inout = false;
