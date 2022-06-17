@@ -146,14 +146,16 @@ namespace Obstacle
                 string App2BStripE = App1E.ToString(); string App2BStripN = App1N.ToString();
                 Coord.Add("App2BStripE " + "," + App1E.ToString() + "," + "App2BStripN" + ","+ App1N.ToString());
 
-               //Get Center line Coordinates
+                //Get Center line Coordinates
 
-                GetNewCoordinatesWithAngle(App1BStripE, App1BStripN,2500, double.Parse(this.BackBearing.Text), out  App1N, out  App1E);
+                //  GetNewCoordinatesWithAngle(App1BStripE, App1BStripN,2500, double.Parse(this.BackBearing.Text), out  App1N, out  App1E);
+                GetNewCoordinatesWithAngle(App1BStripE, App1BStripN, 15000, double.Parse(this.BackBearing.Text), out App1N, out App1E);
                 string AppLineE= App1E.ToString(); string AppLineN = App1N.ToString();
                 Coord.Add("AppLineE" + "," + App1E.ToString() + "," + "AppLineN" + ","+ App1N.ToString());
                 //Get Center line Coordinates
 
-                GetNewCoordinatesWithAngle(App2BStripE, App2BStripN, 2500, double.Parse(this.Bearing.Text), out App1N, out  App1E);
+                //  GetNewCoordinatesWithAngle(App2BStripE, App2BStripN, 2500, double.Parse(this.Bearing.Text), out App1N, out  App1E);
+                GetNewCoordinatesWithAngle(App2BStripE, App2BStripN, 15000, double.Parse(this.Bearing.Text), out App1N, out App1E);
                 string RAppLineE = App1E.ToString(); string RAppLineN = App1N.ToString();
                 Coord.Add("RAppLineE" + "," + App1E.ToString() + "," + "RAppLineN" + ","+ App1N.ToString());
                 //Get Runway Strip
@@ -212,14 +214,16 @@ namespace Obstacle
 
                 Coord.Add("App2BSRE" + "," + App1E.ToString() + "," + "App2BSRN" + ","+ App1N.ToString());
 
-                GetNewCoordinatesWithAngle(App1BSLE, App1BSLN, 2500, double.Parse(this.BackBearing.Text) + 5.710,
+               // GetNewCoordinatesWithAngle(App1BSLE, App1BSLN, 2500, double.Parse(this.BackBearing.Text) + 5.710,
+                GetNewCoordinatesWithAngle(App1BSLE, App1BSLN, 15000, double.Parse(this.BackBearing.Text) + 5.710,
                       out App1N, out App1E) ;
                 string AppUppCord1E = App1E.ToString();
                 string AppUppCord1N = App1N.ToString();
 
                 Coord.Add("AppUppCord1E" + "," + App1E.ToString() + "," + "AppUppCord1N" + ","+ App1N.ToString());
 
-                GetNewCoordinatesWithAngle(App1BSRE, App1BSRN, 2500, double.Parse(this.BackBearing.Text) - 5.710,
+                // GetNewCoordinatesWithAngle(App1BSRE, App1BSRN, 2500, double.Parse(this.BackBearing.Text) - 5.710,
+                GetNewCoordinatesWithAngle(App1BSRE, App1BSRN, 15000, double.Parse(this.BackBearing.Text) - 5.710,
                     out App1N, out App1E) ;
                 string AppUppCord1ELeft = App1E.ToString();
                 string AppUppCord1NLeft = App1N.ToString();
@@ -227,7 +231,8 @@ namespace Obstacle
                 Coord.Add("AppUppCord1ELeft" + "," + App1E.ToString() + "," + "AppUppCord1NLeft" + ","+ App1N.ToString());
 
                 //                GetNewCoordinatesWithAngle(App1BSRE, App1BSRN, 2500, double.Parse(this.BackBearing.Text) ,
-                GetNewCoordinatesWithAngle(App1BStripE, App1BStripN, 2500, double.Parse(this.BackBearing.Text),
+                // GetNewCoordinatesWithAngle(App1BStripE, App1BStripN, 2500, double.Parse(this.BackBearing.Text),
+                GetNewCoordinatesWithAngle(App1BStripE, App1BStripN, 15000, double.Parse(this.BackBearing.Text),
                    out App1N, out App1E);
                 string AppUpperCLineE = App1E.ToString();
                 string AppUpperCLineN = App1N.ToString();
@@ -242,14 +247,16 @@ namespace Obstacle
 
                 Coord.Add("AppLwrCord1E" + "," + App1E.ToString() + "," + "AppLwrCord1N" + ","+ App1N.ToString());
 
-                GetNewCoordinatesWithAngle(App2BSRE, App2BSRN, 2500, double.Parse(this.Bearing.Text) + 5.710,
+                //     GetNewCoordinatesWithAngle(App2BSRE, App2BSRN, 2500, double.Parse(this.Bearing.Text) + 5.710,
+                GetNewCoordinatesWithAngle(App2BSRE, App2BSRN, 15000, double.Parse(this.Bearing.Text) + 5.710,
                     out App1N, out App1E) ;
                 string AppLwrCord1ELeft = App1E.ToString();
                 string AppLwrCord1NLeft = App1N.ToString();
 
                 Coord.Add("AppLwrCord1ELeft" + "," + App1E.ToString() + "," + "AppLwrCord1NLeft" + ","+ App1N.ToString());
 
-                GetNewCoordinatesWithAngle(App2BStripE, App2BStripN, 2500, double.Parse(this.Bearing.Text),
+                //   GetNewCoordinatesWithAngle(App2BStripE, App2BStripN, 2500, double.Parse(this.Bearing.Text),
+                GetNewCoordinatesWithAngle(App2BStripE, App2BStripN, 15000, double.Parse(this.Bearing.Text),
                    out App1N, out App1E) ;
                 string AppLwrCLineE = App1E.ToString();
                 string AppLwrCLineN = App1N.ToString();
@@ -257,7 +264,8 @@ namespace Obstacle
                 Coord.Add("AppLwrCLineE" + "," + App1E.ToString() + "," + "AppLwrCLineN" + ","+ App1N.ToString());
 
                 //******************************
-                GetNewCoordinatesWithAngle(App1BSLE, App1BSLN, 225, double.Parse(this.Bearing.Text) - 90,
+                // GetNewCoordinatesWithAngle(App1BSLE, App1BSLN, 225, double.Parse(this.Bearing.Text) - 90,
+                GetNewCoordinatesWithAngle(App1BSLE, App1BSLN, 315, double.Parse(this.Bearing.Text) - 90,
                   out App1N, out App1E);
 
                 string App1TSLeftE = App1E.ToString();
@@ -265,7 +273,8 @@ namespace Obstacle
 
                 Coord.Add("App1TSLeftE" + "," + App1E.ToString() + "," + "App1TSLeftN" + ","+ App1N.ToString());
 
-                GetNewCoordinatesWithAngle(App1BSRE, App1BSRN,225, double.Parse(this.Bearing.Text) + 90,
+                //GetNewCoordinatesWithAngle(App1BSRE, App1BSRN,225, double.Parse(this.Bearing.Text) + 90,
+                GetNewCoordinatesWithAngle(App1BSRE, App1BSRN, 315, double.Parse(this.Bearing.Text) + 90,
                 out App1N, out App1E);
 
                 string App1TSRightE = App1E.ToString();
@@ -273,7 +282,8 @@ namespace Obstacle
 
                 Coord.Add("App1TSRightE" + "," + App1E.ToString() + "," + "App1TSRightN" + ","+ App1N.ToString());
 
-                GetNewCoordinatesWithAngle(App2BSLE, App2BSLN, 225, double.Parse(this.Bearing.Text) - 90,
+                //GetNewCoordinatesWithAngle(App2BSLE, App2BSLN, 225, double.Parse(this.Bearing.Text) - 90,
+                GetNewCoordinatesWithAngle(App2BSLE, App2BSLN, 315, double.Parse(this.Bearing.Text) - 90,
                  out App1N, out App1E);
 
                 string App2TSLeftE = App1E.ToString();
@@ -281,7 +291,8 @@ namespace Obstacle
 
                 Coord.Add("App2TSLeftE" + "," + App1E.ToString() + "," + "App2TSLeftN" + ","+ App1N.ToString());
 
-                GetNewCoordinatesWithAngle(App2BSRE, App2BSRN, 225, double.Parse(this.Bearing.Text) + 90,
+                //GetNewCoordinatesWithAngle(App2BSRE, App2BSRN, 225, double.Parse(this.Bearing.Text) + 90,
+                GetNewCoordinatesWithAngle(App2BSRE, App2BSRN, 315, double.Parse(this.Bearing.Text) + 90,
                 out App1N, out App1E);
 
                 string App2TSRightE = App1E.ToString();
@@ -289,7 +300,8 @@ namespace Obstacle
 
                 Coord.Add("App2TSRightE" + "," + App1E.ToString() + "," + "App2TSRightN" + ","+ App1N.ToString());
 
-                GetNewCoordinatesWithAngle(App1BStripE, App1BStripN, 1125, double.Parse(this.BackBearing.Text),
+                //GetNewCoordinatesWithAngle(App1BStripE, App1BStripN, 1125, double.Parse(this.BackBearing.Text),
+                GetNewCoordinatesWithAngle(App1BStripE, App1BStripN, 2250, double.Parse(this.BackBearing.Text),
             out App1N, out App1E);
 
                 string App1TsPointE = App1E.ToString();
@@ -297,7 +309,8 @@ namespace Obstacle
 
                 Coord.Add("App1TsPointE" + "," + App1E.ToString() + "," + "App1TsPointN" + ","+ App1N.ToString());
 
-                GetNewCoordinatesWithAngle(App2BStripE, App2BStripN, 1125, double.Parse(this.Bearing.Text),
+                //GetNewCoordinatesWithAngle(App2BStripE, App2BStripN, 1125, double.Parse(this.Bearing.Text),
+                GetNewCoordinatesWithAngle(App2BStripE, App2BStripN, 2250, double.Parse(this.Bearing.Text),
             out App1N, out App1E);
 
                 string App2TsPointE = App1E.ToString();

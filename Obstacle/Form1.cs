@@ -1301,7 +1301,7 @@ namespace Obstacle
 
 
                                 WorkLatLong(reader["Easting"].ToString(), reader["Northing"].ToString(),
-                                    Convert.ToInt32(this.Zone.Text), out string PLat, out string PLng);
+                                Convert.ToInt32(this.Zone.Text), out string PLat, out string PLng);
 
                                  PointLat = double.Parse(PLat);
                                  PointLng = double.Parse(PLng);
@@ -1414,8 +1414,8 @@ namespace Obstacle
             Coordinate c1 = new Coordinate( Lat1,  Lng1);
             Coordinate c2 = new Coordinate(Lat2, Lng2);
             Distance d=  new Distance(c1, c2, Shape.Ellipsoid);
-            Bearing= Math.Round(d.Bearing, 2);
-            RDistance = Math.Round(d.Meters);
+            Bearing= d.Bearing;
+            RDistance =  d.Meters;
 
             return RDistance;
         }

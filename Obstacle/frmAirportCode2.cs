@@ -806,7 +806,9 @@ namespace Obstacle
                 // this.dataGridView1.DefaultCellStyle.Font = new System.Drawing.Font("Tahoma", 9);
                 //           showgrid();
             }
+           
             MessageBox.Show("Records Updated ");
+            CreateShapeFiles();
         }
         
 
@@ -1170,6 +1172,7 @@ namespace Obstacle
 
 
             GetObstacles(null, null);
+            
         }
 
         private void GetNewCoordinatesWithAngle(string He, string Hn, double Distance,
@@ -1729,6 +1732,8 @@ namespace Obstacle
                         File.WriteAllText(@CDir + "\\ArpPolygon.prj", ProjFile);
                         File.WriteAllText(@CDir + "\\TstPolygon.prj", ProjFile);
                         //
+                        DisplayShapes ds = new DisplayShapes();
+                        ds.Show();
 
 
 

@@ -88,6 +88,7 @@
             this.ForwardDms = new System.Windows.Forms.TextBox();
             this.BackwardDms = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button8 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
@@ -129,7 +130,6 @@
             this.TstTopRight = new System.Windows.Forms.TextBox();
             this.TstBottomLeft = new System.Windows.Forms.TextBox();
             this.TstBottomRight = new System.Windows.Forms.TextBox();
-            this.button8 = new System.Windows.Forms.Button();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -820,6 +820,16 @@
             this.panel1.Size = new System.Drawing.Size(901, 535);
             this.panel1.TabIndex = 148;
             // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(376, 473);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(139, 43);
+            this.button8.TabIndex = 177;
+            this.button8.Text = "Create Shape Files";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
             // button7
             // 
             this.button7.Location = new System.Drawing.Point(376, 419);
@@ -1220,16 +1230,6 @@
             this.TstBottomRight.Name = "TstBottomRight";
             this.TstBottomRight.Size = new System.Drawing.Size(100, 22);
             this.TstBottomRight.TabIndex = 201;
-            // 
-            // button8
-            // 
-            this.button8.Location = new System.Drawing.Point(376, 473);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(127, 43);
-            this.button8.TabIndex = 177;
-            this.button8.Text = "Create Shape Files";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
             // frmAirportCode2
             // 
