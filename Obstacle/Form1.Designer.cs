@@ -214,6 +214,7 @@
             // 
             // FileName
             // 
+            this.FileName.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.FileName.Name = "FileName";
             this.FileName.Size = new System.Drawing.Size(100, 27);
             this.FileName.Visible = false;

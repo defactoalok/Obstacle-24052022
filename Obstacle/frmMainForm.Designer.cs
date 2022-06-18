@@ -33,6 +33,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btn_NewRecord
@@ -60,7 +61,7 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Tahoma", 10F);
-            this.button1.Location = new System.Drawing.Point(90, 214);
+            this.button1.Location = new System.Drawing.Point(90, 265);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(403, 54);
             this.button1.TabIndex = 3;
@@ -71,7 +72,7 @@
             // button3
             // 
             this.button3.Font = new System.Drawing.Font("Tahoma", 10.2F);
-            this.button3.Location = new System.Drawing.Point(90, 154);
+            this.button3.Location = new System.Drawing.Point(90, 205);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(403, 54);
             this.button3.TabIndex = 4;
@@ -90,11 +91,23 @@
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
+            // button5
+            // 
+            this.button5.Font = new System.Drawing.Font("Tahoma", 10.2F);
+            this.button5.Location = new System.Drawing.Point(90, 154);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(403, 54);
+            this.button5.TabIndex = 6;
+            this.button5.Text = "Airport Code 4 Obstacle Calculations";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
             // frmMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(582, 581);
+            this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button1);
@@ -115,5 +128,6 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button5;
     }
 }

@@ -240,7 +240,7 @@ namespace Obstacle
                 Coord.Add("AppUpperCLineE" + "," + App1E.ToString() + "," + "AppUpperCLineN" + ","+ App1N.ToString());
 
                 //*****************************
-                GetNewCoordinatesWithAngle(App2BSLE, App2BSLN, 2500, double.Parse(this.Bearing.Text) - 5.710,
+                GetNewCoordinatesWithAngle(App2BSLE, App2BSLN, 15000, double.Parse(this.Bearing.Text) - 5.710,
                     out App1N, out App1E) ;
                 string AppLwrCord1E = App1E.ToString();
                 string AppLwrCord1N = App1N.ToString();
@@ -309,7 +309,7 @@ namespace Obstacle
 
                 Coord.Add("App1TsPointE" + "," + App1E.ToString() + "," + "App1TsPointN" + ","+ App1N.ToString());
 
-                //GetNewCoordinatesWithAngle(App2BStripE, App2BStripN, 1125, double.Parse(this.Bearing.Text),
+                //GetNewCoordinatesWithAngle(App2BStripE, App2BStripN,1125, double.Parse(this.Bearing.Text),
                 GetNewCoordinatesWithAngle(App2BStripE, App2BStripN, 2250, double.Parse(this.Bearing.Text),
             out App1N, out App1E);
 
@@ -347,7 +347,8 @@ namespace Obstacle
                 Coord.Add("App2TsFunnelRLwrE" + "," + App1E.ToString() + "," + "App2TsFunnelRLwrN" + ","+ App1N.ToString());
 
                 //Get Upper Approach line Coordinates
-                GetNewCoordinatesWithAngle(this.textBox3.Text, this.textBox1.Text, 2500, double.Parse(this.BackBearing.Text) - 6,
+                //GetNewCoordinatesWithAngle(this.textBox3.Text, this.textBox1.Text, 2500, double.Parse(this.BackBearing.Text) - 6,
+                GetNewCoordinatesWithAngle(this.textBox3.Text, this.textBox1.Text, 15000, double.Parse(this.BackBearing.Text) - 6,
                       out App1N, out App1E); ;
                 string AppBtnCord1E = App1E.ToString();
                 string AppBtnCord1N = App1N.ToString();
@@ -495,8 +496,8 @@ namespace Obstacle
                
                 poly.StopEditingShapes(true, true, null);
                 poly.Close();
-                MakeIHSPolygonShape();
-                MakeCONPolygonShape();
+              //  MakeIHSPolygonShape();
+              ///  MakeCONPolygonShape();
 
              //   axMap1.DrawCircle(double.Parse(this.App1East.Text), double.Parse(this.App1North.Text), 2500, 1, false);
                 MessageBox.Show("Done");
@@ -590,7 +591,51 @@ namespace Obstacle
 
             double ArpCentreE = double.Parse(this.ArpEast.Text);
             double ArpCentreN = double.Parse(this.ArpNorth.Text);
-            double ArpRadius = 2500;
+            //  double ArpRadius = 2500;
+            double ArpRadius = 4000;
+            int myPointIndex = 0;
+            int myShapeIndex = 0;
+            try
+            {
+                Shape shp = new Shape();
+                shp.Create(ShpfileType.SHP_POLYGON);
+
+                for (int i = 0; i <= 37; i++)
+                {
+
+                    MapWinGIS.Point pnt = new Point();
+                    pnt.x = ArpCentreE + ArpRadius * Math.Cos(i * Math.PI / 18);
+                    pnt.y = ArpCentreN - ArpRadius * Math.Sin(i * Math.PI / 18);
+                    shp.InsertPoint(pnt, ref myPointIndex);
+                    shpPloygon.EditInsertShape(shp, ref myShapeIndex);
+                    //   myPointIndex++;
+                    //  myShapeIndex++;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            shpPloygon.StopEditingShapes(true, true, null);
+            shpPloygon.Close();
+
+        }
+
+        private void MakeIHSPolygonShapeCode4()
+        {
+            string CDir = CurrentDir + "\\Shapefiles\\";
+            Shapefile shpPloygon = new Shapefile();
+            shpPloygon.CreateNew(@CDir + "\\ArpPolygon.shp", ShpfileType.SHP_POLYGON);
+            int fldX = shpPloygon.EditAddField("X", FieldType.DOUBLE_FIELD, 9, 12);
+            int fldY = shpPloygon.EditAddField("Y", FieldType.DOUBLE_FIELD, 9, 12);
+            int fldArea = shpPloygon.EditAddField("area", FieldType.DOUBLE_FIELD, 9, 12);
+
+
+            double ArpCentreE = double.Parse(this.ArpEast.Text);
+            double ArpCentreN = double.Parse(this.ArpNorth.Text);
+
+            //  double ArpRadius = 2500;
+            double ArpRadius = 4000;
             int myPointIndex = 0;
             int myShapeIndex = 0;
             try

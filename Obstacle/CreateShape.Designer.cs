@@ -59,6 +59,11 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.Zone = new System.Windows.Forms.TextBox();
             this.textBox13 = new System.Windows.Forms.TextBox();
+            this.OHSWidth = new System.Windows.Forms.TextBox();
+            this.ConWidth = new System.Windows.Forms.TextBox();
+            this.IHSWidth = new System.Windows.Forms.TextBox();
+            this.MaxApproachLength = new System.Windows.Forms.TextBox();
+            this.TSWidth = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -354,11 +359,66 @@
             this.textBox13.TabIndex = 186;
             this.textBox13.Visible = false;
             // 
+            // OHSWidth
+            // 
+            this.OHSWidth.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OHSWidth.Location = new System.Drawing.Point(586, 279);
+            this.OHSWidth.Margin = new System.Windows.Forms.Padding(4);
+            this.OHSWidth.Name = "OHSWidth";
+            this.OHSWidth.Size = new System.Drawing.Size(120, 26);
+            this.OHSWidth.TabIndex = 191;
+            this.OHSWidth.Visible = false;
+            // 
+            // ConWidth
+            // 
+            this.ConWidth.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ConWidth.Location = new System.Drawing.Point(586, 247);
+            this.ConWidth.Margin = new System.Windows.Forms.Padding(4);
+            this.ConWidth.Name = "ConWidth";
+            this.ConWidth.Size = new System.Drawing.Size(120, 26);
+            this.ConWidth.TabIndex = 190;
+            this.ConWidth.Visible = false;
+            // 
+            // IHSWidth
+            // 
+            this.IHSWidth.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IHSWidth.Location = new System.Drawing.Point(586, 214);
+            this.IHSWidth.Margin = new System.Windows.Forms.Padding(4);
+            this.IHSWidth.Name = "IHSWidth";
+            this.IHSWidth.Size = new System.Drawing.Size(120, 26);
+            this.IHSWidth.TabIndex = 189;
+            this.IHSWidth.Visible = false;
+            // 
+            // MaxApproachLength
+            // 
+            this.MaxApproachLength.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MaxApproachLength.Location = new System.Drawing.Point(586, 146);
+            this.MaxApproachLength.Margin = new System.Windows.Forms.Padding(4);
+            this.MaxApproachLength.Name = "MaxApproachLength";
+            this.MaxApproachLength.Size = new System.Drawing.Size(120, 26);
+            this.MaxApproachLength.TabIndex = 187;
+            this.MaxApproachLength.Visible = false;
+            // 
+            // TSWidth
+            // 
+            this.TSWidth.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TSWidth.Location = new System.Drawing.Point(586, 180);
+            this.TSWidth.Margin = new System.Windows.Forms.Padding(4);
+            this.TSWidth.Name = "TSWidth";
+            this.TSWidth.Size = new System.Drawing.Size(120, 26);
+            this.TSWidth.TabIndex = 188;
+            this.TSWidth.Visible = false;
+            // 
             // CreateShape
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1293, 450);
+            this.Controls.Add(this.OHSWidth);
+            this.Controls.Add(this.ConWidth);
+            this.Controls.Add(this.IHSWidth);
+            this.Controls.Add(this.MaxApproachLength);
+            this.Controls.Add(this.TSWidth);
             this.Controls.Add(this.textBox13);
             this.Controls.Add(this.Zone);
             this.Controls.Add(this.panel1);
@@ -431,5 +491,10 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.TextBox Zone;
         private System.Windows.Forms.TextBox textBox13;
+        private System.Windows.Forms.TextBox OHSWidth;
+        private System.Windows.Forms.TextBox ConWidth;
+        private System.Windows.Forms.TextBox IHSWidth;
+        private System.Windows.Forms.TextBox MaxApproachLength;
+        private System.Windows.Forms.TextBox TSWidth;
     }
 }
