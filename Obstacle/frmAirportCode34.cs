@@ -735,9 +735,19 @@ namespace Obstacle
                                     APPElevApproach = Convert.ToDouble(this.Rwy2Elevation.Text.ToString());
                                
                                 }
-                                if (getX <= 15000)
+                                if (getX <= 3000)
                                 {
-                                    PETSRWYAPP = (getX * .04) + APPElevApproach;
+                                    PETSRWYAPP = (getX /50) + APPElevApproach;
+
+                                }
+                                if (getX > 3000 && getX <=6600)
+                                {
+                                    PETSRWYAPP = 60+((getX -3000)/40) + APPElevApproach;
+
+                                }
+                                if (getX > 15000)
+                                {
+                                    PETSRWYAPP =150 + APPElevApproach;
                                     
                                 }
                                 ObstRwyTSApp = Math.Round(PointElevation - PETSRWYAPP,1);
@@ -756,11 +766,11 @@ namespace Obstacle
                                     Elevation = AplElevTSRWY;
                                     if (surface.Substring(0, 2) == "TS")
                                     {
-                                        PETSRWYAPP = ((getY - (Convert.ToDouble(this.RunwayStrip.Text) / 2)) / 5) + Elevation;
+                                        PETSRWYAPP = ((getY - (Convert.ToDouble(this.RunwayStrip.Text) / 2)) / 7) + Elevation;
                                     }
                                     if (surface.Substring(0, 3) == "TST")
                                     {
-                                        PETSRWYAPP = ((getX) * 0.04) + (getYY / 5) + Elevation;
+                                        PETSRWYAPP = ((getX) * 0.04) + (getYY / 7) + Elevation;
                                     }
                                  
                                 }
@@ -979,6 +989,8 @@ namespace Obstacle
             this.Rwy1Elevation.Text = "534.432";
             this.Rwy2Elevation.Text = "534.94";
             this.MaxApproachLength.Text = "15000";
+            this.AppSection1.Text = "3000";
+            this.AppSection2.Text = "6600";
             this.TSWidth.Text = "315";
             this.TSLength.Text = "2250";
             this.IHSWidth.Text = "6000";
@@ -1302,8 +1314,19 @@ namespace Obstacle
             double OHSCirvle = double.Parse(this.ConWidth.Text);
             double Tslength = double.Parse(this.TSLength.Text);
             double TsFunnel = Tslength * (double.Parse(this.Diversion.Text) / 100) + (double.Parse(this.RunwayStrip.Text) / 2);
+            double DiversionTan=6;
+            
+            
+            if ( this.Diversion.Text  == "10") 
+            {
+                DiversionTan = 6;
+            }else 
+            {
+                DiversionTan = 9;
+             }
+            
 
-;            string CDir = Directory.GetCurrentDirectory() + "\\Shapefiles\\";
+            ;            string CDir = Directory.GetCurrentDirectory() + "\\Shapefiles\\";
             int myPointIndex = 0;
             System.IO.DirectoryInfo di = new DirectoryInfo(CDir);
 

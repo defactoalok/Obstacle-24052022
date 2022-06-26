@@ -88,6 +88,8 @@
             this.ForwardDms = new System.Windows.Forms.TextBox();
             this.BackwardDms = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.TSLength = new System.Windows.Forms.TextBox();
+            this.label41 = new System.Windows.Forms.Label();
             this.OHSWidth = new System.Windows.Forms.TextBox();
             this.label40 = new System.Windows.Forms.Label();
             this.ConWidth = new System.Windows.Forms.TextBox();
@@ -140,8 +142,10 @@
             this.TstTopRight = new System.Windows.Forms.TextBox();
             this.TstBottomLeft = new System.Windows.Forms.TextBox();
             this.TstBottomRight = new System.Windows.Forms.TextBox();
-            this.TSLength = new System.Windows.Forms.TextBox();
-            this.label41 = new System.Windows.Forms.Label();
+            this.AppSection2 = new System.Windows.Forms.TextBox();
+            this.label42 = new System.Windows.Forms.Label();
+            this.AppSection1 = new System.Windows.Forms.TextBox();
+            this.label43 = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -753,9 +757,9 @@
             this.label26.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label26.Location = new System.Drawing.Point(13, 5);
             this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(327, 23);
+            this.label26.Size = new System.Drawing.Size(361, 23);
             this.label26.TabIndex = 0;
-            this.label26.Text = "Obstacle Calculation for Code 2 Airport";
+            this.label26.Text = "Obstacle Calculation for Code 3 && 4 Airport";
             // 
             // ForwardDms
             // 
@@ -781,6 +785,10 @@
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.Control;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.AppSection1);
+            this.panel1.Controls.Add(this.label43);
+            this.panel1.Controls.Add(this.AppSection2);
+            this.panel1.Controls.Add(this.label42);
             this.panel1.Controls.Add(this.TSLength);
             this.panel1.Controls.Add(this.label41);
             this.panel1.Controls.Add(this.OHSWidth);
@@ -844,6 +852,26 @@
             this.panel1.Size = new System.Drawing.Size(901, 695);
             this.panel1.TabIndex = 148;
             // 
+            // TSLength
+            // 
+            this.TSLength.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TSLength.Location = new System.Drawing.Point(187, 556);
+            this.TSLength.Margin = new System.Windows.Forms.Padding(4);
+            this.TSLength.Name = "TSLength";
+            this.TSLength.Size = new System.Drawing.Size(120, 26);
+            this.TSLength.TabIndex = 211;
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Font = new System.Drawing.Font("Segoe UI Symbol", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label41.Location = new System.Drawing.Point(19, 558);
+            this.label41.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(92, 20);
+            this.label41.TabIndex = 212;
+            this.label41.Text = "Length of TS";
+            // 
             // OHSWidth
             // 
             this.OHSWidth.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -897,7 +925,7 @@
             // 
             this.label38.AutoSize = true;
             this.label38.Font = new System.Drawing.Font("Segoe UI Symbol", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label38.Location = new System.Drawing.Point(19, 584);
+            this.label38.Location = new System.Drawing.Point(19, 589);
             this.label38.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label38.Name = "label38";
             this.label38.Size = new System.Drawing.Size(76, 20);
@@ -935,7 +963,7 @@
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(376, 473);
+            this.button8.Location = new System.Drawing.Point(423, 569);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(139, 43);
             this.button8.TabIndex = 177;
@@ -956,7 +984,7 @@
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(376, 419);
+            this.button7.Location = new System.Drawing.Point(374, 337);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(144, 38);
             this.button7.TabIndex = 176;
@@ -966,7 +994,7 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(376, 357);
+            this.button6.Location = new System.Drawing.Point(374, 301);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(139, 42);
             this.button6.TabIndex = 175;
@@ -977,9 +1005,9 @@
             // button5
             // 
             this.button5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button5.Location = new System.Drawing.Point(367, 278);
+            this.button5.Location = new System.Drawing.Point(374, 252);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(295, 43);
+            this.button5.Size = new System.Drawing.Size(112, 43);
             this.button5.TabIndex = 174;
             this.button5.Text = "Fill ";
             this.button5.UseVisualStyleBackColor = true;
@@ -1008,7 +1036,7 @@
             // button4
             // 
             this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.Location = new System.Drawing.Point(550, 332);
+            this.button4.Location = new System.Drawing.Point(601, 565);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(295, 43);
             this.button4.TabIndex = 171;
@@ -1019,7 +1047,7 @@
             // button3
             // 
             this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.Location = new System.Drawing.Point(550, 381);
+            this.button3.Location = new System.Drawing.Point(601, 614);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(295, 76);
             this.button3.TabIndex = 147;
@@ -1355,25 +1383,45 @@
             this.TstBottomRight.Size = new System.Drawing.Size(100, 22);
             this.TstBottomRight.TabIndex = 201;
             // 
-            // TSLength
+            // AppSection2
             // 
-            this.TSLength.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TSLength.Location = new System.Drawing.Point(187, 556);
-            this.TSLength.Margin = new System.Windows.Forms.Padding(4);
-            this.TSLength.Name = "TSLength";
-            this.TSLength.Size = new System.Drawing.Size(120, 26);
-            this.TSLength.TabIndex = 211;
+            this.AppSection2.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AppSection2.Location = new System.Drawing.Point(396, 493);
+            this.AppSection2.Margin = new System.Windows.Forms.Padding(4);
+            this.AppSection2.Name = "AppSection2";
+            this.AppSection2.Size = new System.Drawing.Size(120, 26);
+            this.AppSection2.TabIndex = 30;
             // 
-            // label41
+            // label42
             // 
-            this.label41.AutoSize = true;
-            this.label41.Font = new System.Drawing.Font("Segoe UI Symbol", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label41.Location = new System.Drawing.Point(19, 558);
-            this.label41.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(92, 20);
-            this.label41.TabIndex = 212;
-            this.label41.Text = "Length of TS";
+            this.label42.AutoSize = true;
+            this.label42.Font = new System.Drawing.Font("Segoe UI Symbol", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label42.Location = new System.Drawing.Point(329, 496);
+            this.label42.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(70, 20);
+            this.label42.TabIndex = 214;
+            this.label42.Text = "Section 2";
+            // 
+            // AppSection1
+            // 
+            this.AppSection1.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AppSection1.Location = new System.Drawing.Point(658, 490);
+            this.AppSection1.Margin = new System.Windows.Forms.Padding(4);
+            this.AppSection1.Name = "AppSection1";
+            this.AppSection1.Size = new System.Drawing.Size(120, 26);
+            this.AppSection1.TabIndex = 31;
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Font = new System.Drawing.Font("Segoe UI Symbol", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label43.Location = new System.Drawing.Point(591, 493);
+            this.label43.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(70, 20);
+            this.label43.TabIndex = 216;
+            this.label43.Text = "Section 1";
             // 
             // frmAirportCode34
             // 
@@ -1561,5 +1609,9 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox TSLength;
         private System.Windows.Forms.Label label41;
+        private System.Windows.Forms.TextBox AppSection1;
+        private System.Windows.Forms.Label label43;
+        private System.Windows.Forms.TextBox AppSection2;
+        private System.Windows.Forms.Label label42;
     }
 }
