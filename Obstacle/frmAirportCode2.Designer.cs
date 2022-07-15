@@ -221,7 +221,7 @@
             this.LngS.Margin = new System.Windows.Forms.Padding(4);
             this.LngS.MaxLength = 8;
             this.LngS.Name = "LngS";
-            this.LngS.Size = new System.Drawing.Size(90, 26);
+            this.LngS.Size = new System.Drawing.Size(63, 26);
             this.LngS.TabIndex = 5;
             // 
             // LngM
@@ -254,7 +254,7 @@
             this.LatS.Margin = new System.Windows.Forms.Padding(4);
             this.LatS.MaxLength = 8;
             this.LatS.Name = "LatS";
-            this.LatS.Size = new System.Drawing.Size(90, 26);
+            this.LatS.Size = new System.Drawing.Size(63, 26);
             this.LatS.TabIndex = 2;
             // 
             // LatM
@@ -298,7 +298,7 @@
             this.LngS2.Margin = new System.Windows.Forms.Padding(4);
             this.LngS2.MaxLength = 8;
             this.LngS2.Name = "LngS2";
-            this.LngS2.Size = new System.Drawing.Size(90, 26);
+            this.LngS2.Size = new System.Drawing.Size(63, 26);
             this.LngS2.TabIndex = 11;
             // 
             // LngM2
@@ -331,7 +331,7 @@
             this.LatS2.Margin = new System.Windows.Forms.Padding(4);
             this.LatS2.MaxLength = 8;
             this.LatS2.Name = "LatS2";
-            this.LatS2.Size = new System.Drawing.Size(90, 26);
+            this.LatS2.Size = new System.Drawing.Size(63, 26);
             this.LatS2.TabIndex = 8;
             // 
             // LatM2
@@ -817,12 +817,12 @@
             this.panel1.Controls.Add(this.BackBearing);
             this.panel1.Location = new System.Drawing.Point(36, 18);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(901, 535);
+            this.panel1.Size = new System.Drawing.Size(901, 497);
             this.panel1.TabIndex = 148;
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(376, 473);
+            this.button8.Location = new System.Drawing.Point(376, 399);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(139, 43);
             this.button8.TabIndex = 177;
@@ -832,17 +832,18 @@
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(376, 419);
+            this.button7.Location = new System.Drawing.Point(668, 463);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(144, 38);
             this.button7.TabIndex = 176;
             this.button7.Text = "button7";
             this.button7.UseVisualStyleBackColor = true;
+            this.button7.Visible = false;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(376, 357);
+            this.button6.Location = new System.Drawing.Point(376, 339);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(139, 42);
             this.button6.TabIndex = 175;
@@ -853,9 +854,9 @@
             // button5
             // 
             this.button5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button5.Location = new System.Drawing.Point(367, 278);
+            this.button5.Location = new System.Drawing.Point(376, 278);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(295, 43);
+            this.button5.Size = new System.Drawing.Size(139, 43);
             this.button5.TabIndex = 174;
             this.button5.Text = "Fill ";
             this.button5.UseVisualStyleBackColor = true;
@@ -1108,6 +1109,7 @@
             this.label35.Size = new System.Drawing.Size(188, 20);
             this.label35.TabIndex = 189;
             this.label35.Text = "APP1 Latitude && Longitude";
+            this.label35.Visible = false;
             // 
             // Rwy2North
             // 
@@ -1117,6 +1119,7 @@
             this.Rwy2North.Name = "Rwy2North";
             this.Rwy2North.Size = new System.Drawing.Size(120, 26);
             this.Rwy2North.TabIndex = 193;
+            this.Rwy2North.Visible = false;
             // 
             // Rwy1East
             // 
@@ -1126,6 +1129,7 @@
             this.Rwy1East.Name = "Rwy1East";
             this.Rwy1East.Size = new System.Drawing.Size(120, 26);
             this.Rwy1East.TabIndex = 190;
+            this.Rwy1East.Visible = false;
             // 
             // Rwy1North
             // 
@@ -1135,6 +1139,7 @@
             this.Rwy1North.Name = "Rwy1North";
             this.Rwy1North.Size = new System.Drawing.Size(120, 26);
             this.Rwy1North.TabIndex = 191;
+            this.Rwy1North.Visible = false;
             // 
             // Rwy2East
             // 
@@ -1144,6 +1149,7 @@
             this.Rwy2East.Name = "Rwy2East";
             this.Rwy2East.Size = new System.Drawing.Size(120, 26);
             this.Rwy2East.TabIndex = 192;
+            this.Rwy2East.Visible = false;
             // 
             // label36
             // 
@@ -1155,6 +1161,7 @@
             this.label36.Size = new System.Drawing.Size(188, 20);
             this.label36.TabIndex = 188;
             this.label36.Text = "APP1 Latitude && Longitude";
+            this.label36.Visible = false;
             // 
             // App1Lat
             // 
@@ -1164,6 +1171,7 @@
             this.App1Lat.Name = "App1Lat";
             this.App1Lat.Size = new System.Drawing.Size(120, 26);
             this.App1Lat.TabIndex = 194;
+            this.App1Lat.Visible = false;
             // 
             // App1Lng
             // 
@@ -1173,6 +1181,7 @@
             this.App1Lng.Name = "App1Lng";
             this.App1Lng.Size = new System.Drawing.Size(120, 26);
             this.App1Lng.TabIndex = 195;
+            this.App1Lng.Visible = false;
             // 
             // App2Lng
             // 
@@ -1182,6 +1191,7 @@
             this.App2Lng.Name = "App2Lng";
             this.App2Lng.Size = new System.Drawing.Size(120, 26);
             this.App2Lng.TabIndex = 197;
+            this.App2Lng.Visible = false;
             // 
             // App2Lat
             // 
@@ -1191,6 +1201,7 @@
             this.App2Lat.Name = "App2Lat";
             this.App2Lat.Size = new System.Drawing.Size(120, 26);
             this.App2Lat.TabIndex = 196;
+            this.App2Lat.Visible = false;
             // 
             // label37
             // 
@@ -1205,37 +1216,41 @@
             // 
             // TstTopLeft
             // 
-            this.TstTopLeft.Location = new System.Drawing.Point(866, 825);
+            this.TstTopLeft.Location = new System.Drawing.Point(866, 791);
             this.TstTopLeft.Name = "TstTopLeft";
             this.TstTopLeft.Size = new System.Drawing.Size(100, 22);
             this.TstTopLeft.TabIndex = 198;
+            this.TstTopLeft.Visible = false;
             // 
             // TstTopRight
             // 
-            this.TstTopRight.Location = new System.Drawing.Point(866, 795);
+            this.TstTopRight.Location = new System.Drawing.Point(866, 761);
             this.TstTopRight.Name = "TstTopRight";
             this.TstTopRight.Size = new System.Drawing.Size(100, 22);
             this.TstTopRight.TabIndex = 199;
+            this.TstTopRight.Visible = false;
             // 
             // TstBottomLeft
             // 
-            this.TstBottomLeft.Location = new System.Drawing.Point(866, 880);
+            this.TstBottomLeft.Location = new System.Drawing.Point(866, 846);
             this.TstBottomLeft.Name = "TstBottomLeft";
             this.TstBottomLeft.Size = new System.Drawing.Size(100, 22);
             this.TstBottomLeft.TabIndex = 200;
+            this.TstBottomLeft.Visible = false;
             // 
             // TstBottomRight
             // 
-            this.TstBottomRight.Location = new System.Drawing.Point(866, 853);
+            this.TstBottomRight.Location = new System.Drawing.Point(866, 819);
             this.TstBottomRight.Name = "TstBottomRight";
             this.TstBottomRight.Size = new System.Drawing.Size(100, 22);
             this.TstBottomRight.TabIndex = 201;
+            this.TstBottomRight.Visible = false;
             // 
             // frmAirportCode2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(980, 914);
+            this.ClientSize = new System.Drawing.Size(953, 527);
             this.Controls.Add(this.TstBottomRight);
             this.Controls.Add(this.TstBottomLeft);
             this.Controls.Add(this.TstTopRight);

@@ -973,21 +973,21 @@ namespace Obstacle
         {
             //25°01'07.5926"N	73°54'14.2403"E
             //25°01'24.5406"N	73°53'39.6233"E
-            
 
-            this.LatD2.Text = "19"; this.LatM2.Text = "10"; this.LatS2.Text = "57.83";
-            this.LngD2.Text = "77";this.LngM2.Text = "18"; this.LngS2.Text = "52.98";
-            this.LatD.Text = "19"; this.LatM.Text = "10"; this.LatS.Text = "48.46";
-            this.LngD.Text = "77"; this.LngM.Text = "20"; this.LngS.Text = "11.08";
+
+            this.LatD.Text = "08"; this.LatM.Text = "16"; this.LatS.Text = "15.6982";
+            this.LngD.Text = "73"; this.LngM.Text = "01"; this.LngS.Text = "18.1097";
+            this.LatD2.Text = "08"; this.LatM2.Text = "15"; this.LatS2.Text = "56.5293";
+            this.LngD2.Text = "73"; this.LngM2.Text = "02"; this.LngS2.Text = "41.1810";
 
             //19° 10′ 55″ N, 77° 19′ 7″ E
-            this.ArpLatD.Text = "19"; this.ArpLatM.Text = "10"; this.ArpLatS.Text = "55";
-            this.ArpLngD.Text = "77"; this.ArpLngM.Text = "19"; this.ArpLngS.Text = "07";
+            this.ArpLatD.Text = "08"; this.ArpLatM.Text = "15"; this.ArpLatS.Text = "53.4995";
+            this.ArpLngD.Text = "73"; this.ArpLngM.Text = "02"; this.ArpLngS.Text = "45.9582";
             this.BasicStrip.Text = "60";this.RunwayStrip.Text = "140";this.Diversion.Text = "10";
 
-            this.MaximumElevation.Text = "535.055";
-            this.Rwy1Elevation.Text = "534.432";
-            this.Rwy2Elevation.Text = "534.94";
+            this.MaximumElevation.Text = "16.304";
+            this.Rwy1Elevation.Text = "9.385";
+            this.Rwy2Elevation.Text = "0";
             this.MaxApproachLength.Text = "15000";
             this.AppSection1.Text = "3000";
             this.AppSection2.Text = "6600";

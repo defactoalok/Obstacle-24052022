@@ -88,6 +88,10 @@
             this.ForwardDms = new System.Windows.Forms.TextBox();
             this.BackwardDms = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.AppSection1 = new System.Windows.Forms.TextBox();
+            this.label43 = new System.Windows.Forms.Label();
+            this.AppSection2 = new System.Windows.Forms.TextBox();
+            this.label42 = new System.Windows.Forms.Label();
             this.TSLength = new System.Windows.Forms.TextBox();
             this.label41 = new System.Windows.Forms.Label();
             this.OHSWidth = new System.Windows.Forms.TextBox();
@@ -142,10 +146,6 @@
             this.TstTopRight = new System.Windows.Forms.TextBox();
             this.TstBottomLeft = new System.Windows.Forms.TextBox();
             this.TstBottomRight = new System.Windows.Forms.TextBox();
-            this.AppSection2 = new System.Windows.Forms.TextBox();
-            this.label42 = new System.Windows.Forms.Label();
-            this.AppSection1 = new System.Windows.Forms.TextBox();
-            this.label43 = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -849,8 +849,48 @@
             this.panel1.Controls.Add(this.BackBearing);
             this.panel1.Location = new System.Drawing.Point(36, 18);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(901, 695);
+            this.panel1.Size = new System.Drawing.Size(920, 695);
             this.panel1.TabIndex = 148;
+            // 
+            // AppSection1
+            // 
+            this.AppSection1.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AppSection1.Location = new System.Drawing.Point(658, 490);
+            this.AppSection1.Margin = new System.Windows.Forms.Padding(4);
+            this.AppSection1.Name = "AppSection1";
+            this.AppSection1.Size = new System.Drawing.Size(120, 26);
+            this.AppSection1.TabIndex = 31;
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Font = new System.Drawing.Font("Segoe UI Symbol", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label43.Location = new System.Drawing.Point(591, 493);
+            this.label43.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(70, 20);
+            this.label43.TabIndex = 216;
+            this.label43.Text = "Section 1";
+            // 
+            // AppSection2
+            // 
+            this.AppSection2.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AppSection2.Location = new System.Drawing.Point(396, 493);
+            this.AppSection2.Margin = new System.Windows.Forms.Padding(4);
+            this.AppSection2.Name = "AppSection2";
+            this.AppSection2.Size = new System.Drawing.Size(120, 26);
+            this.AppSection2.TabIndex = 30;
+            // 
+            // label42
+            // 
+            this.label42.AutoSize = true;
+            this.label42.Font = new System.Drawing.Font("Segoe UI Symbol", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label42.Location = new System.Drawing.Point(329, 496);
+            this.label42.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(70, 20);
+            this.label42.TabIndex = 214;
+            this.label42.Text = "Section 2";
             // 
             // TSLength
             // 
@@ -963,7 +1003,7 @@
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(423, 569);
+            this.button8.Location = new System.Drawing.Point(374, 349);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(139, 43);
             this.button8.TabIndex = 177;
@@ -984,12 +1024,13 @@
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(374, 337);
+            this.button7.Location = new System.Drawing.Point(658, 337);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(144, 38);
             this.button7.TabIndex = 176;
             this.button7.Text = "button7";
             this.button7.UseVisualStyleBackColor = true;
+            this.button7.Visible = false;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // button6
@@ -1007,7 +1048,7 @@
             this.button5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button5.Location = new System.Drawing.Point(374, 252);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(112, 43);
+            this.button5.Size = new System.Drawing.Size(139, 43);
             this.button5.TabIndex = 174;
             this.button5.Text = "Fill ";
             this.button5.UseVisualStyleBackColor = true;
@@ -1036,9 +1077,9 @@
             // button4
             // 
             this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.Location = new System.Drawing.Point(601, 565);
+            this.button4.Location = new System.Drawing.Point(550, 565);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(295, 43);
+            this.button4.Size = new System.Drawing.Size(346, 43);
             this.button4.TabIndex = 171;
             this.button4.Text = "Import Runway Profile";
             this.button4.UseVisualStyleBackColor = true;
@@ -1047,9 +1088,9 @@
             // button3
             // 
             this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.Location = new System.Drawing.Point(601, 614);
+            this.button3.Location = new System.Drawing.Point(550, 614);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(295, 76);
+            this.button3.Size = new System.Drawing.Size(346, 43);
             this.button3.TabIndex = 147;
             this.button3.Text = "Import survey data - CSV without Header";
             this.button3.UseVisualStyleBackColor = true;
@@ -1165,7 +1206,7 @@
             this.ArpLngS.Margin = new System.Windows.Forms.Padding(4);
             this.ArpLngS.MaxLength = 8;
             this.ArpLngS.Name = "ArpLngS";
-            this.ArpLngS.Size = new System.Drawing.Size(95, 26);
+            this.ArpLngS.Size = new System.Drawing.Size(114, 26);
             this.ArpLngS.TabIndex = 21;
             // 
             // ArpEast
@@ -1227,7 +1268,7 @@
             this.ArpLatS.Margin = new System.Windows.Forms.Padding(4);
             this.ArpLatS.MaxLength = 8;
             this.ArpLatS.Name = "ArpLatS";
-            this.ArpLatS.Size = new System.Drawing.Size(95, 26);
+            this.ArpLatS.Size = new System.Drawing.Size(114, 26);
             this.ArpLatS.TabIndex = 18;
             // 
             // ArpLatM
@@ -1382,46 +1423,6 @@
             this.TstBottomRight.Name = "TstBottomRight";
             this.TstBottomRight.Size = new System.Drawing.Size(100, 22);
             this.TstBottomRight.TabIndex = 201;
-            // 
-            // AppSection2
-            // 
-            this.AppSection2.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AppSection2.Location = new System.Drawing.Point(396, 493);
-            this.AppSection2.Margin = new System.Windows.Forms.Padding(4);
-            this.AppSection2.Name = "AppSection2";
-            this.AppSection2.Size = new System.Drawing.Size(120, 26);
-            this.AppSection2.TabIndex = 30;
-            // 
-            // label42
-            // 
-            this.label42.AutoSize = true;
-            this.label42.Font = new System.Drawing.Font("Segoe UI Symbol", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label42.Location = new System.Drawing.Point(329, 496);
-            this.label42.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(70, 20);
-            this.label42.TabIndex = 214;
-            this.label42.Text = "Section 2";
-            // 
-            // AppSection1
-            // 
-            this.AppSection1.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AppSection1.Location = new System.Drawing.Point(658, 490);
-            this.AppSection1.Margin = new System.Windows.Forms.Padding(4);
-            this.AppSection1.Name = "AppSection1";
-            this.AppSection1.Size = new System.Drawing.Size(120, 26);
-            this.AppSection1.TabIndex = 31;
-            // 
-            // label43
-            // 
-            this.label43.AutoSize = true;
-            this.label43.Font = new System.Drawing.Font("Segoe UI Symbol", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label43.Location = new System.Drawing.Point(591, 493);
-            this.label43.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(70, 20);
-            this.label43.TabIndex = 216;
-            this.label43.Text = "Section 1";
             // 
             // frmAirportCode34
             // 
