@@ -105,6 +105,7 @@
             this.button8 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
             this.button10 = new System.Windows.Forms.Button();
+            this.CreateShape = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -864,11 +865,23 @@
             this.button10.UseVisualStyleBackColor = true;
             this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
+            // CreateShape
+            // 
+            this.CreateShape.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CreateShape.Location = new System.Drawing.Point(356, 540);
+            this.CreateShape.Name = "CreateShape";
+            this.CreateShape.Size = new System.Drawing.Size(241, 34);
+            this.CreateShape.TabIndex = 100;
+            this.CreateShape.Text = "Create Shpaes";
+            this.CreateShape.UseVisualStyleBackColor = true;
+            this.CreateShape.Click += new System.EventHandler(this.CreateShape_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(944, 622);
+            this.Controls.Add(this.CreateShape);
             this.Controls.Add(this.button10);
             this.Controls.Add(this.button9);
             this.Controls.Add(this.button8);
@@ -1025,6 +1038,7 @@
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.Button CreateShape;
     }
 }
 

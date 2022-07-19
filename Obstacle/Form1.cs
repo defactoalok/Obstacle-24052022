@@ -11,11 +11,19 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using Microsoft.Office;
+using MapWinGIS;
+using Point = MapWinGIS.Point;
 
 namespace Obstacle
 {
     public partial class Form1 : Form
     {
+        string CurrentDir = Directory.GetCurrentDirectory();
+        string STstTopLeft, STstTopRight, STstBottomLeft, STstBottomRight;
+
+
+       
+
         public object SafetyArea { get; private set; }
         public bool showMenu;
         public Form1()
@@ -23,7 +31,7 @@ namespace Obstacle
             InitializeComponent();
             // this.FileName.Visible = false;
             //this.SaveFile.Visible = false;
-
+          
 
         }
 
@@ -50,9 +58,9 @@ namespace Obstacle
 
             //splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // showgrid();
-           // if (this.SelectedID.Text == "")
+            // if (this.SelectedID.Text == "")
             //{
-              //  button2_Click(null, null);
+            //  button2_Click(null, null);
 
             //}
         }
@@ -1413,7 +1421,7 @@ namespace Obstacle
         {
             Coordinate c1 = new Coordinate( Lat1,  Lng1);
             Coordinate c2 = new Coordinate(Lat2, Lng2);
-            Distance d=  new Distance(c1, c2, Shape.Ellipsoid);
+            Distance d=  new Distance(c1, c2, CoordinateSharp.Shape.Ellipsoid);
             Bearing= d.Bearing;
             RDistance =  d.Meters;
 
@@ -1484,6 +1492,125 @@ namespace Obstacle
             frmd.Show();
 
         }
+
+        private void CreateShape_Click(object sender, EventArgs e)
+        {
+
+            if (
+                string.IsNullOrEmpty(this.H_Easting.Text) || string.IsNullOrEmpty(this.H_Northing.Text) ||
+                string.IsNullOrEmpty(this.Bearing.Text) || string.IsNullOrEmpty(this.ReverseBearing.Text)
+                || string.IsNullOrEmpty(this.Zone.Text)
+                || string.IsNullOrEmpty(this.Safety.Text) || string.IsNullOrEmpty(this.Diversion.Text))
+            {
+                MessageBox.Show("Some values are left blank");
+                return;
+            }
+
+            string CDir = Directory.GetCurrentDirectory() + "\\Shapefiles\\";
+
+
+            int myPointIndex = 0;
+            int myShapeIndex = 0;
+
+            Shapefile HrpPoint = new Shapefile();
+            HrpPoint.CreateNew(CDir + "\\HrpPoint.shp", ShpfileType.SHP_POINT);
+            MapWinGIS.Shape HrpShape = new MapWinGIS.Shape();
+            
+            MapWinGIS.Point myPoint = new Point();
+            myPoint.x = Math.Round(double.Parse(H_Easting.Text ), 3);
+            myPoint.y = Math.Round(double.Parse(H_Northing.Text), 3);
+            
+            HrpShape.InsertPoint(myPoint, ref myPointIndex);
+            
+            HrpPoint.StopEditingShapes(true, true, null);
+            HrpPoint.Close();
+
+
+            Shapefile PolygonShape = new Shapefile();
+            PolygonShape.CreateNew(@CDir + "\\FATO.shp", ShpfileType.SHP_POLYGON);
+            
+
+
+            GetNewCoordinatesWithAngle(this.H_Easting.Text, this.H_Northing.Text, double.Parse(this.Safety.Text), double.Parse(this.Bearing.Text)+45, out double App1N, out double App1E);
+            string HrpBoxLeftUE = App1E.ToString(); string HrpBoxLeftUN = App1N.ToString();
+            GetNewCoordinatesWithAngle(this.H_Easting.Text, this.H_Northing.Text, double.Parse(this.Safety.Text), double.Parse(this.Bearing.Text)-45, out App1N, out App1E);
+            string HrpBoxLeftDE = App1E.ToString(); string HrpBoxLeftDN = App1N.ToString();
+
+            GetNewCoordinatesWithAngle(this.H_Easting.Text, this.H_Northing.Text, double.Parse(this.Safety.Text), double.Parse(this.ReverseBearing.Text) + 45, out  App1N, out  App1E);
+            string HrpBoxRightUE = App1E.ToString(); string HrpBoxRightUN = App1N.ToString();
+            GetNewCoordinatesWithAngle(this.H_Easting.Text, this.H_Northing.Text, double.Parse(this.Safety.Text), double.Parse(this.ReverseBearing.Text) - 45, out App1N, out App1E);
+            string HrpBoxRightDE = App1E.ToString(); string HrpBoxRightDN = App1N.ToString();
+            
+            string FatoString = HrpBoxLeftUE + "," + HrpBoxLeftUN + ";" + HrpBoxLeftDE + "," + HrpBoxLeftDN + ";"
+                + HrpBoxRightUE + "," + HrpBoxRightUN + ";" + HrpBoxRightDE + "," + HrpBoxRightDN;
+
+
+            MapWinGIS.Shape FatoShape = new MapWinGIS.Shape();
+            FatoShape.Create(PolygonShape.ShapefileType);
+            MakePolygon(FatoString, myPointIndex, myShapeIndex, PolygonShape, FatoShape);
+            //string App1BStripE = App1E.ToString(); string App1BStripN = App1N.ToString();
+
+
+        }
+        private void GetNewCoordinatesWithAngle(string He, string Hn, double Distance,
+         double Bearing, out double App1N, out double App1E)
+        {
+            App1E = 0;
+            //App2E = 0;
+            App1N = 0;
+            //App2N = 0;
+            //double ReverseBear = 0;
+            double SinX = 0;
+            double CosX = 0;
+
+
+            if (Bearing > 0)
+            {
+                double bearRadian = Math.Round(Bearing * (Math.PI) / 180, 3);
+                CosX = Math.Round(Distance * (Math.Cos(bearRadian)), 3);
+                SinX = Math.Round(Distance * (Math.Sin(bearRadian)), 3);
+
+                App1E = Math.Round(double.Parse(He) + SinX, 3);
+                App1N = Math.Round(double.Parse(Hn) + CosX, 3);
+
+            }
+        }
+        private void CreatePolygon()
+        {
+            
+            
+        }
+        private void MakePolygon(string Coordinates, int myPointIndex, int myShapeIndex,
+                   Shapefile poly, MapWinGIS.Shape pPolyline)
+        {
+            try
+            {
+                string[] vpoints = Coordinates.Split(';');
+
+                foreach (string vpoint in vpoints)
+                {
+                    MapWinGIS.Point PolyPoint = new Point();
+                    // ShpfileType.SHP_POINT);
+                    var vp = vpoint.Split(',');
+                    PolyPoint.x = Convert.ToDouble(vp[0]);
+                    PolyPoint.y = Convert.ToDouble(vp[1]);
+                    pPolyline.InsertPoint(PolyPoint, ref myPointIndex);
+                    poly.EditInsertShape(pPolyline, ref myShapeIndex);
+                    myPointIndex++;
+                    myShapeIndex++;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            var shapeindex = poly.EditAddShape(pPolyline);
+
+
+
+        }
+
     }
 }
 

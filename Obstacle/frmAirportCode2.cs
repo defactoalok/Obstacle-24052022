@@ -1627,6 +1627,8 @@ namespace Obstacle
                         Shapefile PolygonShape = new Shapefile();
                         PolygonShape.CreateNew(@CDir + "\\TstPolygon.shp", ShpfileType.SHP_POLYGON);
 
+                       
+
                         //Make TST polygon
 
                         string TriangleTopLeft = App1TsFunnelLE + "," + App1TsFunnelLN + ";" +
@@ -1730,17 +1732,28 @@ namespace Obstacle
                         //   axMap1.DrawCircle(double.Parse(this.Easting.Text), double.Parse(this.Northing.Text), 2500, 1, false);
                         MessageBox.Show("Done");
                         //
-                        string utm = "PROJCS[WGS_84_UTM_zone_" + this.Zone.Text + "N";
-                        string ProjFile = utm + ",GEOGCS['GCS_WGS_1984',DATUM['D_WGS84',SPHEROID['WGS84',6378137,298.257223563]],PRIMEM['Greenwich',0],UNIT['Degree',0.017453292519943295]],PROJECTION['Transverse_Mercator'],PARAMETER['latitude_of_origin',0],PARAMETER['central_meridian',75],PARAMETER['scale_factor',0.9996],PARAMETER['false_easting',500000],PARAMETER['false_northing',0],UNIT['Meter',1]]";
-                        File.WriteAllText(@CDir + "\\SurveyPoints.prj", ProjFile);
-                        File.WriteAllText(@CDir + "\\Polyline.prj", ProjFile);
-                        File.WriteAllText(@CDir + "\\ConPolygon.prj", ProjFile);
-                        File.WriteAllText(@CDir + "\\ArpPolygon.prj", ProjFile);
-                        File.WriteAllText(@CDir + "\\TstPolygon.prj", ProjFile);
-                        //
-                        DisplayShapes ds = new DisplayShapes();
-                        ds.Show();
+                        string utm = "UTM_zone_" + this.Zone.Text + "N";
+                        string findText = "UTM_Zone_43N";
+                        string text = File.ReadAllText(Directory.GetCurrentDirectory() + "\\DefaultProjection.Txt");
+                        text = text.Replace(findText, utm);
+                        File.WriteAllText(@CDir + "\\SurveyPoints.prj", text);
+                        File.WriteAllText(@CDir + "\\Polyline.prj", text);
+                        File.WriteAllText(@CDir + "\\ConPolygon.prj", text);
+                        File.WriteAllText(@CDir + "\\ArpPolygon.prj", text);
+                        File.WriteAllText(@CDir + "\\TstPolygon.prj", text);
 
+
+                        //  string ProjFile = ""; // utm + ",GEOGCS['GCS_WGS_1984',DATUM['D_WGS84',SPHEROID['WGS84',6378137,298.257223563]],PRIMEM['Greenwich',0],UNIT['Degree',0.017453292519943295]],PROJECTION['Transverse_Mercator'],PARAMETER['latitude_of_origin',0],PARAMETER['central_meridian',75],PARAMETER['scale_factor',0.9996],PARAMETER['false_easting',500000],PARAMETER['false_northing',0],UNIT['Meter',1]]";
+
+                        // File.WriteAllText(@CDir + "\\SurveyPoints.prj", ProjFile);
+                        //File.WriteAllText(@CDir + "\\Polyline.prj", ProjFile);
+                        //File.WriteAllText(@CDir + "\\ConPolygon.prj", ProjFile);
+                        //File.WriteAllText(@CDir + "\\ArpPolygon.prj", ProjFile);
+                        //File.WriteAllText(@CDir + "\\TstPolygon.prj", ProjFile);
+                        //
+                        //DisplayShapes ds = new DisplayShapes();
+                        //ds.Show();
+                     
 
 
                     }
